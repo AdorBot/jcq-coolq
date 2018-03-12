@@ -4,6 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
     <groupId>com.sobte.cqp</groupId>
     <artifactId>jcq-coolq</artifactId>
     <version>1.0.9</version>
@@ -60,7 +66,43 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://gitee.com/Sobte/JCQ-CoolQ</url>
+        <connection>git@gitee.com:Sobte/JCQ-CoolQ.git</connection>
+        <developerConnection>https://www.sobte.com</developerConnection>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>Sobte</name>
+            <email>i@sobte.me</email>
+            <url>https://www.sobte.com</url>
+        </developer>
+    </developers>
 
 </project>
