@@ -6,7 +6,7 @@
  
             <groupId>com.sobte.cqp</groupId>
             <artifactId>jcq-coolq</artifactId>
-            <version>1.0.9</version>
+            <version>1.1.0</version>
             
  2.  **下载地址**
  
