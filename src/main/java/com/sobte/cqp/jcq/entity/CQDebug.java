@@ -1,121 +1,120 @@
 package com.sobte.cqp.jcq.entity;
 
 import com.sobte.cqp.jcq.util.StringHelper;
-import org.apache.commons.codec.binary.Base64;
 
 import java.io.File;
+import java.lang.management.ManagementFactory;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Formatter;
 import java.util.List;
 
 /**
- * Created by Sobte on 2018/1/29.
- * Time: 15:32
+ * Created by Sobte on 2018/3/11.
+ * Time: 3:34
  * Email: i@sobte.me
- * CoolQ 操作的核心类
- *
- * @author Sobte
- * @version 1.0.9
+ * 此类用于不在酷Q模式下调试用
  */
-public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
+public class CQDebug extends CoolQ {
 
-    /**
-     * AC码
-     */
-    private int authCode;
-    /**
-     * 应用目录
-     */
-    protected String appDirectory;
-    /**
-     * 应用名称
-     */
-    protected String appName;
-
-    /**
-     * 初始化
-     *
-     * @param authCode AC码
-     */
-    public CoolQ(int authCode) {
-        this.authCode = authCode;
+    public CQDebug() {
+        super(1000);
     }
 
-    /**
-     * 初始化
-     *
-     * @param authCode     AC码
-     * @param appDirectory 应用目录
-     * @param appName      应用名称
-     */
-    public CoolQ(int authCode, String appDirectory, String appName) {
-        this.authCode = authCode;
-        this.appDirectory = appDirectory;
-        this.appName = appName;
+    public CQDebug(String appDirectory, String appName) {
+        super(1000, appDirectory, appName);
     }
 
-    /**
-     * 初始化整个工具（此方法由管理器调用，无需操作）
-     *
-     * @param CQToolPath 工具地址
-     * @param authCode   AC码
-     */
-    private void init(String CQToolPath, int authCode) {
-        this.authCode = authCode;
-        System.load(CQToolPath);
-    }
-
-    private native int setFatal(int authCode, String errorInfo);
-
-    /**
-     * 置错误提示
-     *
-     * @param errorInfo 错误信息
-     * @return 状态码
-     */
+    @Override
     public int setFatal(String errorInfo) {
-        return setFatal(authCode, errorInfo);
+        System.err.printf("发生致命错误 错误信息：%s%n", errorInfo);
+        return 0;
     }
-
-    private native String getAppDirectory(int authCode);
 
     /**
      * 获取应用目录
      *
      * @return 应用目录, 返回的路径末尾带"\"
      */
+    @Override
     public String getAppDirectory() {
         if (StringHelper.isTrimEmpty(appDirectory)) {
-            appDirectory = getAppDirectory(authCode);
+            appDirectory = new File("").getAbsolutePath() + File.separator;
         }
-        File file = new File(appDirectory);
-        if (file.exists() && file.isDirectory())
-            file.mkdirs();
+        addLogs(LOG_INFO, "取应用目录", String.format("返回：%s", appDirectory));
         return appDirectory;
     }
-
-    private native long getLoginQQ(int authCode);
 
     /**
      * 获取登录QQ
      *
      * @return 登录QQ
      */
+    @Override
     public long getLoginQQ() {
-        return getLoginQQ(authCode);
+        addLogs(LOG_INFO, "取登录QQ", "返回：酷Q");
+        return 10001L;
     }
-
-    private native String getLoginNick(int authCode);
 
     /**
      * 获取登录昵称
      *
      * @return 登录昵称
      */
+    @Override
     public String getLoginNick() {
-        return getLoginNick(authCode);
+        addLogs(LOG_INFO, "取登录昵称", "返回：酷Q");
+        return "酷Q";
     }
 
-    private native int addLog(int authCode, int priority, String category, String content);
+    private int addLogs(int priority, String category, String content) {
+        StringBuilder sb = new StringBuilder();
+        Formatter fmt = new Formatter(sb);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+        Date date = new Date();
+        Thread thread = Thread.currentThread();
+        // pid
+        String name = ManagementFactory.getRuntimeMXBean().getName();
+        String pid = name.split("@")[0];
+        sb.append(sdf.format(date));
+        switch (priority) {
+            case LOG_DEBUG:
+                fmt.format(" %11s ", "DEBUG");
+                break;
+            case LOG_ERROR:
+                fmt.format(" %11s ", "ERROR");
+                break;
+            case LOG_FATAL:
+                fmt.format(" %11s ", "FATAL");
+                break;
+            default:
+            case LOG_INFO:
+                fmt.format(" %11s ", "INFO");
+                break;
+            case LOG_INFORECV:
+                fmt.format(" %11s ", "INFORECV");
+                break;
+            case LOG_INFOSEND:
+                fmt.format(" %11s ", "INFOSEND");
+                break;
+            case LOG_INFOSUCCESS:
+                fmt.format(" %11s ", "INFOSUCCESS");
+                break;
+            case LOG_WARNING:
+                fmt.format(" %11s ", "WARNING");
+                break;
+        }
+        sb.append(pid);
+        sb.append(" --- [");
+        fmt.format("%15s", thread.getName());
+        sb.append("] ");
+        fmt.format("%-19s", category);
+        sb.append(" : ");
+        sb.append(content);
+        System.out.println(sb.toString());
+        return 0;
+    }
 
     /**
      * 不推荐使用本方法,请使用log开头的方法，参见see
@@ -135,7 +134,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      */
     @Deprecated
     public int addLog(int priority, String category, String content) {
-        return addLog(authCode, priority, category, content);
+        return addLogs(priority, category, content);
     }
 
     /**
@@ -148,7 +147,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logDebug(String category, String content) {
-        return addLog(authCode, LOG_DEBUG, category, content);
+        return addLogs(LOG_DEBUG, category, content);
     }
 
     /**
@@ -161,7 +160,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logInfo(String category, String content) {
-        return addLog(authCode, LOG_INFO, category, content);
+        return addLogs(LOG_INFO, category, content);
     }
 
     /**
@@ -174,7 +173,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logInfoRecv(String category, String content) {
-        return addLog(authCode, LOG_INFORECV, category, content);
+        return addLogs(LOG_INFORECV, category, content);
     }
 
     /**
@@ -187,7 +186,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logInfoSend(String category, String content) {
-        return addLog(authCode, LOG_INFOSEND, category, content);
+        return addLogs(LOG_INFOSEND, category, content);
     }
 
     /**
@@ -200,7 +199,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logInfoSuccess(String category, String content) {
-        return addLog(authCode, LOG_INFOSUCCESS, category, content);
+        return addLogs(LOG_INFOSUCCESS, category, content);
     }
 
     /**
@@ -213,7 +212,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logWarning(String category, String content) {
-        return addLog(authCode, LOG_WARNING, category, content);
+        return addLogs(LOG_WARNING, category, content);
     }
 
     /**
@@ -226,7 +225,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logError(String category, String content) {
-        return addLog(authCode, LOG_ERROR, category, content);
+        return addLogs(LOG_ERROR, category, content);
     }
 
     /**
@@ -239,11 +238,8 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logFatal(String category, String content) {
-        return addLog(authCode, LOG_FATAL, category, content);
+        return addLogs(LOG_FATAL, category, content);
     }
-
-
-    private native int sendPrivateMsg(int authCode, long qqId, String msg);
 
     /**
      * 发送私聊消息
@@ -252,11 +248,11 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param msg  消息内容
      * @return 失败返回负值, 成功返回消息ID
      */
+    @Override
     public int sendPrivateMsg(long qqId, String msg) {
-        return sendPrivateMsg(authCode, qqId, msg);
+        addLogs(LOG_INFO, "发送私聊消息", String.format("q[%15s] %s", qqId, msg));
+        return 0;
     }
-
-    private native int sendGroupMsg(int authCode, long groupId, String msg);
 
     /**
      * 发送群消息
@@ -265,11 +261,11 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param msg     消息内容
      * @return 失败返回负值, 成功返回消息ID
      */
+    @Override
     public int sendGroupMsg(long groupId, String msg) {
-        return sendGroupMsg(authCode, groupId, msg);
+        addLogs(LOG_INFO, "发送群聊消息", String.format("g[%15s] %s", groupId, msg));
+        return 0;
     }
-
-    private native int sendDiscussMsg(int authCode, long discussionId, String msg);
 
     /**
      * 发送讨论组消息
@@ -278,11 +274,11 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param msg          消息内容
      * @return 失败返回负值, 成功返回消息ID
      */
+    @Override
     public int sendDiscussMsg(long discussionId, String msg) {
-        return sendDiscussMsg(authCode, discussionId, msg);
+        addLogs(LOG_INFO, "发送讨论组消息", String.format("d[%15s] %s", discussionId, msg));
+        return 0;
     }
-
-    private native int deleteMsg(int authCode, long msgId);
 
     /**
      * 撤回消息
@@ -290,11 +286,11 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param msgId 消息ID
      * @return 状态码
      */
+    @Override
     public int deleteMsg(long msgId) {
-        return deleteMsg(authCode, msgId);
+        addLogs(LOG_INFO, "撤回消息", String.format("m[%15s]", msgId));
+        return 0;
     }
-
-    private native int sendLikeV2(int authCode, long qqId, int times);
 
     /**
      * 发送手机赞
@@ -303,33 +299,33 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param times 赞的次数,最多10次
      * @return 状态码
      */
+    @Override
     public int sendLikeV2(long qqId, int times) {
-        return sendLikeV2(authCode, qqId, times <= 0 || times > 10 ? 1 : times);
+        addLogs(LOG_INFO, "发送赞", String.format("q[%15s] %s次", qqId, times <= 0 || times > 10 ? 1 : times));
+        return 0;
     }
-
-    private native String getCookies(int authCode);
 
     /**
      * 获取Cookie,慎用,此接口需要严格授权
      *
      * @return Cookies
      */
+    @Override
     public String getCookies() {
-        return getCookies(authCode);
+        addLogs(LOG_INFO, "取Cookies", "本函数请在酷Q中测试");
+        return "";
     }
-
-    private native int getCsrfToken(int authCode);
 
     /**
      * 获取CsrfToken,即QQ网页用到的bkn/g_tk等 慎用,此接口需要严格授权
      *
      * @return CsrfToken
      */
+    @Override
     public int getCsrfToken() {
-        return getCsrfToken(authCode);
+        addLogs(LOG_INFO, "取CsrfToken", "本函数请在酷Q中测试");
+        return 0;
     }
-
-    private native String getRecord(int authCode, String file, String outformat);
 
     /**
      * 接收消息中的语音(record)
@@ -338,11 +334,11 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param outformat 应用所需的语音文件格式，目前支持 mp3,amr,wma,m4a,spx,ogg,wav,flac
      * @return 返回保存在 \data\record\ 目录下的文件名
      */
+    @Override
     public String getRecord(String file, String outformat) {
-        return getRecord(file, outformat);
+        addLogs(LOG_INFO, "接收语音", String.format("本函数请在酷Q中测试 文件名：%s 指定格式：%s", file, outformat));
+        return "";
     }
-
-    private native int setGroupKick(int authCode, long groupId, long qqId, boolean notBack);
 
     /**
      * 移除群员
@@ -352,11 +348,11 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param notBack 如果为true，则“不再接收此人加群申请”，请慎用
      * @return 状态码
      */
+    @Override
     public int setGroupKick(long groupId, long qqId, boolean notBack) {
-        return setGroupKick(authCode, groupId, qqId, notBack);
+        addLogs(LOG_INFO, "移除群员", String.format("g[%15s] q[%15s] 拒绝再加群：%s", groupId, qqId, notBack));
+        return 0;
     }
-
-    private native int setGroupBan(int authCode, long groupId, long qqId, long banTime);
 
     /**
      * 禁言群员
@@ -366,11 +362,11 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param banTime 禁言的时间，单位为秒。如果要解禁，这里填写0
      * @return 状态码
      */
+    @Override
     public int setGroupBan(long groupId, long qqId, long banTime) {
-        return setGroupBan(groupId, qqId, banTime);
+        addLogs(LOG_INFO, "禁言群员", String.format("g[%15s] q[%15s] 禁言时间：%s", groupId, qqId, banTime));
+        return 0;
     }
-
-    private native int setGroupAdmin(int authCode, long groupId, long qqId, boolean isAdmin);
 
     /**
      * 设置群管理员
@@ -380,11 +376,11 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param isAdmin true/设置管理员 false/取消管理员
      * @return 状态码
      */
+    @Override
     public int setGroupAdmin(long groupId, long qqId, boolean isAdmin) {
-        return setGroupAdmin(authCode, groupId, qqId, isAdmin);
+        addLogs(LOG_INFO, "设置群管理", String.format("g[%15s] q[%15s] 成为管理员：%s", groupId, qqId, isAdmin));
+        return 0;
     }
-
-    private native int setGroupWholeBan(int authCode, long groupId, boolean isBan);
 
     /**
      * 全群禁言
@@ -393,11 +389,11 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param isBan   true/开启 false/关闭
      * @return 状态码
      */
+    @Override
     public int setGroupWholeBan(long groupId, boolean isBan) {
-        return setGroupWholeBan(authCode, groupId, isBan);
+        addLogs(LOG_INFO, "全群禁言", String.format("g[%15s] 开启禁言：%s", groupId, isBan));
+        return super.setGroupWholeBan(groupId, isBan);
     }
-
-    private native int setGroupAnonymousBan(int authCode, long groupId, String anonymous, long banTime);
 
     /**
      * 禁言匿名群员
@@ -407,11 +403,11 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param banTime   禁言的时间，单位为秒。不支持解禁
      * @return 状态码
      */
+    @Override
     public int setGroupAnonymousBan(long groupId, String anonymous, long banTime) {
-        return setGroupAnonymousBan(authCode, groupId, anonymous, banTime);
+        addLogs(LOG_INFO, "全群禁言", String.format("g[%15s] 匿名：%s 禁言时间：%s", groupId, anonymous, banTime));
+        return 0;
     }
-
-    private native int setGroupAnonymous(int authCode, long groupId, boolean isAnonymous);
 
     /**
      * 群匿名设置
@@ -420,11 +416,11 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param isAnonymous true/开启 false/关闭
      * @return 状态码
      */
+    @Override
     public int setGroupAnonymous(long groupId, boolean isAnonymous) {
-        return setGroupAnonymous(authCode, groupId, isAnonymous);
+        addLogs(LOG_INFO, "群匿名设置", String.format("g[%15s] 开启匿名：%s", groupId, isAnonymous));
+        return 0;
     }
-
-    private native int setGroupCard(int authCode, long groupId, long qqId, String nick);
 
     /**
      * 设置群成员名片
@@ -434,11 +430,11 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param nick    新名片(昵称)
      * @return 状态码
      */
+    @Override
     public int setGroupCard(long groupId, long qqId, String nick) {
-        return setGroupCard(authCode, groupId, qqId, nick);
+        addLogs(LOG_INFO, "设置群成员名片", String.format("g[%15s] q[%15s] 新名片：%s", groupId, qqId, nick));
+        return 0;
     }
-
-    private native int setGroupLeave(int authCode, long groupId, boolean isDisband);
 
     /**
      * 退出QQ群,慎用,此接口需要严格授权
@@ -447,11 +443,11 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param isDisband 默认为假 true/解散本群(群主) false/退出本群(管理、群成员)
      * @return 状态码
      */
+    @Override
     public int setGroupLeave(long groupId, boolean isDisband) {
-        return setGroupLeave(authCode, groupId, isDisband);
+        addLogs(LOG_INFO, "退出QQ群", String.format("g[%15s] 是否解散：%s", groupId, isDisband));
+        return 0;
     }
-
-    private native int setGroupSpecialTitle(int authCode, long groupId, long qqId, String title, long expireTime);
 
     /**
      * 设置群成员专属头衔,需群主权限
@@ -462,14 +458,11 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param expireTime 专属头衔有效期，单位为秒。如果永久有效，这里填写-1
      * @return 状态码
      */
+    @Override
     public int setGroupSpecialTitle(long groupId, long qqId, String title, long expireTime) {
-        if (StringHelper.isTrimEmpty(title)) {
-            title = "";
-        }
-        return setGroupSpecialTitle(authCode, groupId, qqId, title, expireTime);
+        addLogs(LOG_INFO, "设置群成员专属头衔", String.format("g[%15s] q[%15s] 头衔：%s 过期时间：%s", groupId, qqId, title, expireTime));
+        return 0;
     }
-
-    private native String getGroupMemberInfoV2(int authCode, long groupId, long qqId, boolean notCache);
 
     /**
      * 获取群成员信息
@@ -479,15 +472,20 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param notCache 不使用缓存，通常忽略本参数，仅在必要时使用
      * @return 如果成功，返回群成员信息，失败返回null
      */
+    @Override
     public Member getGroupMemberInfoV2(long groupId, long qqId, boolean notCache) {
-        String info = getGroupMemberInfoV2(authCode, groupId, qqId, notCache);
-        if (StringHelper.isTrimEmpty(info))
-            return null;
-        byte[] bytes = Base64.decodeBase64(info);
-        return Member.toMember(bytes);
+        addLogs(LOG_INFO, "取群成员信息", String.format("g[%15s] q[%15s] 本函数请在酷Q中测试 不使用缓存：%s 返回：测试群成员", groupId, qqId, notCache));
+        Member member = new Member();
+        member.setGroupId(groupId);
+        member.setQqId(qqId);
+        member.setNick("测试昵称");
+        member.setCard("测试名片");
+        member.setGender(0);
+        member.setAuthority(1);
+        member.setTitle("测试专属头衔");
+        member.setTitleExpire(null);
+        return member;
     }
-
-    private native String getStrangerInfo(int authCode, long qqId, boolean notCache);
 
     /**
      * 获取陌生人信息
@@ -496,15 +494,39 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param notCache 不使用缓存，通常忽略本参数，仅在必要时使用
      * @return 如果成功，返回陌生人信息
      */
+    @Override
     public QQInfo getStrangerInfo(long qqId, boolean notCache) {
-        String info = getStrangerInfo(authCode, qqId, notCache);
-        if (StringHelper.isTrimEmpty(info))
-            return null;
-        byte[] bytes = Base64.decodeBase64(info);
-        return QQInfo.toQQInfo(bytes);
+        addLogs(LOG_INFO, "取陌生人信息", String.format("q[%15s] 本函数请在酷Q中测试 不使用缓存：%s 返回：测试陌生人", qqId, notCache));
+        QQInfo info = new QQInfo();
+        info.setQqId(qqId);
+        info.setNick("测试昵称");
+        info.setAge(0);
+        info.setGender(0);
+        return info;
     }
 
-    private native int setDiscussLeave(int authCode, long discussionId);
+    /**
+     * 获取群成员列表
+     *
+     * @param groupId 目标群
+     * @return 如果成功，返回群成员列表
+     */
+    @Override
+    public List<Member> getGroupMemberList(long groupId) {
+        addLogs(LOG_INFO, "取群成员列表", String.format("g[%15s] 本函数请在酷Q中测试 返回：空列表", groupId));
+        return new ArrayList<Member>();
+    }
+
+    /**
+     * 获取群列表
+     *
+     * @return 如果成功，返回群列表
+     */
+    @Override
+    public List<Group> getGroupList() {
+        addLogs(LOG_INFO, "取群列表", "本函数请在酷Q中测试 返回：空列表");
+        return new ArrayList<Group>();
+    }
 
     /**
      * 退出讨论组
@@ -512,11 +534,11 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param discussionId 目标讨论组
      * @return 状态码
      */
+    @Override
     public int setDiscussLeave(long discussionId) {
-        return setDiscussLeave(authCode, discussionId);
+        addLogs(LOG_INFO, "退出讨论组", String.format("d[%15s]", discussionId));
+        return 0;
     }
-
-    private native int setFriendAddRequest(int authCode, String responseFlag, int backType, String remarks);
 
     /**
      * 处理好友添加请求
@@ -526,11 +548,11 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param remarks      添加后的好友备注
      * @return 状态码
      */
+    @Override
     public int setFriendAddRequest(String responseFlag, int backType, String remarks) {
-        return setFriendAddRequest(authCode, responseFlag, backType, remarks);
+        addLogs(LOG_INFO, "处理好友添加请求", String.format("请求反馈标识:%s 反馈类型:%s 备注:%s", responseFlag, backType, remarks));
+        return 0;
     }
-
-    private native int setGroupAddRequestV2(int authCode, String responseFlag, int requestType, int backType, String reason);
 
     /**
      * 处理群添加请求
@@ -541,85 +563,10 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param reason       操作理由，仅 REQUEST_GROUP_ADD(群添加) 且 REQUEST_REFUSE(拒绝) 时可用
      * @return 状态码
      */
+    @Override
     public int setGroupAddRequestV2(String responseFlag, int requestType, int backType, String reason) {
-        return setGroupAddRequestV2(authCode, responseFlag, requestType, backType, reason);
-    }
-
-    private native String getGroupMemberList(int authCode, long groupId);
-
-    /**
-     * 获取群成员列表
-     *
-     * @param groupId 目标群
-     * @return 如果成功，返回群成员列表
-     */
-    public List<Member> getGroupMemberList(long groupId) {
-        return toMemberList(getGroupMemberList(authCode, groupId));
-    }
-
-    private native String getGroupList(int authCode);
-
-    /**
-     * 获取群列表
-     *
-     * @return 如果成功，返回群列表
-     */
-    public List<Group> getGroupList() {
-        return toGroupList(getGroupList(authCode));
-    }
-
-    /**
-     * 转换数据到群信息
-     *
-     * @param info 数据
-     * @return 群列表
-     */
-    private List<Group> toGroupList(String info) {
-        List<Group> list = new ArrayList<Group>();
-        if (StringHelper.isTrimEmpty(info))
-            return list;
-        byte[] groupInfo = Base64.decodeBase64(info);
-        if (groupInfo == null || groupInfo.length < 4)
-            return list;
-        Pack pack = new Pack(groupInfo);
-        int count = pack.getInt();
-        for (int i = 0; i < count; i++) {
-            if (pack.getRemainingLen() <= 0) {
-                return list;
-            }
-            Group group = Group.toGroup(pack.getToken());
-            if (group == null)
-                return list;
-            list.add(group);
-        }
-        return list;
-    }
-
-    /**
-     * 数据转群成员
-     *
-     * @param info 数据
-     * @return 群成员列表
-     */
-    private List<Member> toMemberList(String info) {
-        List<Member> list = new ArrayList<Member>();
-        if (StringHelper.isTrimEmpty(info))
-            return list;
-        byte[] memberInfo = Base64.decodeBase64(info);
-        if (memberInfo == null || memberInfo.length < 4)
-            return list;
-        Pack pack = new Pack(memberInfo);
-        int count = pack.getInt();
-        for (int i = 0; i < count; i++) {
-            if (pack.getRemainingLen() <= 0) {
-                return list;
-            }
-            Member member = Member.toMember(pack.getToken());
-            if (member == null)
-                return list;
-            list.add(member);
-        }
-        return list;
+        addLogs(LOG_INFO, "处理群添加请求", String.format("请求反馈标识:%s 请求类型:%s 反馈类型:%s 理由:%s", responseFlag, requestType, backType, reason));
+        return 0;
     }
 
 }

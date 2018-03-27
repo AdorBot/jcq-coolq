@@ -1,5 +1,6 @@
 package com.sobte.cqp.jcq.event;
 
+import com.sobte.cqp.jcq.entity.CQCode;
 import com.sobte.cqp.jcq.entity.CoolQ;
 
 /**
@@ -13,7 +14,12 @@ public abstract class JcqAppAbstract {
     /**
      * CQ操作变量
      */
-    public CoolQ CQ;
+    public static CoolQ CQ;
+
+    /**
+     * CQ码，赋值操作变量
+     */
+    public final static CQCode CC = new CQCode();
 
     /**
      * 应用启用状态

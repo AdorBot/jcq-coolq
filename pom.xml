@@ -12,15 +12,10 @@
 
     <groupId>com.sobte.cqp</groupId>
     <artifactId>jcq-coolq</artifactId>
-    <version>1.0.9</version>
+    <version>1.1.0</version>
     <packaging>jar</packaging>
 
     <dependencies>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.2.4</version>
-        </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
@@ -92,8 +87,8 @@
     </licenses>
 
     <scm>
-        <url>https://gitee.com/Sobte/JCQ-CoolQ</url>
-        <connection>git@gitee.com:Sobte/JCQ-CoolQ.git</connection>
+        <url>https://github.com/Sobte/JCQ-CoolQ</url>
+        <connection>git@github.com:Sobte/JCQ-CoolQ.git</connection>
         <developerConnection>https://www.sobte.com</developerConnection>
     </scm>
 

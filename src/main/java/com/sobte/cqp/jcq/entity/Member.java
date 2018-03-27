@@ -59,7 +59,7 @@ public class Member {
      */
     private String title;
     /**
-     * 专属头衔过期时间 -1 代表不过期
+     * 专属头衔过期时间 null 代表不过期
      */
     private Date titleExpire;
     /**
@@ -126,6 +126,7 @@ public class Member {
 
     /**
      * 性别 0/男性 1/女性
+     *
      * @return 性别
      */
     public int getGender() {
@@ -178,6 +179,7 @@ public class Member {
 
     /**
      * 管理权限 1/成员 2/管理员 3/群主
+     *
      * @return 权限id
      */
     public int getAuthority() {
@@ -197,7 +199,7 @@ public class Member {
     }
 
     /**
-     * 专属头衔过期时间 -1 代表不过期
+     * 专属头衔过期时间 null 代表不过期
      *
      * @return 过期时间
      */
@@ -243,7 +245,8 @@ public class Member {
         member.setAuthority(pack.getInt());
         member.setBad(pack.getInt() == 1);
         member.setTitle(pack.getLenStr());
-        member.setTitleExpire(new Date(pack.getInt() * 1000));
+        int expire = pack.getInt();
+        member.setTitleExpire(expire == -1 ? null : new Date(expire * 1000));
         member.setModifyCard(pack.getInt() == 1);
         return member;
     }
