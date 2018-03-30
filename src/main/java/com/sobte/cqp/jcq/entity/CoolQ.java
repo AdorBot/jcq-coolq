@@ -14,7 +14,7 @@ import java.util.List;
  * CoolQ 操作的核心类
  *
  * @author Sobte
- * @version 1.0.9
+ * @version 1.1.0
  */
 public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
 

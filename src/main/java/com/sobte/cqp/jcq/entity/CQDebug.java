@@ -15,6 +15,8 @@ import java.util.List;
  * Time: 3:34
  * Email: i@sobte.me
  * 此类用于不在酷Q模式下调试用
+ * @author Sobte
+ * @version 1.1.0
  */
 public class CQDebug extends CoolQ {
 
