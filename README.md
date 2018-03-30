@@ -139,6 +139,19 @@ JSON文件是用于存储插件信息的文本文件
    注：因为JRE不能重新加载，重新加载插件需重启酷Q，重启插件无效
 10) 触发事件开始体验自己的插件吧，喵呜~
 
+## 快速开发
+
+> 此步骤面向一定Java基础的开发者
+
+1) 待续，暂未完成....
+
+Maven 导入
+```
+   <groupId>com.sobte.cqp</groupId>
+   <artifactId>jcq-coolq</artifactId>
+   <version>1.1.0</version>
+```
+
 ## JCQ-CoolQ 常用类说明
 
 CoolQ 类     
