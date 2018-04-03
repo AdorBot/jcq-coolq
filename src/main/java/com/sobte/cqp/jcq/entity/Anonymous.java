@@ -42,6 +42,7 @@ public class Anonymous {
 
     /**
      * 代号 如“大力鬼王”
+     *
      * @return 匿名名称
      */
     public String getName() {
@@ -58,6 +59,23 @@ public class Anonymous {
 
     public void setToken(byte[] token) {
         this.token = token;
+    }
+
+    /**
+     * 数据转匿名
+     *
+     * @param bytes 数据
+     * @return 匿名
+     */
+    public static Anonymous toAnonymous(byte[] bytes) {
+        if (bytes == null || bytes.length < 12)
+            return null;
+        Pack pack = new Pack(bytes);
+        Anonymous anonymous = new Anonymous();
+        anonymous.setAid(pack.getLong());
+        anonymous.setName(pack.getLenStr());
+        anonymous.setToken(pack.getToken());
+        return anonymous;
     }
 
     @Override

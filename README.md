@@ -166,11 +166,15 @@ CoolQ 类
 | getCookies   | 获取Cookie,慎用,此接口需要严格授权 |
 | getCsrfToken   | 获取CsrfToken,即QQ网页用到的bkn/g_tk等 慎用,此接口需要严格授权 |
 | getGroupList   | 获取群列表 |
+| getGroupMemberInfo   | 获取群成员信息 |
 | getGroupMemberInfoV2   | 获取群成员信息 |
 | getGroupMemberList   | 获取群成员列表 |
 | getLoginNick   | 获取登录昵称 |
 | getLoginQQ   | 获取登录QQ |
 | getRecord   | 接收消息中的语音(record) |
+| getFont   | 转换数据到字体信息 |
+| getGroupFile   | 获取群文件信息 |
+| getAnonymous   | 获取匿名信息 |
 | getStrangerInfo   | 获取陌生人信息 |
 | addLog   | 不推荐使用本方法,请使用log开头的方法 |
 | logDebug   | 添加日志，级别：调试，颜色：灰色 |
@@ -183,11 +187,13 @@ CoolQ 类
 | logWarning| 添加日志，级别：警告，颜色：橙色|
 | sendDiscussMsg| 发送讨论组消息|
 | sendGroupMsg| 发送群消息|
+| sendLike| 发送手机赞|
 | sendLikeV2| 发送手机赞|
 | sendPrivateMsg| 发送私聊消息|
 | setDiscussLeave| 退出讨论组|
 | setFatal| 置错误提示|
 | setFriendAddRequest| 处理好友添加请求|
+| setGroupAddRequest| 处理群添加请求|
 | setGroupAddRequestV2| 处理群添加请求|
 | setGroupAdmin| 设置群管理员|
 | setGroupAnonymous| 群匿名设置|

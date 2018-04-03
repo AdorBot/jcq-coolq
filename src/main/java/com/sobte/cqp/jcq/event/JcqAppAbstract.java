@@ -24,7 +24,7 @@ public abstract class JcqAppAbstract {
     /**
      * 应用启用状态
      */
-    public boolean enable;
+    public static boolean enable;
 
     /**
      * 返回应用的ApiVer、Appid，打包后将不会调用

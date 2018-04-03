@@ -50,6 +50,7 @@ public class Font {
 
     /**
      * 粗体：1 斜体：2 下划线：4
+     *
      * @return 大小
      */
     public int getSize() {

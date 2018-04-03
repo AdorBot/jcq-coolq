@@ -307,6 +307,17 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
         return sendLikeV2(authCode, qqId, times <= 0 || times > 10 ? 1 : times);
     }
 
+    /**
+     * 发送手机赞
+     *
+     * @param qqId  目标QQ
+     * @param times 赞的次数,最多10次
+     * @return 状态码
+     */
+    public int sendLike(long qqId, int times) {
+        return sendLikeV2(authCode, qqId, times <= 0 || times > 10 ? 1 : times);
+    }
+
     private native String getCookies(int authCode);
 
     /**
@@ -472,7 +483,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
     private native String getGroupMemberInfoV2(int authCode, long groupId, long qqId, boolean notCache);
 
     /**
-     * 获取群成员信息
+     * 获取群成员信息 (v2版本)
      *
      * @param groupId  目标QQ所在群
      * @param qqId     目标QQ
@@ -480,6 +491,22 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 如果成功，返回群成员信息，失败返回null
      */
     public Member getGroupMemberInfoV2(long groupId, long qqId, boolean notCache) {
+        String info = getGroupMemberInfoV2(authCode, groupId, qqId, notCache);
+        if (StringHelper.isTrimEmpty(info))
+            return null;
+        byte[] bytes = Base64.decodeBase64(info);
+        return Member.toMember(bytes);
+    }
+
+    /**
+     * 获取群成员信息
+     *
+     * @param groupId  目标QQ所在群
+     * @param qqId     目标QQ
+     * @param notCache 不使用缓存，通常忽略本参数，仅在必要时使用
+     * @return 如果成功，返回群成员信息，失败返回null
+     */
+    public Member getGroupMemberInfo(long groupId, long qqId, boolean notCache) {
         String info = getGroupMemberInfoV2(authCode, groupId, qqId, notCache);
         if (StringHelper.isTrimEmpty(info))
             return null;
@@ -545,6 +572,19 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
         return setGroupAddRequestV2(authCode, responseFlag, requestType, backType, reason);
     }
 
+    /**
+     * 处理群添加请求
+     *
+     * @param responseFlag 请求事件收到的“responseFlag”参数
+     * @param requestType  根据请求事件的子类型区分 REQUEST_GROUP_ADD(群添加) 或 REQUEST_GROUP_INVITE(群邀请)
+     * @param backType     REQUEST_ADOPT(通过) 或 REQUEST_REFUSE(拒绝)
+     * @param reason       操作理由，仅 REQUEST_GROUP_ADD(群添加) 且 REQUEST_REFUSE(拒绝) 时可用
+     * @return 状态码
+     */
+    public int setGroupAddRequest(String responseFlag, int requestType, int backType, String reason) {
+        return setGroupAddRequestV2(authCode, responseFlag, requestType, backType, reason);
+    }
+
     private native String getGroupMemberList(int authCode, long groupId);
 
     /**
@@ -566,6 +606,32 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      */
     public List<Group> getGroupList() {
         return toGroupList(getGroupList(authCode));
+    }
+
+    /**
+     * 获取匿名信息
+     *
+     * @param source 源数据
+     * @return 如果成功，返回匿名信息
+     */
+    public Anonymous getAnonymous(String source) {
+        if (StringHelper.isTrimEmpty(source))
+            return null;
+        byte[] bytes = Base64.decodeBase64(source);
+        return Anonymous.toAnonymous(bytes);
+    }
+
+    /**
+     * 获取群文件信息
+     *
+     * @param source 源数据
+     * @return 如果成功，返回群文件信息
+     */
+    public GroupFile getGroupFile(String source) {
+        if (StringHelper.isTrimEmpty(source))
+            return null;
+        byte[] bytes = Base64.decodeBase64(source);
+        return GroupFile.toGroupFile(bytes);
     }
 
     /**
@@ -594,6 +660,19 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
         }
         return list;
     }
+
+    private native Font toFont(int font);
+
+    /**
+     * 转换数据到字体信息
+     *
+     * @param font 字体
+     * @return 字体信息
+     */
+    public Font getFont(int font) {
+        return toFont(font);
+    }
+
 
     /**
      * 数据转群成员
