@@ -156,6 +156,9 @@ Maven 导入
 
 ## JCQ-CoolQ 常用类说明
 
+ JCQ JavaDoc http://jcq.sobte.com/ 
+ 其中包括JCQ所有类的注释
+ 
 CoolQ 类     
 酷Q操作的核心类
 
