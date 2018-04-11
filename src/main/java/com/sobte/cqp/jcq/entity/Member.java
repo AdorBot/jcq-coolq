@@ -41,7 +41,7 @@ public class Member {
     /**
      * 加群时间
      */
-    private Date addTime;
+    private Date clear;
     /**
      * 最后发言
      */
@@ -74,7 +74,7 @@ public class Member {
     public Member() {
     }
 
-    public Member(long groupId, long qqId, String nick, String card, int gender, int age, String area, Date addTime, Date lastTime, String levelName, int authority, String title, Date titleExpire, boolean bad, boolean modifyCard) {
+    public Member(long groupId, long qqId, String nick, String card, int gender, int age, String area, Date clear, Date lastTime, String levelName, int authority, String title, Date titleExpire, boolean bad, boolean modifyCard) {
         this.groupId = groupId;
         this.qqId = qqId;
         this.nick = nick;
@@ -82,7 +82,7 @@ public class Member {
         this.gender = gender;
         this.age = age;
         this.area = area;
-        this.addTime = addTime;
+        this.clear = clear;
         this.lastTime = lastTime;
         this.levelName = levelName;
         Authority = authority;
@@ -154,11 +154,11 @@ public class Member {
     }
 
     public Date getAddTime() {
-        return addTime;
+        return clear;
     }
 
-    public void setAddTime(Date addTime) {
-        this.addTime = addTime;
+    public void setAddTime(Date clear) {
+        this.clear = clear;
     }
 
     public Date getLastTime() {
@@ -261,7 +261,7 @@ public class Member {
                 ", gender=" + gender +
                 ", age=" + age +
                 ", area='" + area + '\'' +
-                ", addTime=" + addTime +
+                ", clear=" + clear +
                 ", lastTime=" + lastTime +
                 ", levelName='" + levelName + '\'' +
                 ", Authority=" + Authority +

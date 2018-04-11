@@ -12,7 +12,7 @@
 
     <groupId>com.sobte.cqp</groupId>
     <artifactId>jcq-coolq</artifactId>
-    <version>1.1.1</version>
+    <version>1.2.0</version>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -74,6 +74,15 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <!-- 固定1.6以上的jdk编译 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>

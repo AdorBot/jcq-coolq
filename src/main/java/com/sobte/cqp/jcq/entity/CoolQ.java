@@ -84,11 +84,11 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 应用目录, 返回的路径末尾带"\"
      */
     public String getAppDirectory() {
-        if (StringHelper.isTrimEmpty(appDirectory)) {
+        if (StringHelper.isEmpty(appDirectory)) {
             appDirectory = getAppDirectory(authCode);
         }
         File file = new File(appDirectory);
-        if (file.exists() && file.isDirectory())
+        if (!file.exists())
             file.mkdirs();
         return appDirectory;
     }
@@ -474,7 +474,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int setGroupSpecialTitle(long groupId, long qqId, String title, long expireTime) {
-        if (StringHelper.isTrimEmpty(title)) {
+        if (StringHelper.isEmpty(title)) {
             title = "";
         }
         return setGroupSpecialTitle(authCode, groupId, qqId, title, expireTime);
@@ -492,7 +492,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      */
     public Member getGroupMemberInfoV2(long groupId, long qqId, boolean notCache) {
         String info = getGroupMemberInfoV2(authCode, groupId, qqId, notCache);
-        if (StringHelper.isTrimEmpty(info))
+        if (StringHelper.isEmpty(info))
             return null;
         byte[] bytes = Base64.decodeBase64(info);
         return Member.toMember(bytes);
@@ -508,7 +508,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      */
     public Member getGroupMemberInfo(long groupId, long qqId, boolean notCache) {
         String info = getGroupMemberInfoV2(authCode, groupId, qqId, notCache);
-        if (StringHelper.isTrimEmpty(info))
+        if (StringHelper.isEmpty(info))
             return null;
         byte[] bytes = Base64.decodeBase64(info);
         return Member.toMember(bytes);
@@ -525,7 +525,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      */
     public QQInfo getStrangerInfo(long qqId, boolean notCache) {
         String info = getStrangerInfo(authCode, qqId, notCache);
-        if (StringHelper.isTrimEmpty(info))
+        if (StringHelper.isEmpty(info))
             return null;
         byte[] bytes = Base64.decodeBase64(info);
         return QQInfo.toQQInfo(bytes);
@@ -615,7 +615,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 如果成功，返回匿名信息
      */
     public Anonymous getAnonymous(String source) {
-        if (StringHelper.isTrimEmpty(source))
+        if (StringHelper.isEmpty(source))
             return null;
         byte[] bytes = Base64.decodeBase64(source);
         return Anonymous.toAnonymous(bytes);
@@ -628,7 +628,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 如果成功，返回群文件信息
      */
     public GroupFile getGroupFile(String source) {
-        if (StringHelper.isTrimEmpty(source))
+        if (StringHelper.isEmpty(source))
             return null;
         byte[] bytes = Base64.decodeBase64(source);
         return GroupFile.toGroupFile(bytes);
@@ -642,7 +642,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      */
     private List<Group> toGroupList(String info) {
         List<Group> list = new ArrayList<Group>();
-        if (StringHelper.isTrimEmpty(info))
+        if (StringHelper.isEmpty(info))
             return list;
         byte[] groupInfo = Base64.decodeBase64(info);
         if (groupInfo == null || groupInfo.length < 4)
@@ -682,7 +682,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      */
     private List<Member> toMemberList(String info) {
         List<Member> list = new ArrayList<Member>();
-        if (StringHelper.isTrimEmpty(info))
+        if (StringHelper.isEmpty(info))
             return list;
         byte[] memberInfo = Base64.decodeBase64(info);
         if (memberInfo == null || memberInfo.length < 4)

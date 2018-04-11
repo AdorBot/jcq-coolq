@@ -41,7 +41,7 @@ public class CQDebug extends CoolQ {
      */
     @Override
     public String getAppDirectory() {
-        if (StringHelper.isTrimEmpty(appDirectory)) {
+        if (StringHelper.isEmpty(appDirectory)) {
             appDirectory = new File("").getAbsolutePath() + File.separator;
         }
         addLogs(LOG_INFO, "取应用目录", String.format("返回：%s", appDirectory));

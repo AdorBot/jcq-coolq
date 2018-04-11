@@ -2,6 +2,9 @@ package com.sobte.cqp.jcq.entity;
 
 import com.sobte.cqp.jcq.util.StringHelper;
 
+import java.io.File;
+import java.util.Date;
+
 /**
  * Created by Sobte on 2018/3/27.<br>
  * Time: 2018/3/27 18:45<br>
@@ -45,6 +48,16 @@ public class CQCode {
     }
 
     /**
+     * 解析CQ码
+     *
+     * @param code 要解析CQ码
+     * @return 解析完成的CQ码
+     */
+    public CoolQCode analysis(String code) {
+        return new CoolQCode(code);
+    }
+
+    /**
      * 表情QQ表情(face)
      *
      * @param faceId 表情ID
@@ -55,6 +68,17 @@ public class CQCode {
     }
 
     /**
+     * 从CQ码中获取QQ表情ID，错误返回 -1
+     *
+     * @param code CQ码
+     * @return 表情ID
+     */
+    public int getFaceId(String code) {
+        String faceId = new CoolQCode(code).get("face", "id");
+        return faceId == null ? -1 : Integer.parseInt(faceId);
+    }
+
+    /**
      * emoji表情(emoji)
      *
      * @param emojiId emoji的unicode编号
@@ -62,6 +86,17 @@ public class CQCode {
      */
     public String emoji(int emojiId) {
         return StringHelper.stringConcat("[CQ:emoji,id=", emojiId, "]");
+    }
+
+    /**
+     * 从CQ码中获取emoji表情ID，错误返回 -1
+     *
+     * @param code CQ码
+     * @return emoji的unicode编号
+     */
+    public int getEmoji(String code) {
+        String emoji = new CoolQCode(code).get("emoji", "id");
+        return emoji == null ? -1 : Integer.parseInt(emoji);
     }
 
     /**
@@ -89,12 +124,33 @@ public class CQCode {
     }
 
     /**
+     * 从CQ码中获取at的QQ号，-1 为全体，错误为 -1000
+     *
+     * @param code CQ码
+     * @return qq号，-1 为全体，错误为 -1000
+     */
+    public long getAt(String code) {
+        String qqId = new CoolQCode(code).get("at", "qq");
+        return qqId == null ? -1000 : Long.parseLong(qqId);
+    }
+
+    /**
      * 窗口抖动(shake) - 仅支持好友
      *
      * @return CQ码
      */
     public String shake() {
         return "[CQ:shake]";
+    }
+
+    /**
+     * 判断CQ码中是否包含 窗口抖动(shake)
+     *
+     * @param code CQ码
+     * @return 是否包含
+     */
+    public boolean isShake(String code) {
+        return code.contains("[CQ:shake]");
     }
 
     /**
@@ -116,7 +172,7 @@ public class CQCode {
      * @return CQ码
      */
     public String music(long musicId, String type, boolean style) {
-        return StringHelper.stringConcat("[CQ:music,id=", musicId, ",type=", StringHelper.isTrimEmpty(type) ? "qq" : encode(type, true), style ? ",style=1" : "", "]");
+        return StringHelper.stringConcat("[CQ:music,id=", musicId, ",type=", StringHelper.isEmpty(type) ? "qq" : encode(type, true), style ? ",style=1" : "", "]");
     }
 
     /**
@@ -134,11 +190,11 @@ public class CQCode {
         sb.append("[CQ:music,type=custom");
         sb.append(",url=").append(encode(url, true));
         sb.append(",audio=").append(encode(audio, true));
-        if (!StringHelper.isTrimEmpty(title))
+        if (!StringHelper.isEmpty(title))
             sb.append(",title=").append(encode(title, true));
-        if (!StringHelper.isTrimEmpty(content))
+        if (!StringHelper.isEmpty(content))
             sb.append(",content=").append(encode(content, true));
-        if (!StringHelper.isTrimEmpty(image))
+        if (!StringHelper.isEmpty(image))
             sb.append(",image=").append(encode(image, true));
         sb.append("]");
         return sb.toString();
@@ -168,11 +224,11 @@ public class CQCode {
         StringBuilder sb = new StringBuilder();
         sb.append("[CQ:share");
         sb.append(",url=").append(encode(url, true));
-        if (!StringHelper.isTrimEmpty(title))
+        if (!StringHelper.isEmpty(title))
             sb.append(",title=").append(encode(title, true));
-        if (!StringHelper.isTrimEmpty(content))
+        if (!StringHelper.isEmpty(content))
             sb.append(",content=").append(encode(content, true));
-        if (!StringHelper.isTrimEmpty(image))
+        if (!StringHelper.isEmpty(image))
             sb.append(",image=").append(encode(image, true));
         sb.append("]");
         return sb.toString();
@@ -211,6 +267,41 @@ public class CQCode {
     }
 
     /**
+     * 从CQ码中获取图片的路径，如 [CQ:image,file=1.jpg] 则返回 1.jpg
+     *
+     * @param code CQ码
+     * @return 图片路径，如 [CQ:image,file=1.jpg] 则返回 1.jpg，错误返回 {@code null}
+     */
+    public String getImage(String code) {
+        return new CoolQCode(code).get("image", "file");
+    }
+
+    /**
+     * 从CQ码中获取图片的 CQImage 对象
+     *
+     * @param code CQ码
+     * @return CQImage 对象，错误返回 {@code null}
+     */
+    public CQImage getCQImage(String code) {
+        try {
+            // 获取相对路径
+            String path = StringHelper.stringConcat("data", File.separator, "image", File.separator, new CoolQCode(code).get("image", "file"), ".cqimg");
+            IniFile iniFile = new IniFile(new File(path));
+            CQImage cqImage = new CQImage();
+            cqImage.setMd5(iniFile.getProfileString("image", "md5"));
+            cqImage.setWidth(Integer.parseInt(iniFile.getProfileString("image", "width")));
+            cqImage.setHeight(Integer.parseInt(iniFile.getProfileString("image", "height")));
+            cqImage.setSize(Integer.parseInt(iniFile.getProfileString("image", "size")));
+            cqImage.setUrl(iniFile.getProfileString("image", "url"));
+            long time = Long.parseLong(iniFile.getProfileString("image", "addtime"));
+            cqImage.setAddtime(new Date(time * 1000L));
+            return cqImage;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
      * 发送语音(record)
      *
      * @param file 将语音放在 data\record 下，并填写相对路径。如 data\record\1.amr 则填写 1.amr
@@ -218,6 +309,29 @@ public class CQCode {
      */
     public String record(String file) {
         return StringHelper.stringConcat("[CQ:record,file=", encode(file, true), "]");
+    }
+
+    /**
+     * 从CQ码中获取语音的路径，如 [CQ:record,file=1.amr] 则返回 1.amr
+     *
+     * @param code CQ码
+     * @return 语音路径，如 [CQ:record,file=1.amr] 则返回 1.amr，错误返回 {@code null}
+     */
+    public String getRecord(String code) {
+        return new CoolQCode(code).get("record", "file");
+    }
+
+    /**
+     * 从CQ码中获取语音的文件对象
+     *
+     * @param code CQ码
+     * @return 语音文件对象，错误返回 {@code null}
+     */
+    public File getRecordFile(String code) {
+        String record = new CoolQCode(code).get("record", "file");
+        if (StringHelper.isTrimEmpty(record))
+            return null;
+        return new File(StringHelper.stringConcat("data", File.separator, "record", File.separator, record));
     }
 
 }

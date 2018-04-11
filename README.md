@@ -46,6 +46,7 @@ JavaVM 相关
 | key        | value                                 |
 | --------   | :------------------------------------|
 | JrePath    | 自定义JRE路径配置 (默认从注册表读JRE目录) |
+| ClassPath  | 设置JVM启动加载类路径                   |
 | MinSize    | JVM堆内存最小设置                       |
 | MaxSize    | JVM堆内存最大设置                       |
 | MinPermSize| JVM非堆内存最小设置                     |
@@ -159,7 +160,7 @@ Maven 导入
  JCQ JavaDoc http://jcq.sobte.com/ 
  其中包括JCQ所有类的注释
  
-CoolQ 类     
+[CoolQ](http://jcq.sobte.com/com/sobte/cqp/jcq/entity/CoolQ.html) 类     
 酷Q操作的核心类
 
 | 方法         | 说明                                |
@@ -208,23 +209,32 @@ CoolQ 类
 | setGroupSpecialTitle| 设置群成员专属头衔,需群主权限|
 | setGroupWholeBan| 全群禁言|
 
-CQCode 类    
+[CQCode](http://jcq.sobte.com/com/sobte/cqp/jcq/entity/CQCode.html) 类    
 [CQ码](https://d.cqp.me/Pro/CQ%E7%A0%81) ，用于辅助开发加快开发效率，以下方法均返回 [CQ码](https://d.cqp.me/Pro/CQ%E7%A0%81) 文本
 
 | 方法         | 说明                                |
-| --------    | :------------------------------------|
-| decode      | 特殊字符，反转义 |
-| encode      | 特殊字符，转义，避免冲突 |
-| anonymous   | 匿名发消息(anonymous) - 仅支持群 |
-| at          | 提醒某人，@某人(at) |
-| contact     | 发送名片分享(contact) |
-| emoji       | emoji表情(emoji) |
-| face       | 表情QQ表情(face) |
-| image       | 发送图片(image),需Pro版 |
-| location    | 发送位置分享(location) |
-| music       | 发送音乐(music) |
-| record      | 发送语音(record) |
-| shake       | 窗口抖动(shake) - 仅支持好友 |
-| share       | 发送链接分享(share) |
+| -------------| :------------------------------------|
+| decode       | 特殊字符，反转义 |
+| encode       | 特殊字符，转义，避免冲突 |
+| anonymous    | 匿名发消息(anonymous) - 仅支持群 |
+| analysis     | 解析CQ码 |
+| getFaceId    | 从CQ码中获取QQ表情ID，错误返回 -1 |
+| at           | 提醒某人，@某人(at) |
+| getAt        | 从CQ码中获取at的QQ号，-1 为全体，错误为 -1000 |
+| contact      | 发送名片分享(contact) |
+| emoji        | emoji表情(emoji) |
+| getEmoji     | 从CQ码中获取emoji表情ID，错误返回 -1 |
+| face         | 表情QQ表情(face) |
+| image        | 发送图片(image),需Pro版 |
+| getImage     | 从CQ码中获取图片的路径，如 [CQ:image,file=1.jpg] 则返回 1.jpg |
+| getCQImage   | 从CQ码中获取图片的 CQImage 对象 |
+| location     | 发送位置分享(location) |
+| music        | 发送音乐(music) |
+| record       | 发送语音(record) |
+| getRecord    | 从CQ码中获取语音的路径，如 [CQ:record,file=1.amr] 则返回 1.amr |
+| getRecordFile| 从CQ码中获取语音的文件对象 |
+| shake        | 窗口抖动(shake) - 仅支持好友 |
+| isShake      | 判断CQ码中是否包含 窗口抖动(shake) |
+| share        | 发送链接分享(share) |
 
 ## 支持赞助作者
