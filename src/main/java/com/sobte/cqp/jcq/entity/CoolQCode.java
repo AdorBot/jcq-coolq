@@ -43,22 +43,22 @@ public class CoolQCode {
     public void analysis(String code) {
         if (StringHelper.isTrimEmpty(code))
             return;
-        char[] chars = code.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            switch (chars[i]) {
+        int length = code.length();
+        for (int i = 0; i < length; i++) {
+            switch (code.charAt(i)) {
                 case '[':
                     int idx = code.indexOf(']', i);
                     if (idx == -1) {
-                        i = chars.length;// 设置为超出，则退出循环
+                        i = length;// 设置为超出，则退出循环
                         continue;
                     }
-                    if (!new String(chars, i + 1, 3).equals("CQ:"))// 排除不是CQ码的文本
-                        continue;
-                    i = i + 4;// 加4是为了指CQ:后面
-                    int endidx = code.indexOf(',', i);
-                    if (endidx == -1)
-                        endidx = idx;
-                    analysisKeyValue(code.substring(i, endidx), code.substring(endidx, idx));
+                    if (code.charAt(++i) == 'C' && code.charAt(++i) == 'Q' && code.charAt(++i) == ':') {
+                        int endidx = code.indexOf(',', ++i);
+                        if (endidx == -1 || endidx > idx)
+                            endidx = idx;
+                        analysisKeyValue(code.substring(i, endidx), code.substring(endidx, idx));
+                        i = idx;
+                    }
                     break;
             }
         }
@@ -72,18 +72,18 @@ public class CoolQCode {
      */
     public void analysisKeyValue(String action, String code) {
         ActionCode ac = new ActionCode();
-        ac.setAction(CQCode.decode(action));
-        char[] chars = code.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            switch (chars[i]) {
+        ac.setAction(action);
+        int length = code.length();
+        for (int i = 0; i < length; i++) {
+            switch (code.charAt(i)) {
                 case '=':
                     int idx = code.lastIndexOf(',', i) + 1;
                     String key = code.substring(idx, i);
                     idx = code.indexOf(',', i);
                     if (idx == -1)
-                        idx = chars.length;
+                        idx = length;
                     String value = code.substring(i + 1, idx);// 加1排除 '='
-                    ac.put(CQCode.decode(key), CQCode.decode(value));
+                    ac.put(key, value);
                     i = idx;
                     break;
             }

@@ -3,7 +3,9 @@ package com.sobte.cqp.jcq.entity;
 import com.sobte.cqp.jcq.util.StringHelper;
 
 import java.io.File;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by Sobte on 2018/3/27.<br>
@@ -286,16 +288,29 @@ public class CQCode {
         try {
             // 获取相对路径
             String path = StringHelper.stringConcat("data", File.separator, "image", File.separator, new CoolQCode(code).get("image", "file"), ".cqimg");
-            IniFile iniFile = new IniFile(new File(path));
-            CQImage cqImage = new CQImage();
-            cqImage.setMd5(iniFile.getProfileString("image", "md5"));
-            cqImage.setWidth(Integer.parseInt(iniFile.getProfileString("image", "width")));
-            cqImage.setHeight(Integer.parseInt(iniFile.getProfileString("image", "height")));
-            cqImage.setSize(Integer.parseInt(iniFile.getProfileString("image", "size")));
-            cqImage.setUrl(iniFile.getProfileString("image", "url"));
-            long time = Long.parseLong(iniFile.getProfileString("image", "addtime"));
-            cqImage.setAddtime(new Date(time * 1000L));
-            return cqImage;
+            return new CQImage(new IniFile(new File(path)));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 从CQ码中获取图片的 所有 的 CQImage 对象
+     *
+     * @param code CQ码
+     * @return CQImage 对象集合
+     */
+    public List<CQImage> getCQImages(String code) {
+        try {
+            CoolQCode qCode = new CoolQCode(code);
+            Iterator<ActionCode> iterator = qCode.iterator();
+            List<CQImage> list = new ArrayList<CQImage>();
+            while (iterator.hasNext()) {
+                ActionCode actionCode = iterator.next();
+                String path = StringHelper.stringConcat("data", File.separator, "image", File.separator, actionCode.get("file"), ".cqimg");
+                list.add(new CQImage(new IniFile(new File(path))));
+            }
+            return list;
         } catch (Exception e) {
             return null;
         }

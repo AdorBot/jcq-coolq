@@ -25,6 +25,11 @@ public class ActionCode {
      */
     private ConcurrentSkipListMap<String, String> map = new ConcurrentSkipListMap<String, String>();
 
+    /**
+     * 第一次访问
+     */
+    private boolean first;
+
     public ActionCode() {
 
     }
@@ -102,7 +107,7 @@ public class ActionCode {
      * @return 值
      */
     public String get(String key) {
-        return map.get(key);
+        return getValue(key);
     }
 
     /**
@@ -115,8 +120,23 @@ public class ActionCode {
         Iterator<String> keys = map.keySet().iterator();
         for (int i = 0; keys.hasNext(); i++)
             if (i == index)
-                return map.get(keys.next());
+                return getValue(keys.next());
         return null;
+    }
+
+    /**
+     * 获取值 第一次加载时解码酷Q
+     *
+     * @return 值
+     */
+    private String getValue(String key) {
+        if (!first) {
+            for (String k : map.keySet()) {
+                map.put(k, CQCode.decode(map.get(k)));
+            }
+            first = true;
+        }
+        return map.get(key);
     }
 
     /**

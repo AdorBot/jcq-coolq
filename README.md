@@ -228,6 +228,7 @@ Maven 导入
 | image        | 发送图片(image),需Pro版 |
 | getImage     | 从CQ码中获取图片的路径，如 [CQ:image,file=1.jpg] 则返回 1.jpg |
 | getCQImage   | 从CQ码中获取图片的 CQImage 对象 |
+| getCQImages  | 从CQ码中获取图片的 所有 CQImage 对象 |
 | location     | 发送位置分享(location) |
 | music        | 发送音乐(music) |
 | record       | 发送语音(record) |

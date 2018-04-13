@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Sobte on 2018/4/11.<br>
@@ -32,6 +33,16 @@ public class CQImage {
         this.size = size;
         this.url = url;
         this.addTime = addTime;
+    }
+
+    public CQImage(IniFile iniFile) {
+        this.md5 = iniFile.getProfileString("image", "md5");
+        this.width = Integer.parseInt(iniFile.getProfileString("image", "width"));
+        this.height = Integer.parseInt(iniFile.getProfileString("image", "height"));
+        this.size = Integer.parseInt(iniFile.getProfileString("image", "size"));
+        this.url = iniFile.getProfileString("image", "url");
+        long time = Long.parseLong(iniFile.getProfileString("image", "addtime"));
+        this.addTime = new Date(time * 1000L);
     }
 
     /**
@@ -111,6 +122,10 @@ public class CQImage {
 
     public void setAddtime(Date addTime) {
         this.addTime = addTime;
+    }
+
+    public List<CQImage> toCQImage() {
+        return null;
     }
 
     @Override

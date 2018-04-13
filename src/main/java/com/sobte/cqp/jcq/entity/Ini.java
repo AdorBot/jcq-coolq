@@ -44,15 +44,15 @@ public class Ini {
      */
     public void analysis(String exp) {
         // 获取单字符换行符
-        char[] chars = exp.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            switch (chars[i]) {
+        int length = exp.length();
+        for (int i = 0; i < length; i++) {
+            switch (exp.charAt(i)) {
                 // ini注释
                 case ';':
                 case '#':
                     i = exp.indexOf(lineSeparator, i);
                     if (i == -1)
-                        i = chars.length;// 直接设置为超出，相当于退出循环
+                        i = length;// 直接设置为超出，相当于退出循环
                     break;
                 // ini段落
                 case '[':
@@ -60,16 +60,16 @@ public class Ini {
                     if (idx != -1) {
                         int endIdx = exp.indexOf('[', idx);
                         if (endIdx == -1)
-                            endIdx = chars.length;
+                            endIdx = length;
                         analysisKeyValue(exp.substring(++i, idx), exp.substring(++idx, --endIdx));// key加一排除开头 '[' , endIdx减一排除末尾 '['  , idx加一排除开头 ']'
                         i = endIdx;
                     } else {
-                        i = chars.length;// 直接设置为超出，相当于退出循环
+                        i = length;// 直接设置为超出，相当于退出循环
                     }
                     break;
                 case '=':
                     analysisKeyValue("", exp);
-                    i = chars.length;// 直接设置为超出，相当于退出循环
+                    i = length;// 直接设置为超出，相当于退出循环
                     break;
                 // 过滤无效段落
                 default:
@@ -288,15 +288,15 @@ public class Ini {
         ConcurrentHashMap<String, List<String>> expMap = map.get(expKey);
         if (expMap == null)
             expMap = new ConcurrentHashMap<String, List<String>>();
-        char[] chars = exp.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            switch (chars[i]) {
+        int length = exp.length();
+        for (int i = 0; i < length; i++) {
+            switch (exp.charAt(i)) {
                 // ini注释
                 case ';':
                 case '#':
                     i = exp.indexOf(lineSeparator, i);
                     if (i == -1)
-                        i = chars.length;// 直接设置为超出，相当于退出循环
+                        i = length;// 直接设置为超出，相当于退出循环
                     break;
                 case '=':
                     int idx = exp.lastIndexOf(lineSeparator, i);
@@ -305,7 +305,7 @@ public class Ini {
                     String key = exp.substring(idx, i).trim();
                     idx = exp.indexOf(lineSeparator, i);
                     if (idx == -1)
-                        idx = chars.length - 1;
+                        idx = length - 1;
                     String value = StringHelper.trimEnterRight(exp.substring(i + 1, idx));
                     // 去除value末尾换行
                     List<String> values = expMap.get(key);
