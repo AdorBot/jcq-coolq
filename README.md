@@ -152,7 +152,7 @@ Maven 导入
 ```
    <groupId>com.sobte.cqp</groupId>
    <artifactId>jcq-coolq</artifactId>
-   <version>1.2.0</version>
+   <version>1.2.1</version>
 ```
 
 ## JCQ-CoolQ 常用类说明
