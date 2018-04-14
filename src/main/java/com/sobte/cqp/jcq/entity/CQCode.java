@@ -3,8 +3,8 @@ package com.sobte.cqp.jcq.entity;
 import com.sobte.cqp.jcq.util.StringHelper;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -134,6 +134,24 @@ public class CQCode {
     public long getAt(String code) {
         String qqId = new CoolQCode(code).get("at", "qq");
         return qqId == null ? -1000 : Long.parseLong(qqId);
+    }
+
+    /**
+     * 从CQ码中获取所有at的QQ号，-1 为全体
+     *
+     * @param code CQ码
+     * @return qq号集合，-1 为全体
+     */
+    public List<Long> getAts(String code) {
+        CoolQCode qCode = new CoolQCode(code);
+        List<ActionCode> list = qCode.gets("at");
+        List<Long> longs = new ArrayList<Long>();
+        for (ActionCode actionCode : list) {
+            String qqId = actionCode.get("qq");
+            if (qqId != null)
+                longs.add(Long.parseLong(qqId));
+        }
+        return longs;
     }
 
     /**
@@ -295,25 +313,25 @@ public class CQCode {
     }
 
     /**
-     * 从CQ码中获取图片的 所有 的 CQImage 对象
+     * 从CQ码中获取 所有 CQImage 对象
      *
      * @param code CQ码
      * @return CQImage 对象集合
      */
-    public List<CQImage> getCQImages(String code) {
-        try {
-            CoolQCode qCode = new CoolQCode(code);
-            Iterator<ActionCode> iterator = qCode.iterator();
-            List<CQImage> list = new ArrayList<CQImage>();
-            while (iterator.hasNext()) {
-                ActionCode actionCode = iterator.next();
+    public List<CQImage> getCQImages(String code) throws IOException {
+        List<CQImage> list = new ArrayList<CQImage>();
+        CoolQCode qCode = new CoolQCode(code);
+        List<ActionCode> actionCodeList = qCode.gets("image");
+        for (ActionCode actionCode : actionCodeList) {
+            String file = actionCode.get("file");
+            if (file != null) {
                 String path = StringHelper.stringConcat("data", File.separator, "image", File.separator, actionCode.get("file"), ".cqimg");
-                list.add(new CQImage(new IniFile(new File(path))));
+                File iniFile = new File(path);
+                if (iniFile.exists() && iniFile.canRead())
+                    list.add(new CQImage(new IniFile(iniFile)));
             }
-            return list;
-        } catch (Exception e) {
-            return null;
         }
+        return list;
     }
 
     /**

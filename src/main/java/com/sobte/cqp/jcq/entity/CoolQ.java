@@ -378,7 +378,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int setGroupBan(long groupId, long qqId, long banTime) {
-        return setGroupBan(groupId, qqId, banTime);
+        return setGroupBan(authCode, groupId, qqId, banTime);
     }
 
     private native int setGroupAdmin(int authCode, long groupId, long qqId, boolean isAdmin);
@@ -496,6 +496,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
             return null;
         byte[] bytes = Base64.decodeBase64(info);
         return Member.toMember(bytes);
+
     }
 
     /**

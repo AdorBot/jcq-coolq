@@ -152,7 +152,7 @@ Maven 导入
 ```
    <groupId>com.sobte.cqp</groupId>
    <artifactId>jcq-coolq</artifactId>
-   <version>1.2.1</version>
+   <version>1.2.2</version>
 ```
 
 ## JCQ-CoolQ 常用类说明
@@ -221,6 +221,7 @@ Maven 导入
 | getFaceId    | 从CQ码中获取QQ表情ID，错误返回 -1 |
 | at           | 提醒某人，@某人(at) |
 | getAt        | 从CQ码中获取at的QQ号，-1 为全体，错误为 -1000 |
+| getAts       | 从CQ码中获取所有at的QQ号 |
 | contact      | 发送名片分享(contact) |
 | emoji        | emoji表情(emoji) |
 | getEmoji     | 从CQ码中获取emoji表情ID，错误返回 -1 |
@@ -228,7 +229,7 @@ Maven 导入
 | image        | 发送图片(image),需Pro版 |
 | getImage     | 从CQ码中获取图片的路径，如 [CQ:image,file=1.jpg] 则返回 1.jpg |
 | getCQImage   | 从CQ码中获取图片的 CQImage 对象 |
-| getCQImages  | 从CQ码中获取图片的 所有 CQImage 对象 |
+| getCQImages  | 从CQ码中获取所有 CQImage 对象 |
 | location     | 发送位置分享(location) |
 | music        | 发送音乐(music) |
 | record       | 发送语音(record) |

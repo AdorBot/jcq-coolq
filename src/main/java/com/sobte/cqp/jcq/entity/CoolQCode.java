@@ -114,6 +114,36 @@ public class CoolQCode {
     }
 
     /**
+     * 获取指定功能名称的 所有CQ功能<br>
+     * 遇到相同功能名称，则返回 符合的所有CQ功能
+     *
+     * @param key 功能名称
+     * @return CQ功能
+     */
+    public List<ActionCode> gets(String key) {
+        List<ActionCode> list = new ArrayList<ActionCode>();
+        for (ActionCode ac : this.list)
+            if (ac.getAction().equals(key))
+                list.add(ac);
+        return list;
+    }
+
+    /**
+     * 获取指定功能名称的 所有CQ功能<br>
+     * 遇到相同功能名称，则返回 符合的所有CQ功能
+     *
+     * @param actionCode CQ功能
+     * @return CQ功能
+     */
+    public List<ActionCode> gets(ActionCode actionCode) {
+        List<ActionCode> list = new ArrayList<ActionCode>();
+        for (ActionCode ac : this.list)
+            if (ac.equals(actionCode))
+                list.add(ac);
+        return list;
+    }
+
+    /**
      * 获取指定功能名称的 CQ功能<br>
      * 遇到相同功能名称，则返回最先找到的 CQ功能
      *
