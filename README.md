@@ -28,7 +28,7 @@
 | lib/       | 全局lib目录，需手动创建               |
 
 小提示
-> jar插件同名文件夹下创建lib，可以使用独立lib    
+> jar插件同名文件夹下创建lib，可以使用独立lib（可在json中修改此位置）
 > 优先级：独立lib > 全局lib > JCQ自带lib      
 > 每个插件都是独立的，互不影响，各插件加载类时优先级越高的最先加载  
 > 全局lib 和 独立lib 根据需求使用 注意类加载优先级
@@ -82,6 +82,7 @@ JSON文件是用于存储插件信息的文本文件
     "version"    : "1.0.0",    // 应用文本版本号 例：1.0.0
     "version_id" : 1,        // 应用顺序版本（每次发布时至少+1）
     "author"     : "author",    // 应用作者
+    //"path"       : "lib",    // 应用lib加载处，默认插件同名文件夹目录下lib文件夹，此目录可以填相对路径和绝对路径，相对：同名文件夹
     //"class"      : "com.example.Demo", // 应用加载主类，注意必须填写全类名，默认使用appid加载，如需使用则删除前面注释
     "description": "", // 应用描述
     "event"      : [],  //  事件列表，同一事件类型可重复定义（发布前请删除无用事件）
@@ -208,6 +209,7 @@ Maven 导入
 | setGroupLeave| 退出QQ群,慎用,此接口需要严格授权|
 | setGroupSpecialTitle| 设置群成员专属头衔,需群主权限|
 | setGroupWholeBan| 全群禁言|
+| getLastStatus| 获取最后状态|
 
 [CQCode](http://jcq.sobte.com/com/sobte/cqp/jcq/entity/CQCode.html) 类    
 [CQ码](https://d.cqp.me/Pro/CQ%E7%A0%81) ，用于辅助开发加快开发效率，以下方法均返回 [CQ码](https://d.cqp.me/Pro/CQ%E7%A0%81) 文本
@@ -219,12 +221,14 @@ Maven 导入
 | anonymous    | 匿名发消息(anonymous) - 仅支持群 |
 | analysis     | 解析CQ码 |
 | getFaceId    | 从CQ码中获取QQ表情ID，错误返回 -1 |
+| getFaceIds   | 从CQ码中获取所有QQ表情ID |
 | at           | 提醒某人，@某人(at) |
 | getAt        | 从CQ码中获取at的QQ号，-1 为全体，错误为 -1000 |
 | getAts       | 从CQ码中获取所有at的QQ号 |
 | contact      | 发送名片分享(contact) |
 | emoji        | emoji表情(emoji) |
 | getEmoji     | 从CQ码中获取emoji表情ID，错误返回 -1 |
+| getEmojis    | 从CQ码中获取所有emoji表情ID |
 | face         | 表情QQ表情(face) |
 | image        | 发送图片(image),需Pro版 |
 | getImage     | 从CQ码中获取图片的路径，如 [CQ:image,file=1.jpg] 则返回 1.jpg |

@@ -61,7 +61,9 @@ public class Ini {
                         int endIdx = exp.indexOf('[', idx);
                         if (endIdx == -1)
                             endIdx = length;
-                        analysisKeyValue(exp.substring(++i, idx), exp.substring(++idx, --endIdx));// key加一排除开头 '[' , endIdx减一排除末尾 '['  , idx加一排除开头 ']'
+                        else
+                            endIdx--;
+                        analysisKeyValue(exp.substring(++i, idx), endIdx < ++idx ? "" : exp.substring(idx, endIdx));// key加一排除开头 '[' , endIdx减一排除末尾 '['  , idx加一排除开头 ']'
                         i = endIdx;
                     } else {
                         i = length;// 直接设置为超出，相当于退出循环
@@ -136,8 +138,9 @@ public class Ini {
      * @param AppName 节名称
      * @param KeyName 配置项名
      * @param Value   配置项值
+     * @return 当前对象
      */
-    public void setProfileString(String AppName, String KeyName, String Value) {
+    public Ini setProfileString(String AppName, String KeyName, String Value) {
         ConcurrentHashMap<String, List<String>> expMap = map.get(AppName);
         if (expMap == null)
             expMap = new ConcurrentHashMap<String, List<String>>();
@@ -153,6 +156,7 @@ public class Ini {
         }
         expMap.put(KeyName, values);
         map.put(AppName, expMap);
+        return this;
     }
 
     /**
@@ -161,8 +165,9 @@ public class Ini {
      * @param AppName 节名称
      * @param KeyName 配置项名
      * @param Value   配置项值
+     * @return 当前对象
      */
-    public void addProfileString(String AppName, String KeyName, String Value) {
+    public Ini addProfileString(String AppName, String KeyName, String Value) {
         ConcurrentHashMap<String, List<String>> expMap = map.get(AppName);
         if (expMap == null)
             expMap = new ConcurrentHashMap<String, List<String>>();
@@ -172,6 +177,7 @@ public class Ini {
         values.add(Value);
         expMap.put(KeyName, values);
         map.put(AppName, expMap);
+        return this;
     }
 
     /**
@@ -181,8 +187,9 @@ public class Ini {
      * @param AppName 节名称
      * @param KeyName 配置项名
      * @param Value   配置项值
+     * @return 当前对象
      */
-    public void setProfileString(int index, String AppName, String KeyName, String Value) {
+    public Ini setProfileString(int index, String AppName, String KeyName, String Value) {
         ConcurrentHashMap<String, List<String>> expMap = map.get(AppName);
         if (expMap == null)
             expMap = new ConcurrentHashMap<String, List<String>>();
@@ -198,6 +205,7 @@ public class Ini {
         }
         expMap.put(KeyName, values);
         map.put(AppName, expMap);
+        return this;
     }
 
     /**
@@ -207,8 +215,9 @@ public class Ini {
      * @param AppName 节名称
      * @param KeyName 配置项名
      * @param Value   配置项值
+     * @return 当前对象
      */
-    public void addProfileString(int index, String AppName, String KeyName, String Value) {
+    public Ini addProfileString(int index, String AppName, String KeyName, String Value) {
         ConcurrentHashMap<String, List<String>> expMap = map.get(AppName);
         if (expMap == null)
             expMap = new ConcurrentHashMap<String, List<String>>();
@@ -221,6 +230,7 @@ public class Ini {
             values.add(Value);
         expMap.put(KeyName, values);
         map.put(AppName, expMap);
+        return this;
     }
 
     /**
@@ -305,8 +315,8 @@ public class Ini {
                     String key = exp.substring(idx, i).trim();
                     idx = exp.indexOf(lineSeparator, i);
                     if (idx == -1)
-                        idx = length - 1;
-                    String value = StringHelper.trimEnterRight(exp.substring(i + 1, idx));
+                        idx = length;
+                    String value = ++i > idx ? "" : StringHelper.trimEnterRight(exp.substring(i, idx));
                     // 去除value末尾换行
                     List<String> values = expMap.get(key);
                     if (values == null)

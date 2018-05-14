@@ -1,4 +1,4 @@
-package com.sobte.cqp.jcq.entity;
+package com.sobte.cqp.jcq.message;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
  *
  * @author Sobte
  */
-public class ActionCode {
+public class ActionCode extends ActionMsg {
 
     /**
      * 功能名称
@@ -24,11 +24,6 @@ public class ActionCode {
      * 功能键值队
      */
     private ConcurrentSkipListMap<String, String> map = new ConcurrentSkipListMap<String, String>();
-
-    /**
-     * 第一次访问
-     */
-    private boolean first;
 
     public ActionCode() {
 
@@ -186,6 +181,44 @@ public class ActionCode {
      */
     public void clear() {
         map.clear();
+    }
+
+    /**
+     * 解析文本返回CQ功能
+     *
+     * @param action 功能名称
+     * @param code   要解析的文本，功能的键值队
+     * @return CQ功能
+     */
+    public static ActionCode analysis(String action, String code) {
+        ActionCode ac = new ActionCode();
+        ac.setAction(action);
+        int length = code.length();
+        for (int i = 0; i < length; i++) {
+            switch (code.charAt(i)) {
+                case '=':
+                    int idx = code.lastIndexOf(',', i) + 1;
+                    String key = code.substring(idx, i);
+                    idx = code.indexOf(',', i);
+                    if (idx == -1)
+                        idx = length;
+                    String value = code.substring(i + 1, idx);// 加1排除 '='
+                    ac.put(key, value);
+                    i = idx;
+                    break;
+            }
+        }
+        return ac;
+    }
+
+    /**
+     * 获取消息
+     *
+     * @return 消息
+     */
+    @Override
+    public String getMsg() {
+        return toString();
     }
 
     @Override

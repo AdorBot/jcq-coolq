@@ -1,7 +1,6 @@
 package com.sobte.cqp.jcq.entity;
 
 import com.sobte.cqp.jcq.util.StringHelper;
-import org.apache.commons.codec.binary.Base64;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -15,6 +14,7 @@ import java.util.List;
  *
  * @author Sobte
  * @version 1.1.0
+ * @since 1.6
  */
 public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
 
@@ -30,6 +30,11 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * 应用名称
      */
     protected String appName;
+
+    /**
+     * 状态码
+     */
+    private int status;
 
     /**
      * 初始化
@@ -73,7 +78,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int setFatal(String errorInfo) {
-        return setFatal(authCode, errorInfo);
+        return status = setFatal(authCode, errorInfo);
     }
 
     private native String getAppDirectory(int authCode);
@@ -135,7 +140,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      */
     @Deprecated
     public int addLog(int priority, String category, String content) {
-        return addLog(authCode, priority, category, content);
+        return status = addLog(authCode, priority, category, content);
     }
 
     /**
@@ -148,7 +153,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logDebug(String category, String content) {
-        return addLog(authCode, LOG_DEBUG, category, content);
+        return status = addLog(authCode, LOG_DEBUG, category, content);
     }
 
     /**
@@ -161,7 +166,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logInfo(String category, String content) {
-        return addLog(authCode, LOG_INFO, category, content);
+        return status = addLog(authCode, LOG_INFO, category, content);
     }
 
     /**
@@ -174,7 +179,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logInfoRecv(String category, String content) {
-        return addLog(authCode, LOG_INFORECV, category, content);
+        return status = addLog(authCode, LOG_INFORECV, category, content);
     }
 
     /**
@@ -187,7 +192,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logInfoSend(String category, String content) {
-        return addLog(authCode, LOG_INFOSEND, category, content);
+        return status = addLog(authCode, LOG_INFOSEND, category, content);
     }
 
     /**
@@ -200,7 +205,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logInfoSuccess(String category, String content) {
-        return addLog(authCode, LOG_INFOSUCCESS, category, content);
+        return status = addLog(authCode, LOG_INFOSUCCESS, category, content);
     }
 
     /**
@@ -213,7 +218,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logWarning(String category, String content) {
-        return addLog(authCode, LOG_WARNING, category, content);
+        return status = addLog(authCode, LOG_WARNING, category, content);
     }
 
     /**
@@ -226,7 +231,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logError(String category, String content) {
-        return addLog(authCode, LOG_ERROR, category, content);
+        return status = addLog(authCode, LOG_ERROR, category, content);
     }
 
     /**
@@ -239,7 +244,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logFatal(String category, String content) {
-        return addLog(authCode, LOG_FATAL, category, content);
+        return status = addLog(authCode, LOG_FATAL, category, content);
     }
 
 
@@ -253,7 +258,9 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 失败返回负值, 成功返回消息ID
      */
     public int sendPrivateMsg(long qqId, String msg) {
-        return sendPrivateMsg(authCode, qqId, msg);
+        int status = sendPrivateMsg(authCode, qqId, msg);
+        this.status = status < 0 ? status : 0;
+        return status;
     }
 
     private native int sendGroupMsg(int authCode, long groupId, String msg);
@@ -266,7 +273,9 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 失败返回负值, 成功返回消息ID
      */
     public int sendGroupMsg(long groupId, String msg) {
-        return sendGroupMsg(authCode, groupId, msg);
+        int status = sendGroupMsg(authCode, groupId, msg);
+        this.status = status < 0 ? status : 0;
+        return status;
     }
 
     private native int sendDiscussMsg(int authCode, long discussionId, String msg);
@@ -279,7 +288,9 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 失败返回负值, 成功返回消息ID
      */
     public int sendDiscussMsg(long discussionId, String msg) {
-        return sendDiscussMsg(authCode, discussionId, msg);
+        int status = sendDiscussMsg(authCode, discussionId, msg);
+        this.status = status < 0 ? status : 0;
+        return status;
     }
 
     private native int deleteMsg(int authCode, long msgId);
@@ -291,7 +302,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int deleteMsg(long msgId) {
-        return deleteMsg(authCode, msgId);
+        return status = deleteMsg(authCode, msgId);
     }
 
     private native int sendLikeV2(int authCode, long qqId, int times);
@@ -304,7 +315,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int sendLikeV2(long qqId, int times) {
-        return sendLikeV2(authCode, qqId, times <= 0 || times > 10 ? 1 : times);
+        return status = sendLikeV2(authCode, qqId, times <= 0 || times > 10 ? 1 : times);
     }
 
     /**
@@ -315,7 +326,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int sendLike(long qqId, int times) {
-        return sendLikeV2(authCode, qqId, times <= 0 || times > 10 ? 1 : times);
+        return status = sendLikeV2(authCode, qqId, times <= 0 || times > 10 ? 1 : times);
     }
 
     private native String getCookies(int authCode);
@@ -364,7 +375,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int setGroupKick(long groupId, long qqId, boolean notBack) {
-        return setGroupKick(authCode, groupId, qqId, notBack);
+        return status = setGroupKick(authCode, groupId, qqId, notBack);
     }
 
     private native int setGroupBan(int authCode, long groupId, long qqId, long banTime);
@@ -378,7 +389,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int setGroupBan(long groupId, long qqId, long banTime) {
-        return setGroupBan(authCode, groupId, qqId, banTime);
+        return status = setGroupBan(authCode, groupId, qqId, banTime);
     }
 
     private native int setGroupAdmin(int authCode, long groupId, long qqId, boolean isAdmin);
@@ -392,7 +403,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int setGroupAdmin(long groupId, long qqId, boolean isAdmin) {
-        return setGroupAdmin(authCode, groupId, qqId, isAdmin);
+        return status = setGroupAdmin(authCode, groupId, qqId, isAdmin);
     }
 
     private native int setGroupWholeBan(int authCode, long groupId, boolean isBan);
@@ -405,7 +416,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int setGroupWholeBan(long groupId, boolean isBan) {
-        return setGroupWholeBan(authCode, groupId, isBan);
+        return status = setGroupWholeBan(authCode, groupId, isBan);
     }
 
     private native int setGroupAnonymousBan(int authCode, long groupId, String anonymous, long banTime);
@@ -419,7 +430,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int setGroupAnonymousBan(long groupId, String anonymous, long banTime) {
-        return setGroupAnonymousBan(authCode, groupId, anonymous, banTime);
+        return status = setGroupAnonymousBan(authCode, groupId, anonymous, banTime);
     }
 
     private native int setGroupAnonymous(int authCode, long groupId, boolean isAnonymous);
@@ -432,7 +443,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int setGroupAnonymous(long groupId, boolean isAnonymous) {
-        return setGroupAnonymous(authCode, groupId, isAnonymous);
+        return status = setGroupAnonymous(authCode, groupId, isAnonymous);
     }
 
     private native int setGroupCard(int authCode, long groupId, long qqId, String nick);
@@ -446,7 +457,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int setGroupCard(long groupId, long qqId, String nick) {
-        return setGroupCard(authCode, groupId, qqId, nick);
+        return status = setGroupCard(authCode, groupId, qqId, nick);
     }
 
     private native int setGroupLeave(int authCode, long groupId, boolean isDisband);
@@ -459,7 +470,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int setGroupLeave(long groupId, boolean isDisband) {
-        return setGroupLeave(authCode, groupId, isDisband);
+        return status = setGroupLeave(authCode, groupId, isDisband);
     }
 
     private native int setGroupSpecialTitle(int authCode, long groupId, long qqId, String title, long expireTime);
@@ -477,10 +488,10 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
         if (StringHelper.isEmpty(title)) {
             title = "";
         }
-        return setGroupSpecialTitle(authCode, groupId, qqId, title, expireTime);
+        return status = setGroupSpecialTitle(authCode, groupId, qqId, title, expireTime);
     }
 
-    private native String getGroupMemberInfoV2(int authCode, long groupId, long qqId, boolean notCache);
+    private native byte[] getGroupMemberInfoV2(int authCode, long groupId, long qqId, boolean notCache);
 
     /**
      * 获取群成员信息 (v2版本)
@@ -491,13 +502,20 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 如果成功，返回群成员信息，失败返回null
      */
     public Member getGroupMemberInfoV2(long groupId, long qqId, boolean notCache) {
-        String info = getGroupMemberInfoV2(authCode, groupId, qqId, notCache);
-        if (StringHelper.isEmpty(info))
-            return null;
-        byte[] bytes = Base64.decodeBase64(info);
-        return Member.toMember(bytes);
-
+        return Member.toMember(getGroupMemberInfoV2(authCode, groupId, qqId, notCache));
     }
+
+    /**
+     * 获取群成员信息 (v2版本)
+     *
+     * @param groupId 目标QQ所在群
+     * @param qqId    目标QQ
+     * @return 如果成功，返回群成员信息，失败返回null
+     */
+    public Member getGroupMemberInfoV2(long groupId, long qqId) {
+        return getGroupMemberInfo(groupId, qqId, false);
+    }
+
 
     /**
      * 获取群成员信息
@@ -508,14 +526,21 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 如果成功，返回群成员信息，失败返回null
      */
     public Member getGroupMemberInfo(long groupId, long qqId, boolean notCache) {
-        String info = getGroupMemberInfoV2(authCode, groupId, qqId, notCache);
-        if (StringHelper.isEmpty(info))
-            return null;
-        byte[] bytes = Base64.decodeBase64(info);
-        return Member.toMember(bytes);
+        return Member.toMember(getGroupMemberInfoV2(authCode, groupId, qqId, notCache));
     }
 
-    private native String getStrangerInfo(int authCode, long qqId, boolean notCache);
+    /**
+     * 获取群成员信息
+     *
+     * @param groupId 目标QQ所在群
+     * @param qqId    目标QQ
+     * @return 如果成功，返回群成员信息，失败返回null
+     */
+    public Member getGroupMemberInfo(long groupId, long qqId) {
+        return getGroupMemberInfo(groupId, qqId, false);
+    }
+
+    private native byte[] getStrangerInfo(int authCode, long qqId, boolean notCache);
 
     /**
      * 获取陌生人信息
@@ -525,11 +550,17 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 如果成功，返回陌生人信息
      */
     public QQInfo getStrangerInfo(long qqId, boolean notCache) {
-        String info = getStrangerInfo(authCode, qqId, notCache);
-        if (StringHelper.isEmpty(info))
-            return null;
-        byte[] bytes = Base64.decodeBase64(info);
-        return QQInfo.toQQInfo(bytes);
+        return QQInfo.toQQInfo(getStrangerInfo(authCode, qqId, notCache));
+    }
+
+    /**
+     * 获取陌生人信息
+     *
+     * @param qqId 目标QQ
+     * @return 如果成功，返回陌生人信息
+     */
+    public QQInfo getStrangerInfo(long qqId) {
+        return getStrangerInfo(qqId, false);
     }
 
     private native int setDiscussLeave(int authCode, long discussionId);
@@ -541,7 +572,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int setDiscussLeave(long discussionId) {
-        return setDiscussLeave(authCode, discussionId);
+        return status = setDiscussLeave(authCode, discussionId);
     }
 
     private native int setFriendAddRequest(int authCode, String responseFlag, int backType, String remarks);
@@ -555,7 +586,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int setFriendAddRequest(String responseFlag, int backType, String remarks) {
-        return setFriendAddRequest(authCode, responseFlag, backType, remarks);
+        return status = setFriendAddRequest(authCode, responseFlag, backType, remarks);
     }
 
     private native int setGroupAddRequestV2(int authCode, String responseFlag, int requestType, int backType, String reason);
@@ -570,7 +601,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int setGroupAddRequestV2(String responseFlag, int requestType, int backType, String reason) {
-        return setGroupAddRequestV2(authCode, responseFlag, requestType, backType, reason);
+        return status = setGroupAddRequestV2(authCode, responseFlag, requestType, backType, reason);
     }
 
     /**
@@ -583,10 +614,10 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int setGroupAddRequest(String responseFlag, int requestType, int backType, String reason) {
-        return setGroupAddRequestV2(authCode, responseFlag, requestType, backType, reason);
+        return status = setGroupAddRequestV2(authCode, responseFlag, requestType, backType, reason);
     }
 
-    private native String getGroupMemberList(int authCode, long groupId);
+    private native byte[] getGroupMemberList(int authCode, long groupId);
 
     /**
      * 获取群成员列表
@@ -598,7 +629,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
         return toMemberList(getGroupMemberList(authCode, groupId));
     }
 
-    private native String getGroupList(int authCode);
+    private native byte[] getGroupList(int authCode);
 
     /**
      * 获取群列表
@@ -615,11 +646,8 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param source 源数据
      * @return 如果成功，返回匿名信息
      */
-    public Anonymous getAnonymous(String source) {
-        if (StringHelper.isEmpty(source))
-            return null;
-        byte[] bytes = Base64.decodeBase64(source);
-        return Anonymous.toAnonymous(bytes);
+    public Anonymous getAnonymous(byte[] source) {
+        return Anonymous.toAnonymous(source);
     }
 
     /**
@@ -628,27 +656,21 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param source 源数据
      * @return 如果成功，返回群文件信息
      */
-    public GroupFile getGroupFile(String source) {
-        if (StringHelper.isEmpty(source))
-            return null;
-        byte[] bytes = Base64.decodeBase64(source);
-        return GroupFile.toGroupFile(bytes);
+    public GroupFile getGroupFile(byte[] source) {
+        return GroupFile.toGroupFile(source);
     }
 
     /**
      * 转换数据到群信息
      *
-     * @param info 数据
+     * @param source 数据
      * @return 群列表
      */
-    private List<Group> toGroupList(String info) {
+    private List<Group> toGroupList(byte[] source) {
         List<Group> list = new ArrayList<Group>();
-        if (StringHelper.isEmpty(info))
+        if (source == null || source.length < 4)
             return list;
-        byte[] groupInfo = Base64.decodeBase64(info);
-        if (groupInfo == null || groupInfo.length < 4)
-            return list;
-        Pack pack = new Pack(groupInfo);
+        Pack pack = new Pack(source);
         int count = pack.getInt();
         for (int i = 0; i < count; i++) {
             if (pack.getRemainingLen() <= 0) {
@@ -678,17 +700,14 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
     /**
      * 数据转群成员
      *
-     * @param info 数据
+     * @param source 数据
      * @return 群成员列表
      */
-    private List<Member> toMemberList(String info) {
+    private List<Member> toMemberList(byte[] source) {
         List<Member> list = new ArrayList<Member>();
-        if (StringHelper.isEmpty(info))
+        if (source == null || source.length < 4)
             return list;
-        byte[] memberInfo = Base64.decodeBase64(info);
-        if (memberInfo == null || memberInfo.length < 4)
-            return list;
-        Pack pack = new Pack(memberInfo);
+        Pack pack = new Pack(source);
         int count = pack.getInt();
         for (int i = 0; i < count; i++) {
             if (pack.getRemainingLen() <= 0) {
@@ -700,6 +719,15 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
             list.add(member);
         }
         return list;
+    }
+
+    /**
+     * 获取最后状态
+     *
+     * @return 描述信息
+     */
+    public CQStatus getLastStatus() {
+        return CQStatus.getStatus(status);
     }
 
 }

@@ -20,10 +20,7 @@ public class IniFile extends Ini {
      * 编码
      */
     private String encodingName;
-//    /**
-//     * 被解析的源字符串
-//     */
-//    private StringBuffer sb = new StringBuffer();
+
     /**
      * ini配置文件所在处
      */
@@ -81,11 +78,13 @@ public class IniFile extends Ini {
      */
     private void init(File iniFile, String charsetName) throws IOException {
         this.iniFile = iniFile;
+        this.encodingName = charsetName;
         StringBuilder sb = new StringBuilder();
         InputStreamReader isr = null;
         try {
+            if (!iniFile.isFile())
+                return;
             isr = new InputStreamReader(new FileInputStream(iniFile), charsetName);
-            this.encodingName = isr.getEncoding();
             int read, idx = 0;
             char line = StringHelper.lineSeparatorSingle();
             // 读取文件
@@ -110,17 +109,48 @@ public class IniFile extends Ini {
     }
 
     /**
+     * 写入配置项内容，指定第几个的内容，不存在则添加(覆盖)
+     *
+     * @param index   下标
+     * @param AppName 节名称
+     * @param KeyName 配置项名
+     * @param Value   配置项值
+     * @return 当前对象
+     */
+    @Override
+    public IniFile setProfileString(int index, String AppName, String KeyName, String Value) {
+        super.setProfileString(index, AppName, KeyName, Value);
+        return this;
+    }
+
+    /**
+     * 写入配置项内容，指定第几个的内容(添加)
+     *
+     * @param index   下标
+     * @param AppName 节名称
+     * @param KeyName 配置项名
+     * @param Value   配置项值
+     * @return 当前对象
+     */
+    @Override
+    public IniFile addProfileString(int index, String AppName, String KeyName, String Value) {
+        super.addProfileString(index, AppName, KeyName, Value);
+        return this;
+    }
+
+    /**
      * 写取配置项内容，不存在则添加(覆盖)
      *
      * @param AppName 节名称
      * @param KeyName 配置项名
      * @param Value   配置项值
+     * @return 当前对象
      */
     @Override
-    public void setProfileString(String AppName, String KeyName, String Value) {
+    public IniFile setProfileString(String AppName, String KeyName, String Value) {
         super.setProfileString(AppName, KeyName, Value);
         // 添加到源解析字符串中
-
+        return this;
     }
 
     /**
@@ -129,12 +159,13 @@ public class IniFile extends Ini {
      * @param AppName 节名称
      * @param KeyName 配置项名
      * @param Value   配置项值
+     * @return 当前对象
      */
     @Override
-    public void addProfileString(String AppName, String KeyName, String Value) {
+    public IniFile addProfileString(String AppName, String KeyName, String Value) {
         super.addProfileString(AppName, KeyName, Value);
         // 添加到源解析字符串中
-
+        return this;
     }
 
     /**
@@ -144,25 +175,19 @@ public class IniFile extends Ini {
      */
     @Override
     public void analysis(String exp) {
-//        sb.append(exp);
         super.analysis(exp);
     }
 
-//    /**
-//     * 获取源解析字符串
-//     *
-//     * @return 源解析字符串
-//     */
-//    public String getString() {
-//        return sb.toString();
-//    }
-
     /**
-     * 保存内存信息到文件
+     * 保存内存信息到文件,不存在则创建
+     *
+     * @throws IOException IO异常
      */
     public void save() throws IOException {
         OutputStreamWriter osw = null;
         try {
+            if (!iniFile.isFile() && !iniFile.createNewFile())
+                return;
             osw = new OutputStreamWriter(new FileOutputStream(iniFile), encodingName);
             osw.write(super.toString());
             osw.flush();
@@ -178,7 +203,6 @@ public class IniFile extends Ini {
      */
     @Override
     public void clear() {
-//        sb = new StringBuffer();
         super.clear();
     }
 
@@ -219,7 +243,7 @@ public class IniFile extends Ini {
      */
     public static boolean SetPrivateProfileString(String Path, String AppName, String KeyName, String Value) {
         try {
-            new IniFile(Path).setProfileString(AppName, KeyName, Value);
+            new IniFile(Path).setProfileString(AppName, KeyName, Value).save();
             return true;
         } catch (Exception e) {
             return false;
@@ -237,7 +261,7 @@ public class IniFile extends Ini {
      */
     public static boolean AddPrivateProfileString(String Path, String AppName, String KeyName, String Value) {
         try {
-            new IniFile(Path).addProfileString(AppName, KeyName, Value);
+            new IniFile(Path).addProfileString(AppName, KeyName, Value).save();
             return true;
         } catch (Exception e) {
             return false;

@@ -51,6 +51,7 @@ public class CQImage {
      * @param path 图片保存路径
      * @param name 图片文件名称
      * @return 图片文件的file对象
+     * @throws IOException IO异常
      */
     public File download(String path, String name) throws IOException {
         URL url = new URL(this.url);

@@ -18,14 +18,11 @@ public class StringHelper {
      * @return 是否为空
      */
     public static boolean isEmpty(String... args) {
-        if (args == null || args.length == 0) {
+        if (args == null || args.length == 0)
             return true;
-        }
-        for (int i = 0; i < args.length; i++) {
-            if (args[i] == null || args[i].length() == 0) {
+        for (String string : args)
+            if (string == null || string.length() == 0)
                 return true;
-            }
-        }
         return false;
     }
 
@@ -50,14 +47,11 @@ public class StringHelper {
      * @return 是否为空
      */
     public static boolean isTrimEmpty(String... args) {
-        if (args == null || args.length == 0) {
+        if (args == null || args.length == 0)
             return true;
-        }
-        for (int i = 0; i < args.length; i++) {
-            if (args[i] == null || args[i].trim().length() == 0) {
+        for (String string : args)
+            if (string == null || string.trim().length() == 0)
                 return true;
-            }
-        }
         return false;
     }
 
@@ -71,9 +65,8 @@ public class StringHelper {
         char[] val = string.toCharArray();
         int len = val.length;
         int st = 0;
-        while ((st < len) && (val[st] <= ' ')) {
+        while ((st < len) && (val[st] <= ' '))
             st++;
-        }
         return st > 0 ? string.substring(st, len) : string;
     }
 
@@ -87,9 +80,8 @@ public class StringHelper {
         char[] val = string.toCharArray();
         int len = val.length;
         int st = 0;
-        while ((st < len) && (val[len - 1] <= ' ')) {
+        while ((st < len) && (val[len - 1] <= ' '))
             len--;
-        }
         return len < val.length ? string.substring(st, len) : string;
     }
 
@@ -103,12 +95,10 @@ public class StringHelper {
         char[] val = string.toCharArray();
         int len = val.length;
         int st = 0;
-        while ((st < len) && (val[st] < ' ')) {
+        while ((st < len) && (val[st] < ' '))
             st++;
-        }
-        while ((st < len) && (val[len - 1] < ' ')) {
+        while ((st < len) && (val[len - 1] < ' '))
             len--;
-        }
         return st > 0 ? string.substring(st, len) : string;
     }
 
@@ -122,9 +112,8 @@ public class StringHelper {
         char[] val = string.toCharArray();
         int len = val.length;
         int st = 0;
-        while ((st < len) && (val[st] < ' ')) {
+        while ((st < len) && (val[st] < ' '))
             st++;
-        }
         return st > 0 ? string.substring(st, len) : string;
     }
 
@@ -138,9 +127,8 @@ public class StringHelper {
         char[] val = string.toCharArray();
         int len = val.length;
         int st = 0;
-        while ((st < len) && (val[len - 1] < ' ')) {
+        while ((st < len) && (val[len - 1] < ' '))
             len--;
-        }
         return len < val.length ? string.substring(st, len) : string;
     }
 
@@ -163,15 +151,28 @@ public class StringHelper {
     public static String stringToUnicode(String string) {
         StringBuilder unicode = new StringBuilder();
         for (int i = 0; i < string.length(); i++) {
-
-            // 取出每一个字符
-            char c = string.charAt(i);
-
-            // 转换为unicode
-            unicode.append("\\u" + Integer.toHexString(c));
+            unicode.append("\\u");
+            unicode.append(Integer.toHexString(string.charAt(i)));
         }
-
         return unicode.toString();
+    }
+
+    /**
+     * unicode 转字符串
+     *
+     * @param unicode 原Unicode字符
+     * @return 字符串
+     */
+    public static String unicodeToString(String unicode) {
+        StringBuilder string = new StringBuilder();
+        String[] hex = unicode.split("\\\\u");
+        for (int i = 1; i < hex.length; i++) {
+            // 转换出每一个代码点
+            int data = Integer.parseInt(hex[i], 16);
+            // 追加成string
+            string.append((char) data);
+        }
+        return string.toString();
     }
 
     /**
@@ -191,24 +192,76 @@ public class StringHelper {
     }
 
     /**
-     * unicode 转字符串
+     * 字符串替换,替换第一个匹配的相同的字符串
      *
-     * @param unicode 原Unicode字符
-     * @return 字符串
+     * @param src         源字符串
+     * @param target      被替换的字符串
+     * @param replacement 替换的字符串
+     * @return 处理后的字符串
      */
-    public static String unicodeToString(String unicode) {
-        StringBuilder string = new StringBuilder();
-        String[] hex = unicode.split("\\\\u");
-        for (int i = 1; i < hex.length; i++) {
-
-            // 转换出每一个代码点
-            int data = Integer.parseInt(hex[i], 16);
-
-            // 追加成string
-            string.append((char) data);
+    public static String stringReplaceFirst(String src, String target, String replacement) {
+        if (src == null || target == null || target.length() == 0 || replacement == null)
+            return src;
+        int index = src.indexOf(target);
+        if (index == -1)
+            return src;
+        int pos = 0;
+        char[] rs = new char[src.length() - target.length() + replacement.length()];
+        for (int i = 0; i < src.length(); i++) {
+            if (i == index) {
+                for (int j = 0; j < replacement.length(); j++) {
+                    rs[pos] = replacement.charAt(j);
+                    pos++;
+                }
+                i += target.length() - 1;
+                continue;
+            }
+            rs[pos] = src.charAt(i);
+            pos++;
         }
+        return new String(rs);
+    }
 
-        return string.toString();
+    /**
+     * 字符串替换,替换所有相同的字符串
+     *
+     * @param src         源字符串
+     * @param target      被替换的字符串
+     * @param replacement 替换的字符串
+     * @return 处理后的字符串
+     */
+    public static String stringReplace(String src, String target, String replacement) {
+        if (src == null || target == null || target.length() == 0 || replacement == null)
+            return src;
+        int index = src.indexOf(target);
+        if (index == -1)
+            return src;
+        StringBuilder sb = new StringBuilder();
+        char c = target.charAt(0);
+        for (int i = 0; i < src.length(); i++) {
+            if (i >= index && src.charAt(i) == c) {
+                int length = i + target.length(), pos = 0, end = 0;
+                for (int j = i; j < length; j++) {
+                    if (src.charAt(j) != target.charAt(pos)) {
+                        end = j;
+                        break;
+                    }
+                    pos++;
+                }
+                if (end != 0) {
+                    for (; i < end; i++)
+                        sb.append(src.charAt(i));
+                    i = end - 1;
+                } else {
+                    for (int j = 0; j < replacement.length(); j++)
+                        sb.append(replacement.charAt(j));
+                    i = length - 1;
+                }
+                continue;
+            }
+            sb.append(src.charAt(i));
+        }
+        return sb.toString();
     }
 
 }

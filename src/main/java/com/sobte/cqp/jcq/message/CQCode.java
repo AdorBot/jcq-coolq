@@ -1,5 +1,7 @@
-package com.sobte.cqp.jcq.entity;
+package com.sobte.cqp.jcq.message;
 
+import com.sobte.cqp.jcq.entity.CQImage;
+import com.sobte.cqp.jcq.entity.IniFile;
 import com.sobte.cqp.jcq.util.StringHelper;
 
 import java.io.File;
@@ -27,11 +29,11 @@ public class CQCode {
      * @return 转义后的字符串
      */
     public static String encode(String code, boolean isComma) {
-        code = code.replaceAll("&", "&amp;");
-        code = code.replaceAll("\\[", "&#91;");
-        code = code.replaceAll("]", "&#93;");
+        code = StringHelper.stringReplace(code, "&", "&amp;");
+        code = StringHelper.stringReplace(code, "\\[", "&#91;");
+        code = StringHelper.stringReplace(code, "]", "&#93;");
         if (isComma)
-            code = code.replaceAll(",", "&#44;");
+            code = StringHelper.stringReplace(code, ",", "&#44;");
         return code;
     }
 
@@ -42,10 +44,10 @@ public class CQCode {
      * @return 反转义后的字符串
      */
     public static String decode(String code) {
-        code = code.replaceAll("&#91;", "[");
-        code = code.replaceAll("&#93;", "]");
-        code = code.replaceAll("&#44;", ",");
-        code = code.replaceAll("&amp;", "&");
+        code = StringHelper.stringReplace(code, "&#91;", "[");
+        code = StringHelper.stringReplace(code, "&#93;", "]");
+        code = StringHelper.stringReplace(code, "&#44;", ",");
+        code = StringHelper.stringReplace(code, "&amp;", "&");
         return code;
     }
 
@@ -65,8 +67,16 @@ public class CQCode {
      * @param faceId 表情ID
      * @return CQ码
      */
-    public String face(int faceId) {
-        return StringHelper.stringConcat("[CQ:face,id=", faceId, "]");
+    public String face(int... faceId) {
+        if (faceId == null || faceId.length == 0)
+            return "";
+        StringBuilder sb = new StringBuilder();
+        for (long id : faceId) {
+            sb.append("[CQ:face,id=");
+            sb.append(id);
+            sb.append("]");
+        }
+        return sb.toString();
     }
 
     /**
@@ -81,13 +91,37 @@ public class CQCode {
     }
 
     /**
+     * 从CQ码中获取所有QQ表情ID
+     *
+     * @param code CQ码
+     * @return 所有表情ID
+     */
+    public List<Integer> getFaceIds(String code) {
+        List<String> list = new CoolQCode(code).gets("face", "id");
+        List<Integer> ints = new ArrayList<Integer>();
+        for (String faceId : list) {
+            if (faceId != null)
+                ints.add(Integer.parseInt(faceId));
+        }
+        return ints;
+    }
+
+    /**
      * emoji表情(emoji)
      *
      * @param emojiId emoji的unicode编号
      * @return CQ码
      */
-    public String emoji(int emojiId) {
-        return StringHelper.stringConcat("[CQ:emoji,id=", emojiId, "]");
+    public String emoji(int... emojiId) {
+        if (emojiId == null || emojiId.length == 0)
+            return "";
+        StringBuilder sb = new StringBuilder();
+        for (long id : emojiId) {
+            sb.append("[CQ:emoji,id=");
+            sb.append(id);
+            sb.append("]");
+        }
+        return sb.toString();
     }
 
     /**
@@ -102,15 +136,31 @@ public class CQCode {
     }
 
     /**
+     * 从CQ码中获取所有emoji表情ID
+     *
+     * @param code CQ码
+     * @return 所有emoji表情ID
+     */
+    public List<Integer> getEmojis(String code) {
+        List<String> list = new CoolQCode(code).gets("emoji", "id");
+        List<Integer> ints = new ArrayList<Integer>();
+        for (String emoji : list) {
+            if (emoji != null)
+                ints.add(Integer.parseInt(emoji));
+        }
+        return ints;
+    }
+
+    /**
      * 提醒某人，@某人(at)
      *
      * @param qqId      qq号，-1 为全体
      * @param isNoSpace At后添加空格，可使At更规范美观。如果不需要添加空格，请置本参数为true。
      * @return CQ码
-     * @see #at(long) @某人(末尾加空格)
+     * @see #at(long...) @某人(末尾加空格)
      */
     public String at(long qqId, boolean isNoSpace) {
-        return StringHelper.stringConcat("[CQ:at,qq=", qqId, "]", isNoSpace ? "" : " ");
+        return StringHelper.stringConcat("[CQ:at,qq=", qqId == -1 ? "all" : qqId, "]", isNoSpace ? "" : " ");
     }
 
     /**
@@ -121,8 +171,16 @@ public class CQCode {
      * @return CQ码
      * @see #at(long, boolean) @某人
      */
-    public String at(long qqId) {
-        return StringHelper.stringConcat("[CQ:at,qq=", qqId, "] ");
+    public String at(long... qqId) {
+        if (qqId == null || qqId.length == 0)
+            return "";
+        StringBuilder sb = new StringBuilder();
+        for (long id : qqId) {
+            sb.append("[CQ:at,qq=");
+            sb.append(id == -1 ? "all" : id);
+            sb.append("] ");
+        }
+        return sb.toString();
     }
 
     /**
@@ -133,7 +191,11 @@ public class CQCode {
      */
     public long getAt(String code) {
         String qqId = new CoolQCode(code).get("at", "qq");
-        return qqId == null ? -1000 : Long.parseLong(qqId);
+        if (qqId == null)
+            return -1000;
+        if (qqId.equals("all"))
+            return -1;
+        return Long.parseLong(qqId);
     }
 
     /**
@@ -143,13 +205,15 @@ public class CQCode {
      * @return qq号集合，-1 为全体
      */
     public List<Long> getAts(String code) {
-        CoolQCode qCode = new CoolQCode(code);
-        List<ActionCode> list = qCode.gets("at");
+        List<String> list = new CoolQCode(code).gets("at", "qq");
         List<Long> longs = new ArrayList<Long>();
-        for (ActionCode actionCode : list) {
-            String qqId = actionCode.get("qq");
-            if (qqId != null)
-                longs.add(Long.parseLong(qqId));
+        for (String qqId : list) {
+            if (qqId != null) {
+                if (qqId.equals("all"))
+                    longs.add(-1L);
+                else
+                    longs.add(Long.parseLong(qqId));
+            }
         }
         return longs;
     }
@@ -317,21 +381,31 @@ public class CQCode {
      *
      * @param code CQ码
      * @return CQImage 对象集合
+     * @throws IOException IO异常
      */
     public List<CQImage> getCQImages(String code) throws IOException {
         List<CQImage> list = new ArrayList<CQImage>();
-        CoolQCode qCode = new CoolQCode(code);
-        List<ActionCode> actionCodeList = qCode.gets("image");
-        for (ActionCode actionCode : actionCodeList) {
-            String file = actionCode.get("file");
+        List<String> imgs = new CoolQCode(code).gets("image", "file");
+        for (String file : imgs) {
             if (file != null) {
-                String path = StringHelper.stringConcat("data", File.separator, "image", File.separator, actionCode.get("file"), ".cqimg");
+                String path = StringHelper.stringConcat("data", File.separator, "image", File.separator, file, ".cqimg");
                 File iniFile = new File(path);
                 if (iniFile.exists() && iniFile.canRead())
                     list.add(new CQImage(new IniFile(iniFile)));
             }
         }
         return list;
+    }
+
+    /**
+     * 发送语音(record)
+     *
+     * @param file  将语音放在 data\record 下，并填写相对路径。如 data\record\1.amr 则填写 1.amr
+     * @param magic 是否是魔法语音
+     * @return CQ码
+     */
+    public String record(String file, boolean magic) {
+        return StringHelper.stringConcat("[CQ:record,file=", encode(file, true), magic ? ",magic=true" : "", "]");
     }
 
     /**
@@ -352,19 +426,6 @@ public class CQCode {
      */
     public String getRecord(String code) {
         return new CoolQCode(code).get("record", "file");
-    }
-
-    /**
-     * 从CQ码中获取语音的文件对象
-     *
-     * @param code CQ码
-     * @return 语音文件对象，错误返回 {@code null}
-     */
-    public File getRecordFile(String code) {
-        String record = new CoolQCode(code).get("record", "file");
-        if (StringHelper.isTrimEmpty(record))
-            return null;
-        return new File(StringHelper.stringConcat("data", File.separator, "record", File.separator, record));
     }
 
 }
