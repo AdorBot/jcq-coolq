@@ -154,15 +154,15 @@ Maven 导入
 ```
    <groupId>com.sobte.cqp</groupId>
    <artifactId>jcq-coolq</artifactId>
-   <version>1.2.2</version>
+   <version>1.2.6</version>
 ```
 
 ## JCQ-CoolQ 常用类说明
 
- JCQ JavaDoc http://jcq.sobte.com/ 
+ JCQ JavaDoc http://sobte.gitee.io/jcq-wiki/ 
  其中包括JCQ所有类的注释
  
-[CoolQ](http://jcq.sobte.com/com/sobte/cqp/jcq/entity/CoolQ.html) 类     
+[CoolQ](http://sobte.gitee.io/jcq-wiki/com/sobte/cqp/jcq/entity/CoolQ.html) 类     
 酷Q操作的核心类
 
 | 方法         | 说明                                |
@@ -212,7 +212,7 @@ Maven 导入
 | setGroupWholeBan| 全群禁言|
 | getLastStatus| 获取最后状态|
 
-[CQCode](http://jcq.sobte.com/com/sobte/cqp/jcq/entity/CQCode.html) 类    
+[CQCode](http://sobte.gitee.io/jcq-wiki/com/sobte/cqp/jcq/entity/CQCode.html) 类    
 [CQ码](https://d.cqp.me/Pro/CQ%E7%A0%81) ，用于辅助开发加快开发效率，以下方法均返回 [CQ码](https://d.cqp.me/Pro/CQ%E7%A0%81) 文本
 
 | 方法         | 说明                                |
