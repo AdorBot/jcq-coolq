@@ -38,6 +38,7 @@
 | 文件        |  描述                               |
 | --------   | :----------------------------------:|
 | setting.ini| JCQ配置文件                          |
+| JCQ.cfg    | JCQ应用配置文件，此文件较为重要，不做解释|
 
 ## JCQ Tool 配置文件
  
@@ -82,9 +83,8 @@ JSON文件是用于存储插件信息的文本文件
     "version"    : "1.0.0",    // 应用文本版本号 例：1.0.0
     "version_id" : 1,        // 应用顺序版本（每次发布时至少+1）
     "author"     : "author",    // 应用作者
-    //"path"       : "lib",    // 应用lib加载处，默认插件同名文件夹目录下lib文件夹，此目录可以填相对路径和绝对路径，相对：同名文件夹
+    //"path"       : "lib",    // 应用lib加载处，默认插件同名文件夹目录下lib文件夹，此目录可以填相对路径和绝对路径，相对：应用同名文件夹
     //"class"      : "com.example.Demo", // 应用加载主类，注意必须填写全类名，默认使用appid加载，如需使用则删除前面注释
-    //"charset"    : "utf-8",  // 应用的字符集编码，默认GBK，如果设置则将转换到此编码
     "description": "", // 应用描述
     "event"      : [],  //  事件列表，同一事件类型可重复定义（发布前请删除无用事件）
     "menu"       : [],  // 设置菜单 (暂无实际功能，后期加入)
@@ -108,6 +108,22 @@ JSON文件是用于存储插件信息的文本文件
 			"function": "privateMsg",           // 事件对应主类中的函数  
 			"priority": 30000                   // 事件优先级 (参见 cqp.im/deveventpriority)  
 		}  
+	]  
+}
+```  
+
+菜单部分
+
+```json  
+{
+	// 这是事件部分json，其他部分与上面一致
+	"event":
+	[  
+	    // 菜单会在管理器中被调用
+		{
+            "name": "设置A", //菜单名称
+            "function": "menuA" //菜单对应主类中的函数
+        }
 	]  
 }
 ```  
@@ -154,7 +170,7 @@ Maven 导入
 ```
    <groupId>com.sobte.cqp</groupId>
    <artifactId>jcq-coolq</artifactId>
-   <version>1.2.6</version>
+   <version>1.2.7</version>
 ```
 
 ## JCQ-CoolQ 常用类说明
@@ -232,6 +248,8 @@ Maven 导入
 | getEmojis    | 从CQ码中获取所有emoji表情ID |
 | face         | 表情QQ表情(face) |
 | image        | 发送图片(image),需Pro版 |
+| imageUseGet  | 使用Get方式获取图片并发送图片(image),需Pro版 |
+| imageUsePost | 使用Post方式获取图片并发送图片(image),需Pro版 |
 | getImage     | 从CQ码中获取图片的路径，如 [CQ:image,file=1.jpg] 则返回 1.jpg |
 | getCQImage   | 从CQ码中获取图片的 CQImage 对象 |
 | getCQImages  | 从CQ码中获取所有 CQImage 对象 |
@@ -245,3 +263,5 @@ Maven 导入
 | share        | 发送链接分享(share) |
 
 ## 支持赞助作者
+
+可以加入交流群赞助：427984429

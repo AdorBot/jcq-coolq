@@ -47,10 +47,10 @@ public class CoolQMsg extends BaseMsg<ActionMsg> {
                         continue;
                     }
                     if (code.charAt(++i) == 'C' && code.charAt(++i) == 'Q' && code.charAt(++i) == ':') {
-                        int endidx = code.indexOf(',', ++i);
-                        if (endidx == -1 || endidx > idx)
-                            endidx = idx;
-                        add(ActionCode.analysis(code.substring(i, endidx), code.substring(endidx, idx)));
+                        int endIdx = code.indexOf(',', ++i);
+                        if (endIdx == -1 || endIdx > idx)
+                            endIdx = idx;
+                        add(ActionCode.analysis(code.substring(i, endIdx), code.substring(endIdx, idx)));
                         begin = i = idx;
                         begin++;
                         break;

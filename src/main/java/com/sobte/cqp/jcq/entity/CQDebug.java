@@ -15,8 +15,9 @@ import java.util.List;
  * Time: 3:34
  * Email: i@sobte.me
  * 此类用于不在酷Q模式下调试用
+ *
  * @author Sobte
- * @version 1.1.0
+ * @version 1.2.6
  */
 public class CQDebug extends CoolQ {
 
@@ -31,7 +32,7 @@ public class CQDebug extends CoolQ {
     @Override
     public int setFatal(String errorInfo) {
         System.err.printf("发生致命错误 错误信息：%s%n", errorInfo);
-        return 0;
+        return status = 0;
     }
 
     /**
@@ -73,7 +74,7 @@ public class CQDebug extends CoolQ {
     private int addLogs(int priority, String category, String content) {
         StringBuilder sb = new StringBuilder();
         Formatter fmt = new Formatter(sb);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         Date date = new Date();
         Thread thread = Thread.currentThread();
         // pid
@@ -115,7 +116,136 @@ public class CQDebug extends CoolQ {
         sb.append(" : ");
         sb.append(content);
         System.out.println(sb.toString());
-        return 0;
+        return status = 0;
+    }
+
+    /**
+     * 发送手机赞
+     *
+     * @param qqId  目标QQ
+     * @param times 赞的次数,最多10次
+     * @return 状态码
+     */
+    @Override
+    public int sendLike(long qqId, int times) {
+        return sendLikeV2(qqId, times);
+    }
+
+    /**
+     * 获取群成员信息 (v2版本)
+     *
+     * @param groupId 目标QQ所在群
+     * @param qqId    目标QQ
+     * @return 如果成功，返回群成员信息，失败返回null
+     */
+    @Override
+    public Member getGroupMemberInfoV2(long groupId, long qqId) {
+        return getGroupMemberInfoV2(groupId, qqId, false);
+    }
+
+    /**
+     * 获取群成员信息
+     *
+     * @param groupId  目标QQ所在群
+     * @param qqId     目标QQ
+     * @param notCache 不使用缓存，通常忽略本参数，仅在必要时使用
+     * @return 如果成功，返回群成员信息，失败返回null
+     */
+    @Override
+    public Member getGroupMemberInfo(long groupId, long qqId, boolean notCache) {
+        return getGroupMemberInfoV2(groupId, qqId, notCache);
+    }
+
+    /**
+     * 获取群成员信息
+     *
+     * @param groupId 目标QQ所在群
+     * @param qqId    目标QQ
+     * @return 如果成功，返回群成员信息，失败返回null
+     */
+    @Override
+    public Member getGroupMemberInfo(long groupId, long qqId) {
+        return getGroupMemberInfo(groupId, qqId, false);
+    }
+
+    /**
+     * 获取陌生人信息
+     *
+     * @param qqId 目标QQ
+     * @return 如果成功，返回陌生人信息
+     */
+    @Override
+    public QQInfo getStrangerInfo(long qqId) {
+        return getStrangerInfo(qqId, false);
+    }
+
+    /**
+     * 处理群添加请求
+     *
+     * @param responseFlag 请求事件收到的“responseFlag”参数
+     * @param requestType  根据请求事件的子类型区分 REQUEST_GROUP_ADD(群添加) 或 REQUEST_GROUP_INVITE(群邀请)
+     * @param backType     REQUEST_ADOPT(通过) 或 REQUEST_REFUSE(拒绝)
+     * @param reason       操作理由，仅 REQUEST_GROUP_ADD(群添加) 且 REQUEST_REFUSE(拒绝) 时可用
+     * @return 状态码
+     */
+    @Override
+    public int setGroupAddRequest(String responseFlag, int requestType, int backType, String reason) {
+        return setGroupAddRequestV2(responseFlag, requestType, backType, reason);
+    }
+
+    /**
+     * 获取匿名信息
+     *
+     * @param source 源数据
+     * @return 如果成功，返回匿名信息
+     */
+    @Override
+    public Anonymous getAnonymous(String source) {
+        addLogs(LOG_INFO, "取匿名信息", String.format("本函数请在酷Q中测试 源数据：%s 返回：测试匿名信息", source));
+        Anonymous anonymous = new Anonymous();
+        anonymous.setAid(1000L);
+        anonymous.setName("大力鬼王");
+        anonymous.setToken(new byte[0]);
+        return anonymous;
+    }
+
+    /**
+     * 获取群文件信息
+     *
+     * @param source 源数据
+     * @return 如果成功，返回群文件信息
+     */
+    @Override
+    public GroupFile getGroupFile(String source) {
+        addLogs(LOG_INFO, "取群文件信息", String.format("本函数请在酷Q中测试 源数据：%s 返回：测试文件信息", source));
+        GroupFile groupFile = new GroupFile();
+        groupFile.setId("233");
+        groupFile.setBusid(233);
+        groupFile.setName("233");
+        return groupFile;
+    }
+
+    /**
+     * 转换数据到字体信息
+     *
+     * @param font 字体
+     * @return 字体信息
+     */
+    @Override
+    public Font getFont(int font) {
+        Font f = new Font();
+        f.setName("Microsoft YaHei");
+        return f;
+    }
+
+    /**
+     * 获取最后状态
+     *
+     * @return 描述信息
+     */
+    @Override
+    public CQStatus getLastStatus() {
+        return super.getLastStatus();
     }
 
     /**
@@ -253,7 +383,7 @@ public class CQDebug extends CoolQ {
     @Override
     public int sendPrivateMsg(long qqId, String msg) {
         addLogs(LOG_INFO, "发送私聊消息", String.format("q[%15s] %s", qqId, msg));
-        return 0;
+        return status = 0;
     }
 
     /**
@@ -266,7 +396,7 @@ public class CQDebug extends CoolQ {
     @Override
     public int sendGroupMsg(long groupId, String msg) {
         addLogs(LOG_INFO, "发送群聊消息", String.format("g[%15s] %s", groupId, msg));
-        return 0;
+        return status = 0;
     }
 
     /**
@@ -279,7 +409,7 @@ public class CQDebug extends CoolQ {
     @Override
     public int sendDiscussMsg(long discussionId, String msg) {
         addLogs(LOG_INFO, "发送讨论组消息", String.format("d[%15s] %s", discussionId, msg));
-        return 0;
+        return status = 0;
     }
 
     /**
@@ -291,7 +421,7 @@ public class CQDebug extends CoolQ {
     @Override
     public int deleteMsg(long msgId) {
         addLogs(LOG_INFO, "撤回消息", String.format("m[%15s]", msgId));
-        return 0;
+        return status = 0;
     }
 
     /**
@@ -304,7 +434,7 @@ public class CQDebug extends CoolQ {
     @Override
     public int sendLikeV2(long qqId, int times) {
         addLogs(LOG_INFO, "发送赞", String.format("q[%15s] %s次", qqId, times <= 0 || times > 10 ? 1 : times));
-        return 0;
+        return status = 0;
     }
 
     /**
@@ -326,7 +456,7 @@ public class CQDebug extends CoolQ {
     @Override
     public int getCsrfToken() {
         addLogs(LOG_INFO, "取CsrfToken", "本函数请在酷Q中测试");
-        return 0;
+        return status = 0;
     }
 
     /**
@@ -353,7 +483,7 @@ public class CQDebug extends CoolQ {
     @Override
     public int setGroupKick(long groupId, long qqId, boolean notBack) {
         addLogs(LOG_INFO, "移除群员", String.format("g[%15s] q[%15s] 拒绝再加群：%s", groupId, qqId, notBack));
-        return 0;
+        return status = 0;
     }
 
     /**
@@ -367,7 +497,7 @@ public class CQDebug extends CoolQ {
     @Override
     public int setGroupBan(long groupId, long qqId, long banTime) {
         addLogs(LOG_INFO, "禁言群员", String.format("g[%15s] q[%15s] 禁言时间：%s", groupId, qqId, banTime));
-        return 0;
+        return status = 0;
     }
 
     /**
@@ -381,7 +511,7 @@ public class CQDebug extends CoolQ {
     @Override
     public int setGroupAdmin(long groupId, long qqId, boolean isAdmin) {
         addLogs(LOG_INFO, "设置群管理", String.format("g[%15s] q[%15s] 成为管理员：%s", groupId, qqId, isAdmin));
-        return 0;
+        return status = 0;
     }
 
     /**
@@ -394,7 +524,7 @@ public class CQDebug extends CoolQ {
     @Override
     public int setGroupWholeBan(long groupId, boolean isBan) {
         addLogs(LOG_INFO, "全群禁言", String.format("g[%15s] 开启禁言：%s", groupId, isBan));
-        return super.setGroupWholeBan(groupId, isBan);
+        return status = 0;
     }
 
     /**
@@ -408,7 +538,7 @@ public class CQDebug extends CoolQ {
     @Override
     public int setGroupAnonymousBan(long groupId, String anonymous, long banTime) {
         addLogs(LOG_INFO, "全群禁言", String.format("g[%15s] 匿名：%s 禁言时间：%s", groupId, anonymous, banTime));
-        return 0;
+        return status = 0;
     }
 
     /**
@@ -421,7 +551,7 @@ public class CQDebug extends CoolQ {
     @Override
     public int setGroupAnonymous(long groupId, boolean isAnonymous) {
         addLogs(LOG_INFO, "群匿名设置", String.format("g[%15s] 开启匿名：%s", groupId, isAnonymous));
-        return 0;
+        return status = 0;
     }
 
     /**
@@ -435,7 +565,7 @@ public class CQDebug extends CoolQ {
     @Override
     public int setGroupCard(long groupId, long qqId, String nick) {
         addLogs(LOG_INFO, "设置群成员名片", String.format("g[%15s] q[%15s] 新名片：%s", groupId, qqId, nick));
-        return 0;
+        return status = 0;
     }
 
     /**
@@ -448,7 +578,7 @@ public class CQDebug extends CoolQ {
     @Override
     public int setGroupLeave(long groupId, boolean isDisband) {
         addLogs(LOG_INFO, "退出QQ群", String.format("g[%15s] 是否解散：%s", groupId, isDisband));
-        return 0;
+        return status = 0;
     }
 
     /**
@@ -463,7 +593,7 @@ public class CQDebug extends CoolQ {
     @Override
     public int setGroupSpecialTitle(long groupId, long qqId, String title, long expireTime) {
         addLogs(LOG_INFO, "设置群成员专属头衔", String.format("g[%15s] q[%15s] 头衔：%s 过期时间：%s", groupId, qqId, title, expireTime));
-        return 0;
+        return status = 0;
     }
 
     /**
@@ -539,7 +669,7 @@ public class CQDebug extends CoolQ {
     @Override
     public int setDiscussLeave(long discussionId) {
         addLogs(LOG_INFO, "退出讨论组", String.format("d[%15s]", discussionId));
-        return 0;
+        return status = 0;
     }
 
     /**
@@ -553,7 +683,7 @@ public class CQDebug extends CoolQ {
     @Override
     public int setFriendAddRequest(String responseFlag, int backType, String remarks) {
         addLogs(LOG_INFO, "处理好友添加请求", String.format("请求反馈标识:%s 反馈类型:%s 备注:%s", responseFlag, backType, remarks));
-        return 0;
+        return status = 0;
     }
 
     /**
@@ -568,7 +698,7 @@ public class CQDebug extends CoolQ {
     @Override
     public int setGroupAddRequestV2(String responseFlag, int requestType, int backType, String reason) {
         addLogs(LOG_INFO, "处理群添加请求", String.format("请求反馈标识:%s 请求类型:%s 反馈类型:%s 理由:%s", responseFlag, requestType, backType, reason));
-        return 0;
+        return status = 0;
     }
 
 }

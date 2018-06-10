@@ -34,7 +34,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
     /**
      * 状态码
      */
-    private int status;
+    protected int status;
 
     /**
      * 初始化
@@ -319,7 +319,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
     }
 
     /**
-     * 发送手机赞
+     * 发送手机赞,多次
      *
      * @param qqId  目标QQ
      * @param times 赞的次数,最多10次
@@ -327,6 +327,17 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      */
     public int sendLike(long qqId, int times) {
         return status = sendLikeV2(authCode, qqId, times <= 0 || times > 10 ? 1 : times);
+    }
+
+    /**
+     * 发送手机赞,赞一次,多次查看 {@link #sendLike(long, int) 发送多次手机赞}
+     *
+     * @param qqId 目标QQ
+     * @return 状态码
+     * @see #sendLike(long, int) 发送多次手机赞
+     */
+    public int sendLike(long qqId) {
+        return status = sendLikeV2(authCode, qqId, 1);
     }
 
     private native String getCookies(int authCode);
@@ -348,7 +359,9 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return CsrfToken
      */
     public int getCsrfToken() {
-        return getCsrfToken(authCode);
+        int status = getCsrfToken(authCode);
+        this.status = status < 0 ? status : 0;
+        return status;
     }
 
     private native String getRecord(int authCode, String file, String outformat);
@@ -641,13 +654,21 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
     }
 
     /**
+     * base64解码
+     *
+     * @param code 要解析的代码
+     * @return 解析好的byte数组
+     */
+    private native byte[] base64Decode(String code);
+
+    /**
      * 获取匿名信息
      *
      * @param source 源数据
      * @return 如果成功，返回匿名信息
      */
-    public Anonymous getAnonymous(byte[] source) {
-        return Anonymous.toAnonymous(source);
+    public Anonymous getAnonymous(String source) {
+        return Anonymous.toAnonymous(base64Decode(source));
     }
 
     /**
@@ -656,8 +677,8 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param source 源数据
      * @return 如果成功，返回群文件信息
      */
-    public GroupFile getGroupFile(byte[] source) {
-        return GroupFile.toGroupFile(source);
+    public GroupFile getGroupFile(String source) {
+        return GroupFile.toGroupFile(base64Decode(source));
     }
 
     /**

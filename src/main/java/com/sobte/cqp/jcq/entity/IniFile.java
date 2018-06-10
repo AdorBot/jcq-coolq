@@ -216,6 +216,31 @@ public class IniFile extends Ini {
     }
 
     /**
+     * 获取文件名
+     *
+     * @return 文件名
+     */
+    public String getName() {
+        return iniFile.getName();
+    }
+
+    public String getPath() {
+        return iniFile.getPath();
+    }
+
+    public String getAbsolutePath() {
+        return iniFile.getAbsolutePath();
+    }
+
+    public String getCanonicalPath() throws IOException {
+        return iniFile.getCanonicalPath();
+    }
+
+    public String getParent() {
+        return iniFile.getParent();
+    }
+
+    /**
      * 读取配置项内容
      *
      * @param Path    ini配置文件路径

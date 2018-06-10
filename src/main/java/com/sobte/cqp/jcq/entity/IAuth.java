@@ -118,11 +118,11 @@ public interface IAuth {
     /**
      * 取群列表,对应CoolQ方法 getGroupList
      */
-    int AUTH_getGroupList = 161;
+    int AUTH_GetGroupList = 161;
 
     /**
      * 撤回消息,对应CoolQ方法 deleteMsg
      */
-    int AUTH_deleteMsg = 180;
+    int AUTH_DeleteMsg = 180;
 
 }

@@ -126,6 +126,7 @@ public class CQStatus {
                 break;
             case -30:
                 msg = "消息被服务器拒绝，请检查参数是否正确或稍候再试";
+                break;
             case -99:
                 msg = "您调用的功能无法在此版本上实现";
                 break;

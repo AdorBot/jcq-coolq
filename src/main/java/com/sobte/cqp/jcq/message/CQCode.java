@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Sobte on 2018/3/27.<br>
@@ -348,6 +349,80 @@ public class CQCode {
      */
     public String image(String file) {
         return StringHelper.stringConcat("[CQ:image,file=", encode(file, true), "]");
+    }
+
+    /**
+     * 发送图片(image)
+     *
+     * @param path 要发送的图片文件对象
+     * @return CQ码
+     * @throws IOException IO异常
+     */
+    public String image(File path) throws IOException {
+        CQImage image;
+        image = new CQImage(path, false);
+        path = image.download("data/image/", image.getName());
+        path.deleteOnExit();
+        return StringHelper.stringConcat("[CQ:image,file=", path.getName(), "]");
+    }
+
+    /**
+     * 发送图片(image)
+     *
+     * @param image 要发送的CQImage对象
+     * @return CQ码
+     * @throws IOException IO异常
+     */
+    public String image(CQImage image) throws IOException {
+        File path = new File("data/image/", image.getName());
+        if (!image.getName().endsWith(".cqimg") || !path.isFile())
+            image.download(path);
+        path.deleteOnExit();
+        return StringHelper.stringConcat("[CQ:image,file=", path.getName(), "]");
+    }
+
+    /**
+     * 发送图片(image),使用GET请求
+     *
+     * @param url 要发送的图片链接
+     * @return CQ码
+     * @throws IOException IO异常
+     */
+    public String imageUseGet(String url) throws IOException {
+        return imageUseGet(url, null);
+    }
+
+    /**
+     * 发送图片(image),使用GET请求
+     *
+     * @param url               要发送的图片链接
+     * @param requestProperties 请求头信息
+     * @return CQ码
+     * @throws IOException IO异常
+     */
+    public String imageUseGet(String url, Map<String, List<String>> requestProperties) throws IOException {
+        CQImage image;
+        image = new CQImage(url);
+        File path = image.downloadUseGet(new File("data/image/", image.getName()), requestProperties);
+        path.deleteOnExit();
+        return StringHelper.stringConcat("[CQ:image,file=", path.getName(), "]");
+    }
+
+    /**
+     * 发送图片(image),使用POST请求
+     *
+     * @param url               要发送的图片链接
+     * @param requestProperties 请求头信息
+     * @param bytes             请求的数据
+     * @return CQ码
+     * @throws IOException IO异常
+     */
+    public String imageUsePost(String url, Map<String, List<String>> requestProperties, byte[] bytes) throws IOException {
+        CQImage image;
+        image = new CQImage(url);
+        File path = image.downloadUsePost(new File("data/image/", image.getName()), requestProperties, bytes);
+        path.deleteOnExit();
+        return StringHelper.stringConcat("[CQ:image,file=", path.getName(), "]");
     }
 
     /**
