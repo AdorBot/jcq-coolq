@@ -447,6 +447,7 @@ public class CQCode {
             String path = StringHelper.stringConcat("data", File.separator, "image", File.separator, new CoolQCode(code).get("image", "file"), ".cqimg");
             return new CQImage(new IniFile(new File(path)));
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -456,18 +457,21 @@ public class CQCode {
      *
      * @param code CQ码
      * @return CQImage 对象集合
-     * @throws IOException IO异常
      */
-    public List<CQImage> getCQImages(String code) throws IOException {
+    public List<CQImage> getCQImages(String code) {
         List<CQImage> list = new ArrayList<CQImage>();
         List<String> imgs = new CoolQCode(code).gets("image", "file");
-        for (String file : imgs) {
-            if (file != null) {
-                String path = StringHelper.stringConcat("data", File.separator, "image", File.separator, file, ".cqimg");
-                File iniFile = new File(path);
-                if (iniFile.exists() && iniFile.canRead())
-                    list.add(new CQImage(new IniFile(iniFile)));
+        try {
+            for (String file : imgs) {
+                if (file != null) {
+                    String path = StringHelper.stringConcat("data", File.separator, "image", File.separator, file, ".cqimg");
+                    File iniFile = new File(path);
+                    if (iniFile.exists() && iniFile.canRead())
+                        list.add(new CQImage(new IniFile(iniFile)));
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
