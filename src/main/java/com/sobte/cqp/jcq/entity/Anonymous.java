@@ -68,10 +68,20 @@ public class Anonymous {
      * @return 匿名
      */
     public static Anonymous toAnonymous(byte[] bytes) {
+        return toAnonymous(bytes, new Anonymous());
+    }
+
+    /**
+     * 数据转匿名
+     *
+     * @param bytes     数据
+     * @param anonymous 匿名
+     * @return 匿名
+     */
+    public static Anonymous toAnonymous(byte[] bytes, Anonymous anonymous) {
         if (bytes == null || bytes.length < 12)
             return null;
         Pack pack = new Pack(bytes);
-        Anonymous anonymous = new Anonymous();
         anonymous.setAid(pack.getLong());
         anonymous.setName(pack.getLenStr());
         anonymous.setToken(pack.getToken());

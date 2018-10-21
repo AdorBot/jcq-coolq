@@ -1,6 +1,6 @@
 package com.sobte.cqp.jcq.entity;
 
-import com.sobte.cqp.jcq.util.StringHelper;
+import com.sobte.cqp.jcq.util.StringUtils;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,7 +22,7 @@ public class Ini {
     /**
      * 获取单个换行字符
      */
-    public static final char lineSeparator = StringHelper.lineSeparatorSingle();
+    public static final char lineSeparator = StringUtils.lineSeparatorSingle();
 
     public Ini() {
 
@@ -316,7 +316,7 @@ public class Ini {
                     idx = exp.indexOf(lineSeparator, i);
                     if (idx == -1)
                         idx = length;
-                    String value = ++i > idx ? "" : StringHelper.trimEnterRight(exp.substring(i, idx));
+                    String value = ++i > idx ? "" : StringUtils.trimEnterRight(exp.substring(i, idx));
                     // 去除value末尾换行
                     List<String> values = expMap.get(key);
                     if (values == null)
@@ -343,7 +343,7 @@ public class Ini {
             sb.append('[');
             sb.append(expkey);
             sb.append(']');
-            sb.append(StringHelper.lineSeparator);
+            sb.append(StringUtils.lineSeparator);
             ConcurrentHashMap<String, List<String>> expMap = map.get(expkey);
             if (expMap == null)
                 continue;
@@ -355,7 +355,7 @@ public class Ini {
                     sb.append(key);
                     sb.append('=');
                     sb.append(value);
-                    sb.append(StringHelper.lineSeparator);
+                    sb.append(StringUtils.lineSeparator);
                 }
             }
         }

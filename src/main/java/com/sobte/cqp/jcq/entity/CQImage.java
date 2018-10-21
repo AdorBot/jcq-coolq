@@ -1,7 +1,7 @@
 package com.sobte.cqp.jcq.entity;
 
 import com.sobte.cqp.jcq.util.DigestUtils;
-import com.sobte.cqp.jcq.util.StringHelper;
+import com.sobte.cqp.jcq.util.StringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -9,7 +9,9 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Sobte on 2018/4/11.<br>
@@ -54,10 +56,7 @@ public class CQImage {
         this.size = file.length();
         this.md5 = DigestUtils.md5Hex(inputStream).toUpperCase();
         this.name = file.getName();
-        int idx = this.name.lastIndexOf('.');
-        if (idx != -1)
-            this.name = this.name.substring(idx);
-        else
+        if (!this.name.endsWith(".cqimg"))
             this.name = md5;
         if (load) loadSize(new FileInputStream(file));
         this.addTime = new Date(file.lastModified());
@@ -136,7 +135,7 @@ public class CQImage {
         File file = new File(path);
         if (file.isDirectory() || file.mkdirs())
             return download(new File(file, name));
-        throw new FileNotFoundException(StringHelper.stringConcat(file.getAbsolutePath(), "目录不存在"));
+        throw new FileNotFoundException(StringUtils.stringConcat(file.getAbsolutePath(), "目录不存在"));
     }
 
     /**
@@ -240,7 +239,7 @@ public class CQImage {
                 int resCode = urlConnection.getResponseCode();
                 if (resCode >= 300 && resCode < 400) {
                     String redirect = connection.getHeaderField("Location");
-                    if (!StringHelper.isTrimEmpty(redirect)) {
+                    if (!StringUtils.isTrimEmpty(redirect)) {
                         String oldUrl = this.url;
                         this.url = redirect;
                         download(outputStream, method, requestProperties, data, load);

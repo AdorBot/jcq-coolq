@@ -15,6 +15,8 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class ActionCode extends ActionMsg {
 
+    private static final long serialVersionUID = -7823496685390693145L;
+
     /**
      * 功能名称
      */
@@ -186,29 +188,46 @@ public class ActionCode extends ActionMsg {
     /**
      * 解析文本返回CQ功能
      *
-     * @param action 功能名称
-     * @param code   要解析的文本，功能的键值队
+     * @param ac   CQ功能
+     * @param code 要解析的CQ码文本
      * @return CQ功能
      */
-    public static ActionCode analysis(String action, String code) {
-        ActionCode ac = new ActionCode();
-        ac.setAction(action);
-        int length = code.length();
-        for (int i = 0; i < length; i++) {
-            switch (code.charAt(i)) {
-                case '=':
-                    int idx = code.lastIndexOf(',', i) + 1;
-                    String key = code.substring(idx, i);
-                    idx = code.indexOf(',', i);
-                    if (idx == -1)
-                        idx = length;
-                    String value = code.substring(i + 1, idx);// 加1排除 '='
-                    ac.put(key, value);
-                    i = idx;
-                    break;
+    static ActionCode analysis(ActionCode ac, String code) {
+        int endCharIdx = code.length() - 1;
+        if (code.charAt(0) == '[' && code.charAt(1) == 'C' && code.charAt(2) == 'Q' && code.charAt(3) == ':' && code.charAt(endCharIdx) == ']') {
+            int endIdx = code.indexOf(',', 4);
+            if (endIdx == -1)
+                endIdx = endCharIdx;
+            if (ac == null)
+                ac = new ActionCode();
+            ac.setAction(code.substring(4, endIdx));
+            for (int i = endIdx; i < endCharIdx; i++) {
+                switch (code.charAt(i)) {
+                    case '=':
+                        int idx = code.lastIndexOf(',', i) + 1;
+                        String key = code.substring(idx, i);
+                        idx = code.indexOf(',', i);
+                        if (idx == -1)
+                            idx = endCharIdx;
+                        String value = code.substring(i + 1, idx);// 加1排除 '='
+                        ac.put(key, value);
+                        i = idx;
+                        break;
+                }
             }
+            return ac;
         }
-        return ac;
+        return null;
+    }
+
+    /**
+     * 解析文本返回CQ功能
+     *
+     * @param code 要解析的CQ码文本
+     * @return CQ功能
+     */
+    public static ActionCode analysis(String code) {
+        return analysis(new ActionCode(), code);
     }
 
     /**
@@ -219,6 +238,16 @@ public class ActionCode extends ActionMsg {
     @Override
     public String getMsg() {
         return toString();
+    }
+
+    /**
+     * 根据CQ码解析覆盖本对象
+     *
+     * @param code 要解析的CQ码文本
+     */
+    @Override
+    public void setMsg(String code) {
+        analysis(this, code);
     }
 
     @Override

@@ -8,32 +8,16 @@ import java.util.Date;
  * Email: i@sobte.me
  * 群成员
  */
-public class Member {
+public class Member extends QQInfo {
 
     /**
      * 群号
      */
     private long groupId;
     /**
-     * qq
-     */
-    private long qqId;
-    /**
-     * 昵称
-     */
-    private String nick;
-    /**
      * 名片
      */
     private String card;
-    /**
-     * 性别 0/男性 1/女性
-     */
-    private int gender;
-    /**
-     * 年龄
-     */
-    private int age;
     /**
      * 地区
      */
@@ -41,9 +25,9 @@ public class Member {
     /**
      * 加群时间
      */
-    private Date clear;
+    private Date addTime;
     /**
-     * 最后发言
+     * 最后发言时间
      */
     private Date lastTime;
     /**
@@ -53,7 +37,7 @@ public class Member {
     /**
      * 管理权限 1/成员 2/管理员 3/群主
      */
-    private int Authority;
+    private int authority;
     /**
      * 专属头衔
      */
@@ -74,7 +58,12 @@ public class Member {
     public Member() {
     }
 
-    public Member(long groupId, long qqId, String nick, String card, int gender, int age, String area, Date clear, Date lastTime, String levelName, int authority, String title, Date titleExpire, boolean bad, boolean modifyCard) {
+    public Member(long groupId, long qqId) {
+        super(qqId);
+        this.groupId = groupId;
+    }
+
+    public Member(long groupId, long qqId, String nick, String card, int gender, int age, String area, Date addTime, Date lastTime, String levelName, int authority, String title, Date titleExpire, boolean bad, boolean modifyCard) {
         this.groupId = groupId;
         this.qqId = qqId;
         this.nick = nick;
@@ -82,10 +71,10 @@ public class Member {
         this.gender = gender;
         this.age = age;
         this.area = area;
-        this.clear = clear;
+        this.addTime = addTime;
         this.lastTime = lastTime;
         this.levelName = levelName;
-        Authority = authority;
+        this.authority = authority;
         this.title = title;
         this.titleExpire = titleExpire;
         this.bad = bad;
@@ -100,49 +89,12 @@ public class Member {
         this.groupId = groupId;
     }
 
-    public long getQqId() {
-        return qqId;
-    }
-
-    public void setQqId(long qqId) {
-        this.qqId = qqId;
-    }
-
-    public String getNick() {
-        return nick;
-    }
-
-    public void setNick(String nick) {
-        this.nick = nick;
-    }
-
     public String getCard() {
         return card;
     }
 
     public void setCard(String card) {
         this.card = card;
-    }
-
-    /**
-     * 性别 0/男性 1/女性
-     *
-     * @return 性别
-     */
-    public int getGender() {
-        return gender;
-    }
-
-    public void setGender(int gender) {
-        this.gender = gender;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
     }
 
     public String getArea() {
@@ -154,11 +106,11 @@ public class Member {
     }
 
     public Date getAddTime() {
-        return clear;
+        return addTime;
     }
 
-    public void setAddTime(Date clear) {
-        this.clear = clear;
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
     }
 
     public Date getLastTime() {
@@ -183,11 +135,11 @@ public class Member {
      * @return 权限id
      */
     public int getAuthority() {
-        return Authority;
+        return authority;
     }
 
     public void setAuthority(int authority) {
-        Authority = authority;
+        this.authority = authority;
     }
 
     public String getTitle() {
@@ -228,26 +180,29 @@ public class Member {
     }
 
     public static Member toMember(byte[] bytes) {
-        if (bytes == null || bytes.length < 40)
+        return toMember(bytes, new Member());
+    }
+
+    public static Member toMember(byte[] bytes, Member member) {
+        if (bytes == null || bytes.length < 40 || member == null)
             return null;
         Pack pack = new Pack(bytes);
-        Member member = new Member();
-        member.setGroupId(pack.getLong());
-        member.setQqId(pack.getLong());
-        member.setNick(pack.getLenStr());
-        member.setCard(pack.getLenStr());
-        member.setGender(pack.getInt());
-        member.setAge(pack.getInt());
-        member.setArea(pack.getLenStr());
-        member.setAddTime(new Date(pack.getInt() * 1000L));
-        member.setLastTime(new Date(pack.getInt() * 1000L));
-        member.setLevelName(pack.getLenStr());
-        member.setAuthority(pack.getInt());
-        member.setBad(pack.getInt() == 1);
-        member.setTitle(pack.getLenStr());
+        member.groupId = pack.getLong();
+        member.qqId = pack.getLong();
+        member.nick = pack.getLenStr();
+        member.card = pack.getLenStr();
+        member.gender = pack.getInt();
+        member.age = pack.getInt();
+        member.area = pack.getLenStr();
+        member.addTime = new Date(pack.getInt() * 1000L);
+        member.lastTime = new Date(pack.getInt() * 1000L);
+        member.levelName = pack.getLenStr();
+        member.authority = pack.getInt();
+        member.bad = pack.getInt() == 1;
+        member.title = pack.getLenStr();
         int expire = pack.getInt();
-        member.setTitleExpire(expire == -1 ? null : new Date(expire * 1000));
-        member.setModifyCard(pack.getInt() == 1);
+        member.titleExpire = expire == -1 ? null : new Date(expire * 1000);
+        member.modifyCard = pack.getInt() == 1;
         return member;
     }
 
@@ -261,10 +216,10 @@ public class Member {
                 ", gender=" + gender +
                 ", age=" + age +
                 ", area='" + area + '\'' +
-                ", clear=" + clear +
+                ", addTime=" + addTime +
                 ", lastTime=" + lastTime +
                 ", levelName='" + levelName + '\'' +
-                ", Authority=" + Authority +
+                ", authority=" + authority +
                 ", title='" + title + '\'' +
                 ", titleExpire=" + titleExpire +
                 ", bad=" + bad +

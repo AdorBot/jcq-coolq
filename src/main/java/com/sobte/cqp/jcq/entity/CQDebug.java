@@ -1,6 +1,6 @@
 package com.sobte.cqp.jcq.entity;
 
-import com.sobte.cqp.jcq.util.StringHelper;
+import com.sobte.cqp.jcq.util.StringUtils;
 
 import java.io.File;
 import java.lang.management.ManagementFactory;
@@ -42,7 +42,7 @@ public class CQDebug extends CoolQ {
      */
     @Override
     public String getAppDirectory() {
-        if (StringHelper.isEmpty(appDirectory)) {
+        if (StringUtils.isEmpty(appDirectory)) {
             appDirectory = new File("").getAbsolutePath() + File.separator;
         }
         addLogs(LOG_INFO, "取应用目录", String.format("返回：%s", appDirectory));

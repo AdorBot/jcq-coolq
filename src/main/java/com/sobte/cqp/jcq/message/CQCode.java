@@ -1,12 +1,10 @@
 package com.sobte.cqp.jcq.message;
 
 import com.sobte.cqp.jcq.entity.CQImage;
-import com.sobte.cqp.jcq.entity.IniFile;
-import com.sobte.cqp.jcq.util.StringHelper;
+import com.sobte.cqp.jcq.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +18,7 @@ import java.util.Map;
  *
  * @author Sobte
  */
-public class CQCode {
+public final class CQCode {
 
     /**
      * 特殊字符，转义，避免冲突
@@ -30,12 +28,35 @@ public class CQCode {
      * @return 转义后的字符串
      */
     public static String encode(String code, boolean isComma) {
-        code = StringHelper.stringReplace(code, "&", "&amp;");
-        code = StringHelper.stringReplace(code, "\\[", "&#91;");
-        code = StringHelper.stringReplace(code, "]", "&#93;");
+        code = StringUtils.stringReplace(code, "&", "&amp;");
+        code = StringUtils.stringReplace(code, "[", "&#91;");
+        code = StringUtils.stringReplace(code, "]", "&#93;");
         if (isComma)
-            code = StringHelper.stringReplace(code, ",", "&#44;");
+            code = StringUtils.stringReplace(code, ",", "&#44;");
         return code;
+    }
+
+    /**
+     * 特殊字符，转义，避免冲突
+     *
+     * @param c       要转义的字符
+     * @param isComma 是否转义逗号
+     * @return 转义后的字符串
+     */
+    public static String encode(char c, boolean isComma) {
+        switch (c) {
+            case '&':
+                return "&amp;";
+            case '[':
+                return "&#91;";
+            case ']':
+                return "&#93;";
+            case ',':
+                if (isComma)
+                    return "&#44;";
+            default:
+                return String.valueOf(c);
+        }
     }
 
     /**
@@ -45,10 +66,10 @@ public class CQCode {
      * @return 反转义后的字符串
      */
     public static String decode(String code) {
-        code = StringHelper.stringReplace(code, "&#91;", "[");
-        code = StringHelper.stringReplace(code, "&#93;", "]");
-        code = StringHelper.stringReplace(code, "&#44;", ",");
-        code = StringHelper.stringReplace(code, "&amp;", "&");
+        code = StringUtils.stringReplace(code, "&#91;", "[");
+        code = StringUtils.stringReplace(code, "&#93;", "]");
+        code = StringUtils.stringReplace(code, "&#44;", ",");
+        code = StringUtils.stringReplace(code, "&amp;", "&");
         return code;
     }
 
@@ -87,8 +108,7 @@ public class CQCode {
      * @return 表情ID
      */
     public int getFaceId(String code) {
-        String faceId = new CoolQCode(code).get("face", "id");
-        return faceId == null ? -1 : Integer.parseInt(faceId);
+        return new CoolQCode(code).getFaceId();
     }
 
     /**
@@ -98,13 +118,7 @@ public class CQCode {
      * @return 所有表情ID
      */
     public List<Integer> getFaceIds(String code) {
-        List<String> list = new CoolQCode(code).gets("face", "id");
-        List<Integer> ints = new ArrayList<Integer>();
-        for (String faceId : list) {
-            if (faceId != null)
-                ints.add(Integer.parseInt(faceId));
-        }
-        return ints;
+        return new CoolQCode(code).getFaceIds();
     }
 
     /**
@@ -132,8 +146,7 @@ public class CQCode {
      * @return emoji的unicode编号
      */
     public int getEmoji(String code) {
-        String emoji = new CoolQCode(code).get("emoji", "id");
-        return emoji == null ? -1 : Integer.parseInt(emoji);
+        return new CoolQCode(code).getEmoji();
     }
 
     /**
@@ -143,13 +156,7 @@ public class CQCode {
      * @return 所有emoji表情ID
      */
     public List<Integer> getEmojis(String code) {
-        List<String> list = new CoolQCode(code).gets("emoji", "id");
-        List<Integer> ints = new ArrayList<Integer>();
-        for (String emoji : list) {
-            if (emoji != null)
-                ints.add(Integer.parseInt(emoji));
-        }
-        return ints;
+        return new CoolQCode(code).getEmojis();
     }
 
     /**
@@ -161,7 +168,7 @@ public class CQCode {
      * @see #at(long...) @某人(末尾加空格)
      */
     public String at(long qqId, boolean isNoSpace) {
-        return StringHelper.stringConcat("[CQ:at,qq=", qqId == -1 ? "all" : qqId, "]", isNoSpace ? "" : " ");
+        return StringUtils.stringConcat("[CQ:at,qq=", qqId == -1 ? "all" : qqId, "]", isNoSpace ? "" : " ");
     }
 
     /**
@@ -191,12 +198,7 @@ public class CQCode {
      * @return qq号，-1 为全体，错误为 -1000
      */
     public long getAt(String code) {
-        String qqId = new CoolQCode(code).get("at", "qq");
-        if (qqId == null)
-            return -1000;
-        if (qqId.equals("all"))
-            return -1;
-        return Long.parseLong(qqId);
+        return new CoolQCode(code).getAt();
     }
 
     /**
@@ -206,17 +208,7 @@ public class CQCode {
      * @return qq号集合，-1 为全体
      */
     public List<Long> getAts(String code) {
-        List<String> list = new CoolQCode(code).gets("at", "qq");
-        List<Long> longs = new ArrayList<Long>();
-        for (String qqId : list) {
-            if (qqId != null) {
-                if (qqId.equals("all"))
-                    longs.add(-1L);
-                else
-                    longs.add(Long.parseLong(qqId));
-            }
-        }
-        return longs;
+        return new CoolQCode(code).getAts();
     }
 
     /**
@@ -235,7 +227,7 @@ public class CQCode {
      * @return 是否包含
      */
     public boolean isShake(String code) {
-        return code.contains("[CQ:shake]");
+        return new CoolQCode(code).isShake();
     }
 
     /**
@@ -245,7 +237,7 @@ public class CQCode {
      * @return CQ码
      */
     public String anonymous(boolean ignore) {
-        return StringHelper.stringConcat("[CQ:anonymous", ignore ? ",ignore=true" : "", "] ");
+        return StringUtils.stringConcat("[CQ:anonymous", ignore ? ",ignore=true" : "", "] ");
     }
 
     /**
@@ -257,7 +249,7 @@ public class CQCode {
      * @return CQ码
      */
     public String music(long musicId, String type, boolean style) {
-        return StringHelper.stringConcat("[CQ:music,id=", musicId, ",type=", StringHelper.isEmpty(type) ? "qq" : encode(type, true), style ? ",style=1" : "", "]");
+        return StringUtils.stringConcat("[CQ:music,id=", musicId, ",type=", StringUtils.isEmpty(type) ? "qq" : encode(type, true), style ? ",style=1" : "", "]");
     }
 
     /**
@@ -275,11 +267,11 @@ public class CQCode {
         sb.append("[CQ:music,type=custom");
         sb.append(",url=").append(encode(url, true));
         sb.append(",audio=").append(encode(audio, true));
-        if (!StringHelper.isEmpty(title))
+        if (!StringUtils.isEmpty(title))
             sb.append(",title=").append(encode(title, true));
-        if (!StringHelper.isEmpty(content))
+        if (!StringUtils.isEmpty(content))
             sb.append(",content=").append(encode(content, true));
-        if (!StringHelper.isEmpty(image))
+        if (!StringUtils.isEmpty(image))
             sb.append(",image=").append(encode(image, true));
         sb.append("]");
         return sb.toString();
@@ -293,7 +285,7 @@ public class CQCode {
      * @return CQ码
      */
     public String contact(String type, long id) {
-        return StringHelper.stringConcat("[CQ:contact,type=", encode(type, true), ",id=", id, "]");
+        return StringUtils.stringConcat("[CQ:contact,type=", encode(type, true), ",id=", id, "]");
     }
 
     /**
@@ -309,11 +301,11 @@ public class CQCode {
         StringBuilder sb = new StringBuilder();
         sb.append("[CQ:share");
         sb.append(",url=").append(encode(url, true));
-        if (!StringHelper.isEmpty(title))
+        if (!StringUtils.isEmpty(title))
             sb.append(",title=").append(encode(title, true));
-        if (!StringHelper.isEmpty(content))
+        if (!StringUtils.isEmpty(content))
             sb.append(",content=").append(encode(content, true));
-        if (!StringHelper.isEmpty(image))
+        if (!StringUtils.isEmpty(image))
             sb.append(",image=").append(encode(image, true));
         sb.append("]");
         return sb.toString();
@@ -348,22 +340,21 @@ public class CQCode {
      * @return CQ码
      */
     public String image(String file) {
-        return StringHelper.stringConcat("[CQ:image,file=", encode(file, true), "]");
+        return StringUtils.stringConcat("[CQ:image,file=", encode(file, true), "]");
     }
 
     /**
      * 发送图片(image)
      *
-     * @param path 要发送的图片文件对象
+     * @param path 要发送的图片文件对象，位置随意
      * @return CQ码
      * @throws IOException IO异常
      */
     public String image(File path) throws IOException {
-        CQImage image;
-        image = new CQImage(path, false);
+        CQImage image = new CQImage(path, false);
         path = image.download("data/image/", image.getName());
         path.deleteOnExit();
-        return StringHelper.stringConcat("[CQ:image,file=", path.getName(), "]");
+        return image(path.getName());
     }
 
     /**
@@ -378,7 +369,7 @@ public class CQCode {
         if (!image.getName().endsWith(".cqimg") || !path.isFile())
             image.download(path);
         path.deleteOnExit();
-        return StringHelper.stringConcat("[CQ:image,file=", path.getName(), "]");
+        return image(path.getName());
     }
 
     /**
@@ -401,11 +392,10 @@ public class CQCode {
      * @throws IOException IO异常
      */
     public String imageUseGet(String url, Map<String, List<String>> requestProperties) throws IOException {
-        CQImage image;
-        image = new CQImage(url);
+        CQImage image = new CQImage(url);
         File path = image.downloadUseGet(new File("data/image/", image.getName()), requestProperties);
         path.deleteOnExit();
-        return StringHelper.stringConcat("[CQ:image,file=", path.getName(), "]");
+        return image(path.getName());
     }
 
     /**
@@ -418,11 +408,10 @@ public class CQCode {
      * @throws IOException IO异常
      */
     public String imageUsePost(String url, Map<String, List<String>> requestProperties, byte[] bytes) throws IOException {
-        CQImage image;
-        image = new CQImage(url);
+        CQImage image = new CQImage(url);
         File path = image.downloadUsePost(new File("data/image/", image.getName()), requestProperties, bytes);
         path.deleteOnExit();
-        return StringHelper.stringConcat("[CQ:image,file=", path.getName(), "]");
+        return image(path.getName());
     }
 
     /**
@@ -432,7 +421,7 @@ public class CQCode {
      * @return 图片路径，如 [CQ:image,file=1.jpg] 则返回 1.jpg，错误返回 {@code null}
      */
     public String getImage(String code) {
-        return new CoolQCode(code).get("image", "file");
+        return new CoolQCode(code).getImage();
     }
 
     /**
@@ -442,14 +431,7 @@ public class CQCode {
      * @return CQImage 对象，错误返回 {@code null}
      */
     public CQImage getCQImage(String code) {
-        try {
-            // 获取相对路径
-            String path = StringHelper.stringConcat("data", File.separator, "image", File.separator, new CoolQCode(code).get("image", "file"), ".cqimg");
-            return new CQImage(new IniFile(new File(path)));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        return new CoolQCode(code).getCQImage();
     }
 
     /**
@@ -459,21 +441,7 @@ public class CQCode {
      * @return CQImage 对象集合
      */
     public List<CQImage> getCQImages(String code) {
-        List<CQImage> list = new ArrayList<CQImage>();
-        List<String> imgs = new CoolQCode(code).gets("image", "file");
-        try {
-            for (String file : imgs) {
-                if (file != null) {
-                    String path = StringHelper.stringConcat("data", File.separator, "image", File.separator, file, ".cqimg");
-                    File iniFile = new File(path);
-                    if (iniFile.exists() && iniFile.canRead())
-                        list.add(new CQImage(new IniFile(iniFile)));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return list;
+        return new CoolQCode(code).getCQImages();
     }
 
     /**
@@ -484,7 +452,7 @@ public class CQCode {
      * @return CQ码
      */
     public String record(String file, boolean magic) {
-        return StringHelper.stringConcat("[CQ:record,file=", encode(file, true), magic ? ",magic=true" : "", "]");
+        return StringUtils.stringConcat("[CQ:record,file=", encode(file, true), magic ? ",magic=true" : "", "]");
     }
 
     /**
@@ -494,7 +462,7 @@ public class CQCode {
      * @return CQ码
      */
     public String record(String file) {
-        return StringHelper.stringConcat("[CQ:record,file=", encode(file, true), "]");
+        return StringUtils.stringConcat("[CQ:record,file=", encode(file, true), "]");
     }
 
     /**
@@ -504,7 +472,7 @@ public class CQCode {
      * @return 语音路径，如 [CQ:record,file=1.amr] 则返回 1.amr，错误返回 {@code null}
      */
     public String getRecord(String code) {
-        return new CoolQCode(code).get("record", "file");
+        return new CoolQCode(code).getRecord();
     }
 
 }

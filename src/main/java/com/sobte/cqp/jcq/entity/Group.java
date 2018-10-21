@@ -27,6 +27,7 @@ public class Group {
 
     /**
      * 群号
+     *
      * @return 群号
      */
     public long getId() {
@@ -39,6 +40,7 @@ public class Group {
 
     /**
      * 群名称
+     *
      * @return 名称
      */
     public String getName() {
@@ -56,9 +58,19 @@ public class Group {
      * @return 群
      */
     public static Group toGroup(byte[] bytes) {
+        return toGroup(bytes, new Group());
+    }
+
+    /**
+     * 数据转单群
+     *
+     * @param bytes 数据
+     * @param group 群
+     * @return 群
+     */
+    public static Group toGroup(byte[] bytes, Group group) {
         if (bytes == null || bytes.length < 10)
             return null;
-        Group group = new Group();
         Pack pack = new Pack(bytes);
         group.setId(pack.getLong());
         group.setName(pack.getLenStr());

@@ -74,10 +74,20 @@ public class GroupFile {
      * @return 群文件
      */
     public static GroupFile toGroupFile(byte[] bytes) {
+        return toGroupFile(bytes, new GroupFile());
+    }
+
+    /**
+     * 数据转群文件
+     *
+     * @param bytes     数据
+     * @param groupFile 群文件
+     * @return 群文件
+     */
+    public static GroupFile toGroupFile(byte[] bytes, GroupFile groupFile) {
         if (bytes == null || bytes.length < 20)
             return null;
         Pack pack = new Pack(bytes);
-        GroupFile groupFile = new GroupFile();
         groupFile.setId(pack.getLenStr());
         groupFile.setName(pack.getLenStr());
         groupFile.setSize(pack.getLong());

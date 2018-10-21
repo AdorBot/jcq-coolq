@@ -1,7 +1,7 @@
 package com.sobte.cqp.jcq.entity;
 
 
-import com.sobte.cqp.jcq.util.StringHelper;
+import com.sobte.cqp.jcq.util.StringUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -86,7 +86,7 @@ public class IniFile extends Ini {
                 return;
             isr = new InputStreamReader(new FileInputStream(iniFile), charsetName);
             int read, idx = 0;
-            char line = StringHelper.lineSeparatorSingle();
+            char line = StringUtils.lineSeparatorSingle();
             // 读取文件
             while ((read = isr.read()) != -1) {
                 // 过滤每行开头空格

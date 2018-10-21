@@ -11,21 +11,25 @@ public class QQInfo {
     /**
      * QQ
      */
-    private long qqId;
+    long qqId;
     /**
      * 性别 0/男性 1/女性
      */
-    private int gender;
+    int gender;
     /**
      * 年龄
      */
-    private int age;
+    int age;
     /**
      * 昵称
      */
-    private String nick;
+    String nick;
 
     public QQInfo() {
+    }
+
+    public QQInfo(long qqId) {
+        this.qqId = qqId;
     }
 
     public QQInfo(long qqId, int gender, int age, String nick) {
@@ -35,16 +39,27 @@ public class QQInfo {
         this.nick = nick;
     }
 
+    @Deprecated
     public long getQqId() {
         return qqId;
     }
 
+    @Deprecated
     public void setQqId(long qqId) {
         this.qqId = qqId;
     }
 
+    public void setQQId(long qqId) {
+        this.qqId = qqId;
+    }
+
+    public long getQQId() {
+        return qqId;
+    }
+
     /**
      * 性别 0/男性 1/女性
+     *
      * @return 性别
      */
     public int getGender() {
@@ -71,13 +86,31 @@ public class QQInfo {
         this.nick = nick;
     }
 
+    /**
+     * 数据转QQ信息
+     *
+     * @param bytes 数据
+     * @return QQ信息
+     */
     public static QQInfo toQQInfo(byte[] bytes) {
+        return toQQInfo(bytes, new QQInfo());
+    }
+
+    /**
+     * 数据转QQ信息
+     *
+     * @param bytes  数据
+     * @param qqInfo QQ信息
+     * @return QQ信息
+     */
+    public static QQInfo toQQInfo(byte[] bytes, QQInfo qqInfo) {
+        if (bytes == null || qqInfo == null)
+            return null;
         Pack pack = new Pack(bytes);
-        QQInfo qqInfo = new QQInfo();
-        qqInfo.setQqId(pack.getLong());
-        qqInfo.setNick(pack.getLenStr());
-        qqInfo.setGender(pack.getInt());
-        qqInfo.setAge(pack.getInt());
+        qqInfo.qqId = pack.getLong();
+        qqInfo.nick = pack.getLenStr();
+        qqInfo.gender = pack.getInt();
+        qqInfo.age = pack.getInt();
         return qqInfo;
     }
 

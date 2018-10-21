@@ -1,6 +1,8 @@
 package com.sobte.cqp.jcq.entity;
 
-import com.sobte.cqp.jcq.util.StringHelper;
+import com.sobte.cqp.jcq.annotation.AuthType;
+import com.sobte.cqp.jcq.message.MsgBuilder;
+import com.sobte.cqp.jcq.util.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ import java.util.List;
  *
  * @author Sobte
  * @version 1.1.0
- * @since 1.6
+ * @since 1.7
  */
 public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
 
@@ -41,7 +43,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      *
      * @param authCode AC码
      */
-    public CoolQ(int authCode) {
+    protected CoolQ(int authCode) {
         this.authCode = authCode;
     }
 
@@ -52,21 +54,10 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param appDirectory 应用目录
      * @param appName      应用名称
      */
-    public CoolQ(int authCode, String appDirectory, String appName) {
+    protected CoolQ(int authCode, String appDirectory, String appName) {
         this.authCode = authCode;
         this.appDirectory = appDirectory;
         this.appName = appName;
-    }
-
-    /**
-     * 初始化整个工具（此方法由管理器调用，无需操作）
-     *
-     * @param CQToolPath 工具地址
-     * @param authCode   AC码
-     */
-    private void init(String CQToolPath, int authCode) {
-        this.authCode = authCode;
-        System.load(CQToolPath);
     }
 
     private native int setFatal(int authCode, String errorInfo);
@@ -89,7 +80,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 应用目录, 返回的路径末尾带"\"
      */
     public String getAppDirectory() {
-        if (StringHelper.isEmpty(appDirectory)) {
+        if (StringUtils.isEmpty(appDirectory)) {
             appDirectory = getAppDirectory(authCode);
         }
         File file = new File(appDirectory);
@@ -258,24 +249,40 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 失败返回负值, 成功返回消息ID
      */
     public int sendPrivateMsg(long qqId, String msg) {
-        int status = sendPrivateMsg(authCode, qqId, msg);
-        this.status = status < 0 ? status : 0;
-        return status;
+        return status = sendPrivateMsg(authCode, qqId, msg);
+    }
+
+    /**
+     * 发送私聊消息,不立即发送,创建消息处理对象
+     *
+     * @param qqId 目标QQ
+     * @return 消息处理对象
+     */
+    public MsgBuilder sendPrivateMsg(long qqId) {
+        return new MsgBuilder(AuthType.SendPrivateMsg, qqId);
     }
 
     private native int sendGroupMsg(int authCode, long groupId, String msg);
 
     /**
-     * 发送群消息
+     * 发送群聊消息
      *
-     * @param groupId 目标群
+     * @param groupId 目标群号
      * @param msg     消息内容
      * @return 失败返回负值, 成功返回消息ID
      */
     public int sendGroupMsg(long groupId, String msg) {
-        int status = sendGroupMsg(authCode, groupId, msg);
-        this.status = status < 0 ? status : 0;
-        return status;
+        return status = sendGroupMsg(authCode, groupId, msg);
+    }
+
+    /**
+     * 发送群聊消息,不立即发送,创建消息处理对象
+     *
+     * @param groupId 目标群号
+     * @return 消息处理对象
+     */
+    public MsgBuilder sendGroupMsg(long groupId) {
+        return new MsgBuilder(AuthType.SendGroupMsg, groupId);
     }
 
     private native int sendDiscussMsg(int authCode, long discussionId, String msg);
@@ -288,9 +295,17 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 失败返回负值, 成功返回消息ID
      */
     public int sendDiscussMsg(long discussionId, String msg) {
-        int status = sendDiscussMsg(authCode, discussionId, msg);
-        this.status = status < 0 ? status : 0;
-        return status;
+        return status = sendDiscussMsg(authCode, discussionId, msg);
+    }
+
+    /**
+     * 发送讨论组消息,不立即发送,创建消息处理对象
+     *
+     * @param discussionId 目标讨论组
+     * @return 消息处理对象
+     */
+    public MsgBuilder sendDiscussMsg(long discussionId) {
+        return new MsgBuilder(AuthType.SendDiscussMsg, discussionId);
     }
 
     private native int deleteMsg(int authCode, long msgId);
@@ -359,9 +374,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return CsrfToken
      */
     public int getCsrfToken() {
-        int status = getCsrfToken(authCode);
-        this.status = status < 0 ? status : 0;
-        return status;
+        return status = getCsrfToken(authCode);
     }
 
     private native String getRecord(int authCode, String file, String outformat);
@@ -374,7 +387,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 返回保存在 \data\record\ 目录下的文件名
      */
     public String getRecord(String file, String outformat) {
-        return getRecord(file, outformat);
+        return getRecord(authCode, file, outformat);
     }
 
     private native int setGroupKick(int authCode, long groupId, long qqId, boolean notBack);
@@ -498,7 +511,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int setGroupSpecialTitle(long groupId, long qqId, String title, long expireTime) {
-        if (StringHelper.isEmpty(title)) {
+        if (StringUtils.isEmpty(title)) {
             title = "";
         }
         return status = setGroupSpecialTitle(authCode, groupId, qqId, title, expireTime);
@@ -526,16 +539,28 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 如果成功，返回群成员信息，失败返回null
      */
     public Member getGroupMemberInfoV2(long groupId, long qqId) {
-        return getGroupMemberInfo(groupId, qqId, false);
+        return getGroupMemberInfoV2(groupId, qqId, false);
     }
 
+    /**
+     * 获取群成员信息
+     *
+     * @param member   群成员信息对象，用于覆盖
+     * @param groupId  目标QQ所在群
+     * @param qqId     目标QQ
+     * @param notCache 是否不使用缓存，通常忽略本参数(false)，仅在必要时使用
+     * @return 如果成功，返回群成员信息，失败返回null
+     */
+    public Member getGroupMemberInfo(Member member, long groupId, long qqId, boolean notCache) {
+        return Member.toMember(getGroupMemberInfoV2(authCode, groupId, qqId, notCache));
+    }
 
     /**
      * 获取群成员信息
      *
      * @param groupId  目标QQ所在群
      * @param qqId     目标QQ
-     * @param notCache 不使用缓存，通常忽略本参数，仅在必要时使用
+     * @param notCache 是否不使用缓存，通常忽略本参数(false)，仅在必要时使用
      * @return 如果成功，返回群成员信息，失败返回null
      */
     public Member getGroupMemberInfo(long groupId, long qqId, boolean notCache) {
@@ -558,8 +583,20 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
     /**
      * 获取陌生人信息
      *
+     * @param info     陌生人信息对象，用于覆盖
      * @param qqId     目标QQ
-     * @param notCache 不使用缓存，通常忽略本参数，仅在必要时使用
+     * @param notCache 是否不使用缓存，通常忽略本参数(false)，仅在必要时使用
+     * @return 如果成功，返回陌生人信息
+     */
+    public QQInfo getStrangerInfo(QQInfo info, long qqId, boolean notCache) {
+        return QQInfo.toQQInfo(getStrangerInfo(authCode, qqId, notCache), info);
+    }
+
+    /**
+     * 获取陌生人信息
+     *
+     * @param qqId     目标QQ
+     * @param notCache 是否不使用缓存，通常忽略本参数(false)，仅在必要时使用
      * @return 如果成功，返回陌生人信息
      */
     public QQInfo getStrangerInfo(long qqId, boolean notCache) {
@@ -717,7 +754,6 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
         return toFont(font);
     }
 
-
     /**
      * 数据转群成员
      *
@@ -748,7 +784,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 描述信息
      */
     public CQStatus getLastStatus() {
-        return CQStatus.getStatus(status);
+        return CQStatus.getStatus(status < 0 ? status : 0);
     }
 
 }

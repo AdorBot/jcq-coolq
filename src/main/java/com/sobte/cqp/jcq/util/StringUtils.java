@@ -4,7 +4,7 @@ package com.sobte.cqp.jcq.util;
  * Created by Sobte on 2016/11/9.
  * 字符串帮助类
  */
-public class StringHelper {
+public class StringUtils {
 
     /**
      * 系统换行符，根据不同的系统返回不同的换行符(字符串)
@@ -262,6 +262,62 @@ public class StringHelper {
             sb.append(src.charAt(i));
         }
         return sb.toString();
+    }
+
+    public static String stringPrefix(String src, String split) {
+        if (isEmpty(src))
+            return src;
+        if (isEmpty(split))
+            return split;
+        return src.substring(0, src.indexOf(split));
+    }
+
+    public static String stringPrefix(String src, int split) {
+        if (isEmpty(src))
+            return src;
+        return src.substring(0, src.indexOf(split));
+    }
+
+    public static String stringSuffix(String src, String split) {
+        if (isEmpty(src))
+            return src;
+        if (isEmpty(split))
+            return split;
+        return src.substring(src.indexOf(split));
+    }
+
+    public static String stringSuffix(String src, int split) {
+        if (isEmpty(src))
+            return src;
+        return src.substring(src.indexOf(split));
+    }
+
+    public static String stringLastPrefix(String src, String split) {
+        if (isEmpty(src))
+            return src;
+        if (isEmpty(split))
+            return split;
+        return src.substring(0, src.lastIndexOf(split));
+    }
+
+    public static String stringLastPrefix(String src, int split) {
+        if (isEmpty(src))
+            return src;
+        return src.substring(0, src.lastIndexOf(split));
+    }
+
+    public static String stringLastSuffix(String src, String split) {
+        if (isEmpty(src))
+            return src;
+        if (isEmpty(split))
+            return split;
+        return src.substring(src.lastIndexOf(split));
+    }
+
+    public static String stringLastSuffix(String src, int split) {
+        if (isEmpty(src))
+            return src;
+        return src.substring(src.lastIndexOf(split));
     }
 
 }

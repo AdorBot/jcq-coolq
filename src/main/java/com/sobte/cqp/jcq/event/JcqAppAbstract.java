@@ -11,11 +11,11 @@ public abstract class JcqAppAbstract extends JcqApp implements JcqListener {
     /**
      * 应用启用状态
      */
-    public static boolean enable;
+    public static boolean enable = false;
 
     /**
      * 应用数据目录
      */
-    public static String appDirectory;
+    public static String appDirectory = CQ.getAppDirectory();
 
 }

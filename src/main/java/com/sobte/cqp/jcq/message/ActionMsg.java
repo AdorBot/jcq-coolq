@@ -1,5 +1,7 @@
 package com.sobte.cqp.jcq.message;
 
+import java.io.Serializable;
+
 /**
  * Created by Sobte on 2018/4/24.<br>
  * Time: 2018/4/24 19:09<br>
@@ -8,19 +10,43 @@ package com.sobte.cqp.jcq.message;
  *
  * @author Sobte
  */
-public class ActionMsg {
+public class ActionMsg implements Serializable {
 
+    private static final long serialVersionUID = 7333012650050787773L;
+
+    /**
+     * 消息
+     */
     private String msg;
     /**
      * 第一次访问
      */
     protected boolean first;
 
+    /**
+     * 无参构造函数
+     */
     public ActionMsg() {
     }
 
+    /**
+     * 有参构造函数
+     *
+     * @param msg 消息
+     */
     public ActionMsg(String msg) {
         this.msg = msg;
+    }
+
+    /**
+     * 有参构造函数
+     *
+     * @param msg         消息
+     * @param firstDecode 首次访问是否解码
+     */
+    public ActionMsg(String msg, boolean firstDecode) {
+        this.msg = msg;
+        this.first = !firstDecode;
     }
 
     @Override
@@ -48,4 +74,5 @@ public class ActionMsg {
     public String toString() {
         return CQCode.encode(msg, true);
     }
+
 }

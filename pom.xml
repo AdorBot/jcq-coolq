@@ -14,12 +14,6 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <!-- mam -->
-        <dependency>
-            <groupId>org.meowy</groupId>
-            <artifactId>mam-api</artifactId>
-            <version>1.0.2</version>
-        </dependency>
         <!-- test -->
         <dependency>
             <groupId>junit</groupId>
