@@ -71,7 +71,7 @@ public class CQDebug extends CoolQ {
         return "酷Q";
     }
 
-    private int addLogs(int priority, String category, String content) {
+    protected int addLogs(int priority, String category, String content) {
         StringBuilder sb = new StringBuilder();
         Formatter fmt = new Formatter(sb);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
