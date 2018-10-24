@@ -264,6 +264,52 @@ public class StringUtils {
         return sb.toString();
     }
 
+    /**
+     * 字符串替换,替换所有相同的字符串
+     *
+     * @param src         源字符串
+     * @param target      被替换的字符串
+     * @param replacement 替换的对象（会转成字符串）
+     * @return 处理后的字符串
+     */
+    public static String stringReplace(String src, String target, Object... replacement) {
+        if (src == null || target == null || target.length() == 0 || replacement == null || replacement.length == 0)
+            return src;
+        int index = src.indexOf(target), repIdx = 0;
+        if (index == -1)
+            return src;
+        StringBuilder sb = new StringBuilder();
+        char c = target.charAt(0);
+        for (int i = 0; i < src.length(); i++) {
+            if (i >= index && src.charAt(i) == c && repIdx < replacement.length) {
+                int length = i + target.length(), pos = 0, end = 0;
+                for (int j = i; j < length; j++) {
+                    if (src.charAt(j) != target.charAt(pos)) {
+                        end = j;
+                        break;
+                    }
+                    pos++;
+                }
+                if (end != 0) {
+                    for (; i < end; i++)
+                        sb.append(src.charAt(i));
+                    i = end - 1;
+                } else {
+                    if (replacement[repIdx] != null) {
+                        String replaceStr = replacement[repIdx].toString();
+                        for (int j = 0; j < replaceStr.length(); j++)
+                            sb.append(replaceStr.charAt(j));
+                        i = length - 1;
+                    }
+                    repIdx++;
+                }
+                continue;
+            }
+            sb.append(src.charAt(i));
+        }
+        return sb.toString();
+    }
+
     public static String stringPrefix(String src, String split) {
         if (isEmpty(src))
             return src;

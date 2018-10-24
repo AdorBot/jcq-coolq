@@ -71,7 +71,7 @@ public class CQDebug extends CoolQ {
         return "酷Q";
     }
 
-    protected int addLogs(int priority, String category, String content) {
+    protected int addLogs(int priority, String category, String content, String format, Object... arguments) {
         StringBuilder sb = new StringBuilder();
         Formatter fmt = new Formatter(sb);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
@@ -82,6 +82,9 @@ public class CQDebug extends CoolQ {
         String pid = name.split("@")[0];
         sb.append(sdf.format(date));
         switch (priority) {
+            case LOG_TRACE:
+                fmt.format(" %11s ", "TRACE");
+                break;
             case LOG_DEBUG:
                 fmt.format(" %11s ", "DEBUG");
                 break;
@@ -115,8 +118,15 @@ public class CQDebug extends CoolQ {
         fmt.format("%-19s", category);
         sb.append(" : ");
         sb.append(content);
+        if (format != null) {
+            sb.append(StringUtils.stringReplace(format, "{}", arguments));
+        }
         System.out.println(sb.toString());
         return status = 0;
+    }
+
+    protected int addLogs(int priority, String category, String content) {
+        return addLogs(priority, category, content, null);
     }
 
     /**
@@ -255,6 +265,7 @@ public class CQDebug extends CoolQ {
      * @param category 类型
      * @param content  内容
      * @return 状态码
+     * @see #logTrace(String, String) 追踪信息
      * @see #logDebug(String, String) 调试信息
      * @see #logError(String, String) 错误信息
      * @see #logFatal(String, String) 致命信息
@@ -267,6 +278,38 @@ public class CQDebug extends CoolQ {
     @Deprecated
     public int addLog(int priority, String category, String content) {
         return addLogs(priority, category, content);
+    }
+
+    /**
+     * 添加日志<br>
+     * 级别：追踪<br>
+     * 颜色：无
+     * 提示：此日志不会输出到酷Q，只会记录到JCQ的控制台
+     *
+     * @param category 类型
+     * @param content  内容
+     * @return 状态码
+     */
+    @Override
+    public int logTrace(String category, String content) {
+        return addLogs(LOG_TRACE, category, content);
+    }
+
+    /**
+     * 添加日志<br>
+     * 级别：追踪<br>
+     * 颜色：无
+     * 提示：此日志不会输出到酷Q，只会记录到JCQ的控制台
+     *
+     * @param category  类型
+     * @param content   内容
+     * @param format    格式
+     * @param arguments 参数
+     * @return 状态码
+     */
+    @Override
+    public int logTrace(String category, String content, String format, Object... arguments) {
+        return addLogs(LOG_TRACE, category, content, format, arguments);
     }
 
     /**
@@ -284,6 +327,22 @@ public class CQDebug extends CoolQ {
 
     /**
      * 添加日志<br>
+     * 级别：调试<br>
+     * 颜色：灰色
+     *
+     * @param category  类型
+     * @param content   内容
+     * @param format    格式
+     * @param arguments 参数
+     * @return 状态码
+     */
+    @Override
+    public int logDebug(String category, String content, String format, Object... arguments) {
+        return addLogs(LOG_DEBUG, category, content, format, arguments);
+    }
+
+    /**
+     * 添加日志<br>
      * 级别：信息<br>
      * 颜色：黑色
      *
@@ -293,6 +352,22 @@ public class CQDebug extends CoolQ {
      */
     public int logInfo(String category, String content) {
         return addLogs(LOG_INFO, category, content);
+    }
+
+    /**
+     * 添加日志<br>
+     * 级别：信息<br>
+     * 颜色：黑色
+     *
+     * @param category  类型
+     * @param content   内容
+     * @param format    格式
+     * @param arguments 参数
+     * @return 状态码
+     */
+    @Override
+    public int logInfo(String category, String content, String format, Object... arguments) {
+        return addLogs(LOG_INFO, category, content, format, arguments);
     }
 
     /**
@@ -310,6 +385,22 @@ public class CQDebug extends CoolQ {
 
     /**
      * 添加日志<br>
+     * 级别：信息(接收)<br>
+     * 颜色：蓝色
+     *
+     * @param category  类型
+     * @param content   内容
+     * @param format    格式
+     * @param arguments 参数
+     * @return 状态码
+     */
+    @Override
+    public int logInfoRecv(String category, String content, String format, Object... arguments) {
+        return addLogs(LOG_INFORECV, category, content, format, arguments);
+    }
+
+    /**
+     * 添加日志<br>
      * 级别：信息(发送)<br>
      * 颜色：绿色
      *
@@ -319,6 +410,22 @@ public class CQDebug extends CoolQ {
      */
     public int logInfoSend(String category, String content) {
         return addLogs(LOG_INFOSEND, category, content);
+    }
+
+    /**
+     * 添加日志<br>
+     * 级别：信息(发送)<br>
+     * 颜色：绿色
+     *
+     * @param category  类型
+     * @param content   内容
+     * @param format    格式
+     * @param arguments 参数
+     * @return 状态码
+     */
+    @Override
+    public int logInfoSend(String category, String content, String format, Object... arguments) {
+        return addLogs(LOG_INFOSEND, category, content, format, arguments);
     }
 
     /**
@@ -336,6 +443,22 @@ public class CQDebug extends CoolQ {
 
     /**
      * 添加日志<br>
+     * 级别：信息(成功)<br>
+     * 颜色：紫色
+     *
+     * @param category  类型
+     * @param content   内容
+     * @param format    格式
+     * @param arguments 参数
+     * @return 状态码
+     */
+    @Override
+    public int logInfoSuccess(String category, String content, String format, Object... arguments) {
+        return addLogs(LOG_INFOSUCCESS, category, content, format, arguments);
+    }
+
+    /**
+     * 添加日志<br>
      * 级别：警告<br>
      * 颜色：橙色
      *
@@ -345,6 +468,22 @@ public class CQDebug extends CoolQ {
      */
     public int logWarning(String category, String content) {
         return addLogs(LOG_WARNING, category, content);
+    }
+
+    /**
+     * 添加日志<br>
+     * 级别：警告<br>
+     * 颜色：橙色
+     *
+     * @param category  类型
+     * @param content   内容
+     * @param format    格式
+     * @param arguments 参数
+     * @return 状态码
+     */
+    @Override
+    public int logWarning(String category, String content, String format, Object... arguments) {
+        return addLogs(LOG_WARNING, category, content, format, arguments);
     }
 
     /**
@@ -362,6 +501,22 @@ public class CQDebug extends CoolQ {
 
     /**
      * 添加日志<br>
+     * 级别：错误<br>
+     * 颜色：红色
+     *
+     * @param category  类型
+     * @param content   内容
+     * @param format    格式
+     * @param arguments 参数
+     * @return 状态码
+     */
+    @Override
+    public int logError(String category, String content, String format, Object... arguments) {
+        return addLogs(LOG_ERROR, category, content, format, arguments);
+    }
+
+    /**
+     * 添加日志<br>
      * 级别：致命错误<br>
      * 颜色：深红
      *
@@ -371,6 +526,22 @@ public class CQDebug extends CoolQ {
      */
     public int logFatal(String category, String content) {
         return addLogs(LOG_FATAL, category, content);
+    }
+
+    /**
+     * 添加日志<br>
+     * 级别：致命错误<br>
+     * 颜色：深红
+     *
+     * @param category  类型
+     * @param content   内容
+     * @param format    格式
+     * @param arguments 参数
+     * @return 状态码
+     */
+    @Override
+    public int logFatal(String category, String content, String format, Object... arguments) {
+        return addLogs(LOG_FATAL, category, content, format, arguments);
     }
 
     /**

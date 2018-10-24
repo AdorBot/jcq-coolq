@@ -18,7 +18,7 @@ import java.util.List;
  * @version 1.1.0
  * @since 1.7
  */
-public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
+public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
 
     /**
      * AC码
@@ -120,6 +120,7 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param category 类型
      * @param content  内容
      * @return 状态码
+     * @see #logTrace(String, String) 追踪信息
      * @see #logDebug(String, String) 调试信息
      * @see #logError(String, String) 错误信息
      * @see #logFatal(String, String) 致命信息
@@ -136,6 +137,32 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
 
     /**
      * 添加日志<br>
+     * 级别：追踪<br>
+     * 颜色：无
+     * 提示：此日志不会输出到酷Q，只会记录到JCQ的控制台
+     *
+     * @param category 类型
+     * @param content  内容
+     * @return 状态码
+     */
+    public abstract int logTrace(String category, String content);
+
+    /**
+     * 添加日志<br>
+     * 级别：追踪<br>
+     * 颜色：无
+     * 提示：此日志不会输出到酷Q，只会记录到JCQ的控制台
+     *
+     * @param category  类型
+     * @param content   内容
+     * @param format    格式
+     * @param arguments 参数
+     * @return 状态码
+     */
+    public abstract int logTrace(String category, String content, String format, Object... arguments);
+
+    /**
+     * 添加日志<br>
      * 级别：调试<br>
      * 颜色：灰色
      *
@@ -146,6 +173,19 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
     public int logDebug(String category, String content) {
         return status = addLog(authCode, LOG_DEBUG, category, content);
     }
+
+    /**
+     * 添加日志<br>
+     * 级别：调试<br>
+     * 颜色：灰色
+     *
+     * @param category  类型
+     * @param content   内容
+     * @param format    格式
+     * @param arguments 参数
+     * @return 状态码
+     */
+    public abstract int logDebug(String category, String content, String format, Object... arguments);
 
     /**
      * 添加日志<br>
@@ -162,6 +202,19 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
 
     /**
      * 添加日志<br>
+     * 级别：信息<br>
+     * 颜色：黑色
+     *
+     * @param category  类型
+     * @param content   内容
+     * @param format    格式
+     * @param arguments 参数
+     * @return 状态码
+     */
+    public abstract int logInfo(String category, String content, String format, Object... arguments);
+
+    /**
+     * 添加日志<br>
      * 级别：信息(接收)<br>
      * 颜色：蓝色
      *
@@ -172,6 +225,19 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
     public int logInfoRecv(String category, String content) {
         return status = addLog(authCode, LOG_INFORECV, category, content);
     }
+
+    /**
+     * 添加日志<br>
+     * 级别：信息(接收)<br>
+     * 颜色：蓝色
+     *
+     * @param category  类型
+     * @param content   内容
+     * @param format    格式
+     * @param arguments 参数
+     * @return 状态码
+     */
+    public abstract int logInfoRecv(String category, String content, String format, Object... arguments);
 
     /**
      * 添加日志<br>
@@ -188,6 +254,19 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
 
     /**
      * 添加日志<br>
+     * 级别：信息(发送)<br>
+     * 颜色：绿色
+     *
+     * @param category  类型
+     * @param content   内容
+     * @param format    格式
+     * @param arguments 参数
+     * @return 状态码
+     */
+    public abstract int logInfoSend(String category, String content, String format, Object... arguments);
+
+    /**
+     * 添加日志<br>
      * 级别：信息(成功)<br>
      * 颜色：紫色
      *
@@ -198,6 +277,19 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
     public int logInfoSuccess(String category, String content) {
         return status = addLog(authCode, LOG_INFOSUCCESS, category, content);
     }
+
+    /**
+     * 添加日志<br>
+     * 级别：信息(成功)<br>
+     * 颜色：紫色
+     *
+     * @param category  类型
+     * @param content   内容
+     * @param format    格式
+     * @param arguments 参数
+     * @return 状态码
+     */
+    public abstract int logInfoSuccess(String category, String content, String format, Object... arguments);
 
     /**
      * 添加日志<br>
@@ -214,6 +306,19 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
 
     /**
      * 添加日志<br>
+     * 级别：警告<br>
+     * 颜色：橙色
+     *
+     * @param category  类型
+     * @param content   内容
+     * @param format    格式
+     * @param arguments 参数
+     * @return 状态码
+     */
+    public abstract int logWarning(String category, String content, String format, Object... arguments);
+
+    /**
+     * 添加日志<br>
      * 级别：错误<br>
      * 颜色：红色
      *
@@ -227,6 +332,19 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
 
     /**
      * 添加日志<br>
+     * 级别：错误<br>
+     * 颜色：红色
+     *
+     * @param category  类型
+     * @param content   内容
+     * @param format    格式
+     * @param arguments 参数
+     * @return 状态码
+     */
+    public abstract int logError(String category, String content, String format, Object... arguments);
+
+    /**
+     * 添加日志<br>
      * 级别：致命错误<br>
      * 颜色：深红
      *
@@ -237,6 +355,19 @@ public class CoolQ implements ILog, IRequest, IMsg, ICQVer {
     public int logFatal(String category, String content) {
         return status = addLog(authCode, LOG_FATAL, category, content);
     }
+
+    /**
+     * 添加日志<br>
+     * 级别：致命错误<br>
+     * 颜色：深红
+     *
+     * @param category  类型
+     * @param content   内容
+     * @param format    格式
+     * @param arguments 参数
+     * @return 状态码
+     */
+    public abstract int logFatal(String category, String content, String format, Object... arguments);
 
 
     private native int sendPrivateMsg(int authCode, long qqId, String msg);

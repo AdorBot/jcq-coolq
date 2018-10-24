@@ -10,6 +10,11 @@ public interface ILog {
 
     // 日志变量
     /**
+     * 级别：追踪<br>
+     * 颜色：无
+     */
+    int LOG_TRACE = -10;
+    /**
      * 级别：调试<br>
      * 颜色：灰色
      */
