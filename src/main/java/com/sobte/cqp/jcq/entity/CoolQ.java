@@ -153,6 +153,22 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * 颜色：无
      * 提示：此日志不会输出到酷Q，只会记录到JCQ的控制台
      *
+     * @param category 类型
+     * @param e        异常
+     * @return 状态码
+     */
+    public int logTrace(String category, Throwable e) {
+        int status = logTrace(category, e.getMessage());
+        e.printStackTrace(System.out);
+        return status;
+    }
+
+    /**
+     * 添加日志<br>
+     * 级别：追踪<br>
+     * 颜色：无
+     * 提示：此日志不会输出到酷Q，只会记录到JCQ的控制台
+     *
      * @param category  类型
      * @param content   内容
      * @param format    格式
@@ -172,6 +188,22 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      */
     public int logDebug(String category, String content) {
         return status = addLog(authCode, LOG_DEBUG, category, content);
+    }
+
+    /**
+     * 添加日志<br>
+     * 级别：调试<br>
+     * 颜色：灰色
+     * 提示：此日志不会输出到酷Q，只会记录到JCQ的控制台
+     *
+     * @param category 类型
+     * @param e        异常
+     * @return 状态码
+     */
+    public int logDebug(String category, Throwable e) {
+        int status = logDebug(category, e.getMessage());
+        e.printStackTrace(System.out);
+        return status;
     }
 
     /**
@@ -205,6 +237,21 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * 级别：信息<br>
      * 颜色：黑色
      *
+     * @param category 类型
+     * @param e        异常
+     * @return 状态码
+     */
+    public int logInfo(String category, Throwable e) {
+        int status = logInfo(category, e.getMessage());
+        e.printStackTrace(System.out);
+        return status;
+    }
+
+    /**
+     * 添加日志<br>
+     * 级别：信息<br>
+     * 颜色：黑色
+     *
      * @param category  类型
      * @param content   内容
      * @param format    格式
@@ -224,6 +271,21 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      */
     public int logInfoRecv(String category, String content) {
         return status = addLog(authCode, LOG_INFORECV, category, content);
+    }
+
+    /**
+     * 添加日志<br>
+     * 级别：信息(接收)<br>
+     * 颜色：蓝色
+     *
+     * @param category 类型
+     * @param e        异常
+     * @return 状态码
+     */
+    public int logInfoRecv(String category, Throwable e) {
+        int status = logInfoRecv(category, e.getMessage());
+        e.printStackTrace(System.out);
+        return status;
     }
 
     /**
@@ -257,6 +319,21 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * 级别：信息(发送)<br>
      * 颜色：绿色
      *
+     * @param category 类型
+     * @param e        异常
+     * @return 状态码
+     */
+    public int logInfoSend(String category, Throwable e) {
+        int status = logInfoSend(category, e.getMessage());
+        e.printStackTrace(System.out);
+        return status;
+    }
+
+    /**
+     * 添加日志<br>
+     * 级别：信息(发送)<br>
+     * 颜色：绿色
+     *
      * @param category  类型
      * @param content   内容
      * @param format    格式
@@ -276,6 +353,21 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      */
     public int logInfoSuccess(String category, String content) {
         return status = addLog(authCode, LOG_INFOSUCCESS, category, content);
+    }
+
+    /**
+     * 添加日志<br>
+     * 级别：信息(成功)<br>
+     * 颜色：紫色
+     *
+     * @param category 类型
+     * @param e        异常
+     * @return 状态码
+     */
+    public int logInfoSuccess(String category, Throwable e) {
+        int status = logInfoSuccess(category, e.getMessage());
+        e.printStackTrace(System.out);
+        return status;
     }
 
     /**
@@ -309,6 +401,21 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * 级别：警告<br>
      * 颜色：橙色
      *
+     * @param category 类型
+     * @param e        异常
+     * @return 状态码
+     */
+    public int logWarning(String category, Throwable e) {
+        int status = logWarning(category, e.getMessage());
+        e.printStackTrace(System.out);
+        return status;
+    }
+
+    /**
+     * 添加日志<br>
+     * 级别：警告<br>
+     * 颜色：橙色
+     *
      * @param category  类型
      * @param content   内容
      * @param format    格式
@@ -328,6 +435,21 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      */
     public int logError(String category, String content) {
         return status = addLog(authCode, LOG_ERROR, category, content);
+    }
+
+    /**
+     * 添加日志<br>
+     * 级别：错误<br>
+     * 颜色：红色
+     *
+     * @param category 类型
+     * @param e        异常
+     * @return 状态码
+     */
+    public int logError(String category, Throwable e) {
+        int status = logError(category, e.getMessage());
+        e.printStackTrace(System.out);
+        return status;
     }
 
     /**
