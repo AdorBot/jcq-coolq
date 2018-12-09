@@ -84,7 +84,7 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
             appDirectory = getAppDirectory(authCode);
         }
         File file = new File(appDirectory);
-        if (!file.exists())
+        if (!file.isDirectory())
             file.mkdirs();
         return appDirectory;
     }
@@ -169,13 +169,14 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * 颜色：无
      * 提示：此日志不会输出到酷Q，只会记录到JCQ的控制台
      *
-     * @param category  类型
-     * @param content   内容
-     * @param format    格式
-     * @param arguments 参数
+     * @param category      类型
+     * @param formatContent 格式
+     * @param arguments     参数
      * @return 状态码
      */
-    public abstract int logTrace(String category, String content, String format, Object... arguments);
+    public int logTrace(String category, String formatContent, Object... arguments) {
+        return logTrace(category, StringUtils.stringReplace(formatContent, "{}", arguments));
+    }
 
     /**
      * 添加日志<br>
@@ -211,13 +212,14 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * 级别：调试<br>
      * 颜色：灰色
      *
-     * @param category  类型
-     * @param content   内容
-     * @param format    格式
-     * @param arguments 参数
+     * @param category      类型
+     * @param formatContent 格式
+     * @param arguments     参数
      * @return 状态码
      */
-    public abstract int logDebug(String category, String content, String format, Object... arguments);
+    public int logDebug(String category, String formatContent, Object... arguments) {
+        return logDebug(category, StringUtils.stringReplace(formatContent, "{}", arguments));
+    }
 
     /**
      * 添加日志<br>
@@ -252,13 +254,14 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * 级别：信息<br>
      * 颜色：黑色
      *
-     * @param category  类型
-     * @param content   内容
-     * @param format    格式
-     * @param arguments 参数
+     * @param category      类型
+     * @param formatContent 格式
+     * @param arguments     参数
      * @return 状态码
      */
-    public abstract int logInfo(String category, String content, String format, Object... arguments);
+    public int logInfo(String category, String formatContent, Object... arguments) {
+        return logInfo(category, StringUtils.stringReplace(formatContent, "{}", arguments));
+    }
 
     /**
      * 添加日志<br>
@@ -293,13 +296,14 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * 级别：信息(接收)<br>
      * 颜色：蓝色
      *
-     * @param category  类型
-     * @param content   内容
-     * @param format    格式
-     * @param arguments 参数
+     * @param category      类型
+     * @param formatContent 格式
+     * @param arguments     参数
      * @return 状态码
      */
-    public abstract int logInfoRecv(String category, String content, String format, Object... arguments);
+    public int logInfoRecv(String category, String formatContent, Object... arguments) {
+        return logInfoRecv(category, StringUtils.stringReplace(formatContent, "{}", arguments));
+    }
 
     /**
      * 添加日志<br>
@@ -334,13 +338,14 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * 级别：信息(发送)<br>
      * 颜色：绿色
      *
-     * @param category  类型
-     * @param content   内容
-     * @param format    格式
-     * @param arguments 参数
+     * @param category      类型
+     * @param formatContent 格式
+     * @param arguments     参数
      * @return 状态码
      */
-    public abstract int logInfoSend(String category, String content, String format, Object... arguments);
+    public int logInfoSend(String category, String formatContent, Object... arguments) {
+        return logInfoSend(category, StringUtils.stringReplace(formatContent, "{}", arguments));
+    }
 
     /**
      * 添加日志<br>
@@ -375,13 +380,14 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * 级别：信息(成功)<br>
      * 颜色：紫色
      *
-     * @param category  类型
-     * @param content   内容
-     * @param format    格式
-     * @param arguments 参数
+     * @param category      类型
+     * @param formatContent 格式
+     * @param arguments     参数
      * @return 状态码
      */
-    public abstract int logInfoSuccess(String category, String content, String format, Object... arguments);
+    public int logInfoSuccess(String category, String formatContent, Object... arguments) {
+        return logInfoSuccess(category, StringUtils.stringReplace(formatContent, "{}", arguments));
+    }
 
     /**
      * 添加日志<br>
@@ -416,13 +422,14 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * 级别：警告<br>
      * 颜色：橙色
      *
-     * @param category  类型
-     * @param content   内容
-     * @param format    格式
-     * @param arguments 参数
+     * @param category      类型
+     * @param formatContent 格式
+     * @param arguments     参数
      * @return 状态码
      */
-    public abstract int logWarning(String category, String content, String format, Object... arguments);
+    public int logWarning(String category, String formatContent, Object... arguments) {
+        return logWarning(category, StringUtils.stringReplace(formatContent, "{}", arguments));
+    }
 
     /**
      * 添加日志<br>
@@ -457,13 +464,14 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * 级别：错误<br>
      * 颜色：红色
      *
-     * @param category  类型
-     * @param content   内容
-     * @param format    格式
-     * @param arguments 参数
+     * @param category      类型
+     * @param formatContent 格式
+     * @param arguments     参数
      * @return 状态码
      */
-    public abstract int logError(String category, String content, String format, Object... arguments);
+    public int logError(String category, String formatContent, Object... arguments) {
+        return logError(category, StringUtils.stringReplace(formatContent, "{}", arguments));
+    }
 
     /**
      * 添加日志<br>
@@ -483,14 +491,31 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * 级别：致命错误<br>
      * 颜色：深红
      *
-     * @param category  类型
-     * @param content   内容
-     * @param format    格式
-     * @param arguments 参数
+     * @param category 类型
+     * @param e        异常
      * @return 状态码
      */
-    public abstract int logFatal(String category, String content, String format, Object... arguments);
+    public int logFatal(String category, Throwable e) {
+        String pst = StringUtils.getStackTracePrintString(e);
+        String sb = "很抱歉，应用发生致命错误，无法继续运行。\n" +
+                "应用名称：[" + appName + "]\n" +
+                "堆栈信息：\n" + pst;
+        return logFatal(category, sb);
+    }
 
+    /**
+     * 添加日志<br>
+     * 级别：致命错误<br>
+     * 颜色：深红
+     *
+     * @param category      类型
+     * @param formatContent 格式
+     * @param arguments     参数
+     * @return 状态码
+     */
+    public int logFatal(String category, String formatContent, Object... arguments) {
+        return logFatal(category, StringUtils.stringReplace(formatContent, "{}", arguments));
+    }
 
     private native int sendPrivateMsg(int authCode, long qqId, String msg);
 
@@ -512,7 +537,7 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 消息处理对象
      */
     public MsgBuilder sendPrivateMsg(long qqId) {
-        return new MsgBuilder(AuthType.SendPrivateMsg, qqId);
+        return new MsgBuilder(this, AuthType.SendPrivateMsg, qqId);
     }
 
     private native int sendGroupMsg(int authCode, long groupId, String msg);
@@ -535,7 +560,7 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 消息处理对象
      */
     public MsgBuilder sendGroupMsg(long groupId) {
-        return new MsgBuilder(AuthType.SendGroupMsg, groupId);
+        return new MsgBuilder(this, AuthType.SendGroupMsg, groupId);
     }
 
     private native int sendDiscussMsg(int authCode, long discussionId, String msg);
@@ -558,7 +583,7 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 消息处理对象
      */
     public MsgBuilder sendDiscussMsg(long discussionId) {
-        return new MsgBuilder(AuthType.SendDiscussMsg, discussionId);
+        return new MsgBuilder(this, AuthType.SendDiscussMsg, discussionId);
     }
 
     private native int deleteMsg(int authCode, long msgId);

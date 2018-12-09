@@ -1,5 +1,8 @@
 package com.sobte.cqp.jcq.util;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  * Created by Sobte on 2016/11/9.
  * 字符串帮助类
@@ -308,6 +311,21 @@ public class StringUtils {
             sb.append(src.charAt(i));
         }
         return sb.toString();
+    }
+
+    /**
+     * 获取异常打印的 堆栈信息
+     *
+     * @param e 异常
+     * @return 堆栈信息
+     */
+    public static String getStackTracePrintString(Throwable e) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        pw.flush();
+        pw.close();
+        return sw.toString();
     }
 
     public static String stringPrefix(String src, String split) {

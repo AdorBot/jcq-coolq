@@ -2,6 +2,7 @@ package com.sobte.cqp.jcq.message;
 
 import com.sobte.cqp.jcq.annotation.AuthType;
 import com.sobte.cqp.jcq.entity.CQImage;
+import com.sobte.cqp.jcq.entity.CoolQ;
 
 import java.io.*;
 import java.util.List;
@@ -28,11 +29,24 @@ public final class MsgBuilder extends AbstractMsgBuilder implements Serializable
     /**
      * 有参构造函数
      *
+     * @param CQ     CQ操作变量
      * @param type   函数类型
      * @param target 目标ID
      */
-    public MsgBuilder(AuthType type, long target) {
-        super(type, target);
+    public MsgBuilder(CoolQ CQ, AuthType type, long target) {
+        super(CQ, type, target);
+    }
+
+    /**
+     * 设置酷Q操作变量
+     *
+     * @param CQ 酷Q操作变量
+     * @return 本消息对象
+     */
+    @Override
+    public MsgBuilder setCoolQ(CoolQ CQ) {
+        super.setCoolQ(CQ);
+        return this;
     }
 
     /**
@@ -60,7 +74,7 @@ public final class MsgBuilder extends AbstractMsgBuilder implements Serializable
     }
 
     /**
-     * 撤回消息
+     * 撤回消息，发送前先指定一下 酷Q操作变量 不然默认就是Debug模式进行操作
      *
      * @param msgId 消息ID
      * @return 本消息对象
@@ -83,7 +97,7 @@ public final class MsgBuilder extends AbstractMsgBuilder implements Serializable
     }
 
     /**
-     * 发送消息
+     * 发送消息，发送前先指定一下 酷Q操作变量 不然默认就是Debug模式进行操作
      *
      * @return 本消息对象
      */

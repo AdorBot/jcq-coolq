@@ -2,9 +2,9 @@ package com.sobte.cqp.jcq.message;
 
 import com.sobte.cqp.jcq.annotation.EventType;
 import com.sobte.cqp.jcq.annotation.Gender;
+import com.sobte.cqp.jcq.entity.CQDebug;
 import com.sobte.cqp.jcq.entity.CQStatus;
 import com.sobte.cqp.jcq.entity.CoolQ;
-import com.sobte.cqp.jcq.event.JcqApp;
 
 /**
  * Created by Sobte on 2018/7/13.<br>
@@ -18,7 +18,7 @@ abstract class AbstractSender implements Message {
     /**
      * 酷Q操作变量
      */
-    protected CoolQ CQ = JcqApp.getCoolQ();
+    protected CoolQ CQ = CQDebug.getInstance();
 
     /**
      * 来源事件类型
@@ -67,6 +67,15 @@ abstract class AbstractSender implements Message {
         this.type = msg.getType();
         this.msgId = msg.getMsgId();
         this.msg = msg.getMsg();
+    }
+
+    /**
+     * 设置酷Q操作变量
+     *
+     * @param CQ 酷Q操作变量
+     */
+    public void setCoolQ(CoolQ CQ) {
+        this.CQ = CQ;
     }
 
     /**

@@ -1,10 +1,10 @@
 package com.sobte.cqp.jcq.message;
 
 import com.sobte.cqp.jcq.annotation.AuthType;
+import com.sobte.cqp.jcq.entity.CQDebug;
 import com.sobte.cqp.jcq.entity.CQImage;
 import com.sobte.cqp.jcq.entity.CQStatus;
 import com.sobte.cqp.jcq.entity.CoolQ;
-import com.sobte.cqp.jcq.event.JcqApp;
 import com.sobte.cqp.jcq.util.StringUtils;
 
 import java.io.File;
@@ -25,7 +25,12 @@ abstract class AbstractMsgBuilder implements Appendable, CharSequence, Message {
     /**
      * 追加酷Q码，酷Q码功能生成类
      */
-    private CQCode code = JcqApp.getCQCode();
+    protected CQCode code = CQCode.getInstance();
+
+    /**
+     * CQ操作变量
+     */
+    protected CoolQ CQ = CQDebug.getInstance();
 
     /**
      * 状态码,发送成功则为消息ID
@@ -56,12 +61,25 @@ abstract class AbstractMsgBuilder implements Appendable, CharSequence, Message {
     /**
      * 有参构造函数
      *
+     * @param CQ     酷Q操作变量
      * @param type   函数类型
      * @param target 目标ID
      */
-    public AbstractMsgBuilder(AuthType type, long target) {
+    public AbstractMsgBuilder(CoolQ CQ, AuthType type, long target) {
+        this.CQ = CQ;
         this.type = type;
         this.target = target;
+    }
+
+    /**
+     * 设置酷Q操作变量
+     *
+     * @param CQ 酷Q操作变量
+     * @return 本消息对象
+     */
+    public AbstractMsgBuilder setCoolQ(CoolQ CQ) {
+        this.CQ = CQ;
+        return this;
     }
 
     /**
@@ -115,7 +133,7 @@ abstract class AbstractMsgBuilder implements Appendable, CharSequence, Message {
     }
 
     /**
-     * 发送消息
+     * 发送消息，发送前先指定一下 酷Q操作变量 不然默认就是Debug模式进行操作
      *
      * @param type   函数类型
      * @param target 目标ID
@@ -123,30 +141,28 @@ abstract class AbstractMsgBuilder implements Appendable, CharSequence, Message {
      */
     protected AbstractMsgBuilder send(AuthType type, long target) {
         if (target <= 0) throw new NullPointerException("目标ID不能为空!");
-        CoolQ cq = JcqApp.getCoolQ();
         switch (type) {
             case SendPrivateMsg:
-                status = cq.sendPrivateMsg(target, toString());
+                status = CQ.sendPrivateMsg(target, toString());
                 break;
             case SendGroupMsg:
-                status = cq.sendGroupMsg(target, toString());
+                status = CQ.sendGroupMsg(target, toString());
                 break;
             case SendDiscussMsg:
-                status = cq.sendDiscussMsg(target, toString());
+                status = CQ.sendDiscussMsg(target, toString());
                 break;
         }
         return this;
     }
 
     /**
-     * 撤回消息
+     * 撤回消息，发送前先指定一下 酷Q操作变量 不然默认就是Debug模式进行操作
      *
      * @param msgId 消息ID
      * @return 本消息对象
      */
     public AbstractMsgBuilder deleteMsg(long msgId) {
-        CoolQ cq = JcqApp.getCoolQ();
-        status = cq.deleteMsg(msgId);
+        status = CQ.deleteMsg(msgId);
         return this;
     }
 

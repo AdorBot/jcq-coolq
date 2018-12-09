@@ -21,6 +21,20 @@ import java.util.Map;
 public final class CQCode {
 
     /**
+     * 默认的CQCode
+     */
+    private static final CQCode code = new CQCode();
+
+    /**
+     * 获取默认的CQCode
+     *
+     * @return 默认的CQCode
+     */
+    public static CQCode getInstance() {
+        return code;
+    }
+
+    /**
      * 特殊字符，转义，避免冲突
      *
      * @param code    要转义的字符串

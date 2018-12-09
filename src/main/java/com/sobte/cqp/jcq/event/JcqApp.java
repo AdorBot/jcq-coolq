@@ -15,18 +15,14 @@ import com.sobte.cqp.jcq.message.CQCode;
 public abstract class JcqApp {
 
     /**
-     * CQ操作变量 隔类不建议直接调用 请使用 {@link #getCQCode()} 此变量未来可能改动访问方式<br>
-     * 类中访问更新不受影响
+     * CQ操作变量
      */
-    @Deprecated
-    public static final CoolQ CQ = new CQDebug();
+    protected final CoolQ CQ;
 
     /**
-     * CQ码，赋值操作变量 隔类不建议直接调用 请使用 {@link #getCQCode()} 此变量未来可能改动访问方式<br>
-     * 类中访问更新不受影响
+     * CQ码，赋值操作变量
      */
-    @Deprecated
-    protected static final CQCode CC = new CQCode();
+    protected final CQCode CC;
 
     /**
      * 返回应用的ApiVer、Appid，打包后将不会调用<br>
@@ -38,20 +34,33 @@ public abstract class JcqApp {
     public abstract String appInfo();
 
     /**
-     * 获取CoolQ操作对象
+     * 构造方法 CQ变量由系统分配，继承后保留构造函数的CQ变量即可
      *
-     * @return 酷Q操作对象
+     * @param CQ CQ操作变量，由系统分配
      */
-    public static CoolQ getCoolQ() {
+    public JcqApp(CoolQ CQ) {
+        if (CQ != null)
+            this.CQ = CQ;
+        else
+            this.CQ = CQDebug.getInstance();
+        this.CC = CQCode.getInstance();
+    }
+
+    /**
+     * 获取酷Q操作变量
+     *
+     * @return 酷Q
+     */
+    public final CoolQ getCoolQ() {
         return CQ;
     }
 
     /**
-     * 获取CQCode操作对象，用于操作
+     * 获取酷Q码操作对象
      *
-     * @return 酷Q操作对象
+     * @return 酷Q码
      */
-    public static CQCode getCQCode() {
+    public final CQCode getCQCode() {
         return CC;
     }
 
