@@ -872,8 +872,8 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @param member  用于覆盖信息的成员
      * @return 如果成功，返回群成员信息，失败返回null
      */
-    public Member getGroupMemberInfo(long groupId, long qqId, Member member) {
-        return Member.toMember(getGroupMemberInfoV2(authCode, groupId, qqId, false), member);
+    public Member getGroupMemberInfo(long groupId, long qqId, boolean notCache, Member member) {
+        return Member.toMember(getGroupMemberInfoV2(authCode, groupId, qqId, notCache), member);
     }
 
     /**

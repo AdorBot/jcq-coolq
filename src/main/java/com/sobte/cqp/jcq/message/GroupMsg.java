@@ -456,7 +456,7 @@ public class GroupMsg extends Sender {
      * @return 是否刷新成功
      */
     protected boolean refreshInfo(long groupId, long qqId, boolean notCache) {
-        return CQ.getGroupMemberInfo(member, groupId, qqId, notCache) != null;
+        return CQ.getGroupMemberInfo(groupId, qqId, notCache, member) != null;
     }
 
     /**
