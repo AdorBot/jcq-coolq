@@ -82,7 +82,7 @@ public class CQImage {
     }
 
     /**
-     * 根据配置文件加载
+     * 已废弃，根据配置文件加载
      *
      * @param iniFile 配置文件
      */
@@ -249,7 +249,7 @@ public class CQImage {
                         throw new IOException("重定向请求不包含请求地址，返回码：" + urlConnection.getResponseCode());
                 }
                 if (resCode >= 300 || resCode > 200)
-                    throw new IOException("请求发送失败，返回码：" + urlConnection.getResponseCode());
+                    throw new IOException("请求发送失败，请检查发送的信息和地址是否正确，返回码：" + urlConnection.getResponseCode());
             }
             inputStream = new BufferedInputStream(connection.getInputStream());
             outputStream = new BufferedOutputStream(outputStream);

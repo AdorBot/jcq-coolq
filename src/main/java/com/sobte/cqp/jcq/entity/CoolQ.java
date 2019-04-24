@@ -6,6 +6,7 @@ import com.sobte.cqp.jcq.util.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -598,18 +599,10 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
         return status = deleteMsg(authCode, msgId);
     }
 
-    private native int sendLikeV2(int authCode, long qqId, int times);
+    @Deprecated
+    private native int sendLike(int authCode, long qqId);
 
-    /**
-     * 发送手机赞
-     *
-     * @param qqId  目标QQ
-     * @param times 赞的次数,最多10次
-     * @return 状态码
-     */
-    public int sendLikeV2(long qqId, int times) {
-        return status = sendLikeV2(authCode, qqId, times <= 0 || times > 10 ? 1 : times);
-    }
+    private native int sendLikeV2(int authCode, long qqId, int times);
 
     /**
      * 发送手机赞,多次
@@ -655,18 +648,92 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
         return status = getCsrfToken(authCode);
     }
 
+    @Deprecated
     private native String getRecord(int authCode, String file, String outformat);
+
+    private native String getRecordV2(int authCode, String file, String outformat);
 
     /**
      * 接收消息中的语音(record)
      *
      * @param file      收到消息中的语音文件名(file)
      * @param outformat 应用所需的语音文件格式，目前支持 mp3,amr,wma,m4a,spx,ogg,wav,flac
-     * @return 返回保存在 \data\record\ 目录下的文件名
+     * @return 返回语音文件绝对路径
      */
     public String getRecord(String file, String outformat) {
-        return getRecord(authCode, file, outformat);
+        return getRecordV2(authCode, file, outformat);
     }
+
+    private native String getImage(int authCode, String file);
+
+    /**
+     * 接收消息中的图片(image)
+     *
+     * @param file 收到消息中的图片文件名(file)
+     * @return 返回图片文件绝对路径
+     */
+    public String getImage(String file) {
+        return getImage(authCode, file);
+    }
+
+    /**
+     * 接收消息中的图片(image)，批量
+     *
+     * @param files 收到消息中的图片文件名(file)
+     * @return 返回图片文件绝对路径的集合
+     */
+    public List<String> getImages(Collection<String> files) {
+        List<String> list = new ArrayList<>();
+        for (String file : files)
+            list.add(getImage(authCode, file));
+        return list;
+    }
+
+    /**
+     * 接收消息中的图片(image)
+     *
+     * @param file 收到消息中的图片文件名(file)
+     * @return 返回图片文件
+     */
+    public File getImageFile(String file) {
+        return new File(getImage(authCode, file));
+    }
+
+    /**
+     * 接收消息中的图片(image)，批量
+     *
+     * @param files 收到消息中的图片文件名(file)的集合
+     * @return 返回图片文件的集合
+     */
+    public List<File> getImageFiles(Collection<String> files) {
+        List<File> list = new ArrayList<>();
+        for (String file : files)
+            list.add(new File(getImage(authCode, file)));
+        return list;
+    }
+
+    private native int canSendImage(int authCode);
+
+    /**
+     * 是否支持发送图片
+     *
+     * @return 是否支持发送
+     */
+    public boolean canSendImage() {
+        return canSendImage(authCode) > 0;
+    }
+
+    private native int canSendRecord(int authCode);
+
+    /**
+     * 是否支持发送语音
+     *
+     * @return 是否支持发送
+     */
+    public boolean canSendRecord() {
+        return canSendRecord(authCode) > 0;
+    }
+
 
     private native int setGroupKick(int authCode, long groupId, long qqId, boolean notBack);
 
@@ -798,39 +865,15 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
     private native byte[] getGroupMemberInfoV2(int authCode, long groupId, long qqId, boolean notCache);
 
     /**
-     * 获取群成员信息 (v2版本)
-     *
-     * @param groupId  目标QQ所在群
-     * @param qqId     目标QQ
-     * @param notCache 不使用缓存，通常忽略本参数，仅在必要时使用
-     * @return 如果成功，返回群成员信息，失败返回null
-     */
-    public Member getGroupMemberInfoV2(long groupId, long qqId, boolean notCache) {
-        return Member.toMember(getGroupMemberInfoV2(authCode, groupId, qqId, notCache));
-    }
-
-    /**
-     * 获取群成员信息 (v2版本)
+     * 获取群成员信息
      *
      * @param groupId 目标QQ所在群
      * @param qqId    目标QQ
+     * @param member  用于覆盖信息的成员
      * @return 如果成功，返回群成员信息，失败返回null
      */
-    public Member getGroupMemberInfoV2(long groupId, long qqId) {
-        return getGroupMemberInfoV2(groupId, qqId, false);
-    }
-
-    /**
-     * 获取群成员信息
-     *
-     * @param member   群成员信息对象，用于覆盖
-     * @param groupId  目标QQ所在群
-     * @param qqId     目标QQ
-     * @param notCache 是否不使用缓存，通常忽略本参数(false)，仅在必要时使用
-     * @return 如果成功，返回群成员信息，失败返回null
-     */
-    public Member getGroupMemberInfo(Member member, long groupId, long qqId, boolean notCache) {
-        return Member.toMember(getGroupMemberInfoV2(authCode, groupId, qqId, notCache));
+    public Member getGroupMemberInfo(long groupId, long qqId, Member member) {
+        return Member.toMember(getGroupMemberInfoV2(authCode, groupId, qqId, false), member);
     }
 
     /**
@@ -918,19 +961,6 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
     }
 
     private native int setGroupAddRequestV2(int authCode, String responseFlag, int requestType, int backType, String reason);
-
-    /**
-     * 处理群添加请求
-     *
-     * @param responseFlag 请求事件收到的“responseFlag”参数
-     * @param requestType  根据请求事件的子类型区分 REQUEST_GROUP_ADD(群添加) 或 REQUEST_GROUP_INVITE(群邀请)
-     * @param backType     REQUEST_ADOPT(通过) 或 REQUEST_REFUSE(拒绝)
-     * @param reason       操作理由，仅 REQUEST_GROUP_ADD(群添加) 且 REQUEST_REFUSE(拒绝) 时可用
-     * @return 状态码
-     */
-    public int setGroupAddRequestV2(String responseFlag, int requestType, int backType, String reason) {
-        return status = setGroupAddRequestV2(authCode, responseFlag, requestType, backType, reason);
-    }
 
     /**
      * 处理群添加请求

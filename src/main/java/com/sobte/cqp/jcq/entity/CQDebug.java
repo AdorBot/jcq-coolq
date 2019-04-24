@@ -140,43 +140,6 @@ public class CQDebug extends CoolQ {
     }
 
     /**
-     * 发送手机赞
-     *
-     * @param qqId  目标QQ
-     * @param times 赞的次数,最多10次
-     * @return 状态码
-     */
-    @Override
-    public int sendLike(long qqId, int times) {
-        return sendLikeV2(qqId, times);
-    }
-
-    /**
-     * 获取群成员信息 (v2版本)
-     *
-     * @param groupId 目标QQ所在群
-     * @param qqId    目标QQ
-     * @return 如果成功，返回群成员信息，失败返回null
-     */
-    @Override
-    public Member getGroupMemberInfoV2(long groupId, long qqId) {
-        return getGroupMemberInfoV2(groupId, qqId, false);
-    }
-
-    /**
-     * 获取群成员信息
-     *
-     * @param groupId  目标QQ所在群
-     * @param qqId     目标QQ
-     * @param notCache 不使用缓存，通常忽略本参数，仅在必要时使用
-     * @return 如果成功，返回群成员信息，失败返回null
-     */
-    @Override
-    public Member getGroupMemberInfo(long groupId, long qqId, boolean notCache) {
-        return getGroupMemberInfoV2(groupId, qqId, notCache);
-    }
-
-    /**
      * 获取群成员信息
      *
      * @param groupId 目标QQ所在群
@@ -197,20 +160,6 @@ public class CQDebug extends CoolQ {
     @Override
     public QQInfo getStrangerInfo(long qqId) {
         return getStrangerInfo(qqId, false);
-    }
-
-    /**
-     * 处理群添加请求
-     *
-     * @param responseFlag 请求事件收到的“responseFlag”参数
-     * @param requestType  根据请求事件的子类型区分 REQUEST_GROUP_ADD(群添加) 或 REQUEST_GROUP_INVITE(群邀请)
-     * @param backType     REQUEST_ADOPT(通过) 或 REQUEST_REFUSE(拒绝)
-     * @param reason       操作理由，仅 REQUEST_GROUP_ADD(群添加) 且 REQUEST_REFUSE(拒绝) 时可用
-     * @return 状态码
-     */
-    @Override
-    public int setGroupAddRequest(String responseFlag, int requestType, int backType, String reason) {
-        return setGroupAddRequestV2(responseFlag, requestType, backType, reason);
     }
 
     /**
@@ -470,7 +419,7 @@ public class CQDebug extends CoolQ {
      * @return 状态码
      */
     @Override
-    public int sendLikeV2(long qqId, int times) {
+    public int sendLike(long qqId, int times) {
         addLogs(LOG_INFO, "发送赞", String.format("q[%15s] %s次", qqId, times <= 0 || times > 10 ? 1 : times));
         return status = 0;
     }
@@ -643,7 +592,7 @@ public class CQDebug extends CoolQ {
      * @return 如果成功，返回群成员信息，失败返回null
      */
     @Override
-    public Member getGroupMemberInfoV2(long groupId, long qqId, boolean notCache) {
+    public Member getGroupMemberInfo(long groupId, long qqId, boolean notCache) {
         addLogs(LOG_INFO, "取群成员信息", String.format("g[%15s] q[%15s] 本函数请在酷Q中测试 不使用缓存：%s 返回：测试群成员", groupId, qqId, notCache));
         Member member = new Member();
         member.setGroupId(groupId);
@@ -734,7 +683,7 @@ public class CQDebug extends CoolQ {
      * @return 状态码
      */
     @Override
-    public int setGroupAddRequestV2(String responseFlag, int requestType, int backType, String reason) {
+    public int setGroupAddRequest(String responseFlag, int requestType, int backType, String reason) {
         addLogs(LOG_INFO, "处理群添加请求", String.format("请求反馈标识:%s 请求类型:%s 反馈类型:%s 理由:%s", responseFlag, requestType, backType, reason));
         return status = 0;
     }

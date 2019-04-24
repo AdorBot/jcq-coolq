@@ -542,6 +542,15 @@ abstract class BaseMsg<E extends ActionMsg> extends ArrayList<E> {
     }
 
     /**
+     * 从CQ码中获取图片的路径，如 [CQ:image,file=1.jpg] 则返回 1.jpg
+     *
+     * @return 图片路径的集合
+     */
+    public List<String> getImages() {
+        return gets("image", "file");
+    }
+
+    /**
      * 从CQ码中获取图片的 CQImage 对象
      *
      * @return CQImage 对象，错误返回 {@code null}
