@@ -23,7 +23,7 @@ public final class MsgBuffer extends AbstractMsgBuilder implements java.io.Seria
     /**
      * 无参构造函数
      */
-    public MsgBuffer(CoolQ CQ) {
+    public MsgBuffer() {
         super();
     }
 

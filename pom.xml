@@ -43,4 +43,8 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <finalName>JCQ-CoolQ</finalName>
+    </build>
+
 </project>
