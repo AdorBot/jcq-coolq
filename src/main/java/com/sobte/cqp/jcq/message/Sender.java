@@ -185,7 +185,7 @@ public class Sender extends AbstractSender {
      */
     @Override
     protected boolean refreshInfo(long qqId, boolean notCache) {
-        return CQ.getStrangerInfo(info, qqId, notCache) != null;
+        return CQ.getStrangerInfo(qqId, notCache, info) != null;
     }
 
     /**

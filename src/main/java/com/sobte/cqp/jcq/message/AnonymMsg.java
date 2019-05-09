@@ -291,7 +291,7 @@ public class AnonymMsg extends GroupMsg {
     @Override
     protected boolean refreshInfo(long groupId, long qqId, boolean notCache) {
         if (ISystem.System_QQID_Anonymous == qqId)
-            return CQ.getStrangerInfo(member, qqId, notCache) != null;
+            return CQ.getStrangerInfo(qqId, notCache, member) != null;
         return super.refreshInfo(groupId, qqId, notCache);
     }
 

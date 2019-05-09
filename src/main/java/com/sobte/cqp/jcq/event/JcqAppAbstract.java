@@ -2,7 +2,6 @@ package com.sobte.cqp.jcq.event;
 
 import com.sobte.cqp.jcq.entity.CQDebug;
 import com.sobte.cqp.jcq.entity.CoolQ;
-import com.sobte.cqp.jcq.message.CQCode;
 
 /**
  * Created by Sobte on 2018/1/29.<br>

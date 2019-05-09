@@ -867,9 +867,10 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
     /**
      * 获取群成员信息
      *
-     * @param groupId 目标QQ所在群
-     * @param qqId    目标QQ
-     * @param member  用于覆盖信息的成员
+     * @param groupId  目标QQ所在群
+     * @param qqId     目标QQ
+     * @param notCache 是否不使用缓存，通常忽略本参数(false)，仅在必要时使用
+     * @param member   用于覆盖信息的成员
      * @return 如果成功，返回群成员信息，失败返回null
      */
     public Member getGroupMemberInfo(long groupId, long qqId, boolean notCache, Member member) {
@@ -904,12 +905,12 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
     /**
      * 获取陌生人信息
      *
-     * @param info     陌生人信息对象，用于覆盖
      * @param qqId     目标QQ
      * @param notCache 是否不使用缓存，通常忽略本参数(false)，仅在必要时使用
+     * @param info     陌生人信息对象，用于覆盖
      * @return 如果成功，返回陌生人信息
      */
-    public QQInfo getStrangerInfo(QQInfo info, long qqId, boolean notCache) {
+    public QQInfo getStrangerInfo(long qqId, boolean notCache, QQInfo info) {
         return QQInfo.toQQInfo(getStrangerInfo(authCode, qqId, notCache), info);
     }
 

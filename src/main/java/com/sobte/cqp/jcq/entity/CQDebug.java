@@ -5,10 +5,7 @@ import com.sobte.cqp.jcq.util.StringUtils;
 import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Formatter;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Sobte on 2018/3/11.
@@ -593,10 +590,23 @@ public class CQDebug extends CoolQ {
      */
     @Override
     public Member getGroupMemberInfo(long groupId, long qqId, boolean notCache) {
+        return getGroupMemberInfo(groupId, qqId, notCache, new Member());
+    }
+
+    /**
+     * 获取群成员信息
+     *
+     * @param groupId  目标QQ所在群
+     * @param qqId     目标QQ
+     * @param notCache 是否不使用缓存，通常忽略本参数(false)，仅在必要时使用
+     * @param member   用于覆盖信息的成员
+     * @return 如果成功，返回群成员信息，失败返回null
+     */
+    @Override
+    public Member getGroupMemberInfo(long groupId, long qqId, boolean notCache, Member member) {
         addLogs(LOG_INFO, "取群成员信息", String.format("g[%15s] q[%15s] 本函数请在酷Q中测试 不使用缓存：%s 返回：测试群成员", groupId, qqId, notCache));
-        Member member = new Member();
         member.setGroupId(groupId);
-        member.setQqId(qqId);
+        member.setQQId(qqId);
         member.setNick("测试昵称");
         member.setCard("测试名片");
         member.setGender(0);
@@ -615,9 +625,21 @@ public class CQDebug extends CoolQ {
      */
     @Override
     public QQInfo getStrangerInfo(long qqId, boolean notCache) {
+        return getStrangerInfo(qqId, notCache, new QQInfo());
+    }
+
+    /**
+     * 获取陌生人信息
+     *
+     * @param qqId     目标QQ
+     * @param notCache 是否不使用缓存，通常忽略本参数(false)，仅在必要时使用
+     * @param info     陌生人信息对象，用于覆盖
+     * @return 如果成功，返回陌生人信息
+     */
+    @Override
+    public QQInfo getStrangerInfo(long qqId, boolean notCache, QQInfo info) {
         addLogs(LOG_INFO, "取陌生人信息", String.format("q[%15s] 本函数请在酷Q中测试 不使用缓存：%s 返回：测试陌生人", qqId, notCache));
-        QQInfo info = new QQInfo();
-        info.setQqId(qqId);
+        info.setQQId(qqId);
         info.setNick("测试昵称");
         info.setAge(0);
         info.setGender(0);
@@ -634,6 +656,76 @@ public class CQDebug extends CoolQ {
     public List<Member> getGroupMemberList(long groupId) {
         addLogs(LOG_INFO, "取群成员列表", String.format("g[%15s] 本函数请在酷Q中测试 返回：空列表", groupId));
         return new ArrayList<Member>();
+    }
+
+    /**
+     * 接收消息中的图片(image)
+     *
+     * @param file 收到消息中的图片文件名(file)
+     * @return 返回图片文件绝对路径
+     */
+    @Override
+    public String getImage(String file) {
+        addLogs(LOG_INFO, "接收图片", String.format("本函数请在酷Q中测试 文件名：%s", file));
+        return "";
+    }
+
+    /**
+     * 接收消息中的图片(image)
+     *
+     * @param file 收到消息中的图片文件名(file)
+     * @return 返回图片文件
+     */
+    @Override
+    public File getImageFile(String file) {
+        getImage(file);
+        return null;
+    }
+
+    /**
+     * 接收消息中的图片(image)，批量
+     *
+     * @param files 收到消息中的图片文件名(file)的集合
+     * @return 返回图片文件的集合
+     */
+    @Override
+    public List<File> getImageFiles(Collection<String> files) {
+        getImages(files);
+        return new ArrayList<>();
+    }
+
+    /**
+     * 接收消息中的图片(image)，批量
+     *
+     * @param files 收到消息中的图片文件名(file)
+     * @return 返回图片文件绝对路径的集合
+     */
+    @Override
+    public List<String> getImages(Collection<String> files) {
+        addLogs(LOG_INFO, "接收图片", String.format("本函数请在酷Q中测试 文件名：%s", files.toString()));
+        return new ArrayList<>();
+    }
+
+    /**
+     * 是否支持发送图片
+     *
+     * @return 是否支持发送
+     */
+    @Override
+    public boolean canSendImage() {
+        addLogs(LOG_INFO, "是否支持发送图片", String.format("本函数请在酷Q中测试 返回：%s", true));
+        return true;
+    }
+
+    /**
+     * 是否支持发送语音
+     *
+     * @return 是否支持发送
+     */
+    @Override
+    public boolean canSendRecord() {
+        addLogs(LOG_INFO, "是否支持发送语音", String.format("本函数请在酷Q中测试 返回：%s", true));
+        return true;
     }
 
     /**
