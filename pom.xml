@@ -9,7 +9,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.sobte.cqp</groupId>
     <artifactId>jcq-coolq</artifactId>
     <version>1.3.0</version>
     <packaging>jar</packaging>
