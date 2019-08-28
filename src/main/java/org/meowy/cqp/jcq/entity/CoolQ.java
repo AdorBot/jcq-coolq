@@ -1093,7 +1093,7 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 描述信息
      */
     public CQStatus getLastStatus() {
-        return CQStatus.getStatus(status < 0 ? status : 0);
+        return CQStatus.getStatus(Math.min(status, 0));
     }
 
 }
