@@ -31,12 +31,12 @@ public abstract class JcqAppAbstract extends JcqApp implements JcqListener {
     }
 
     /**
-     * 用于兼容老的版本，1.3.0 将移除此构造方法<br>
+     * 用于兼容老的版本，1.4.0 将移除此构造方法<br>
      * 继承此构造方法会导致 CQ 加载的是DEBUG的 CQ 请注意！！！
      */
     @Deprecated
     protected JcqAppAbstract() {
-        // TODO 用于兼容老的版本，1.3.0 将移除此构造方法
+        // TODO 用于兼容老的版本，1.4.0 将移除此构造方法
         this(CQDebug.getInstance());
     }
 
