@@ -626,7 +626,10 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
         return status = sendLikeV2(authCode, qqId, 1);
     }
 
+    @Deprecated
     private native String getCookies(int authCode);
+
+    private native String getCookiesV2(int authCode, String domain);
 
     /**
      * 获取Cookie,慎用,此接口需要严格授权
@@ -634,7 +637,17 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return Cookies
      */
     public String getCookies() {
-        return getCookies(authCode);
+        return getCookiesV2(authCode, null);
+    }
+
+    /**
+     * 获取Cookie,慎用,此接口需要严格授权
+     *
+     * @param domain 目标域名，如 api.example.com
+     * @return Cookies
+     */
+    public String getCookies(String domain) {
+        return getCookiesV2(authCode, domain);
     }
 
     private native int getCsrfToken(int authCode);
