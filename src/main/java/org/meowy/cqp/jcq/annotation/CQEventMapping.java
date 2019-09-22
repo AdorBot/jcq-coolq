@@ -1,5 +1,8 @@
 package org.meowy.cqp.jcq.annotation;
 
+import org.meowy.cqp.jcq.entity.enumerate.EventType;
+import org.meowy.cqp.jcq.entity.enumerate.MsgType;
+
 import java.lang.annotation.*;
 
 /**

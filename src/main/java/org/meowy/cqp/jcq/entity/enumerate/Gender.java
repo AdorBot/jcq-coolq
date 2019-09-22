@@ -1,10 +1,11 @@
-package org.meowy.cqp.jcq.annotation;
+package org.meowy.cqp.jcq.entity.enumerate;
 
 /**
  * Created by Sobte on 2018/7/13.<br>
  * Time: 2018/7/13 14:15<br>
  * Email: i@sobte.me<br>
  * 性别
+ *
  * @author Sobte
  */
 public enum Gender {
@@ -12,11 +13,15 @@ public enum Gender {
     /**
      * 性别：男
      */
-    Male(0),
+    MALE(0),
     /**
      * 性别：女
      */
-    Female(1);
+    FEMALE(1),
+    /**
+     * 性别：未知
+     */
+    UNKNOWN(-1);
     /**
      * 性别常量值 0/男性 1/女性
      */
@@ -44,11 +49,11 @@ public enum Gender {
     public static Gender valueOf(int value) {
         switch (value) {
             case 0:
-                return Male;
+                return MALE;
             case 1:
-                return Female;
+                return FEMALE;
             default:
-                return null;
+                return UNKNOWN;
         }
     }
 

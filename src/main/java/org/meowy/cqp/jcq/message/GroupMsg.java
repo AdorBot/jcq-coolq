@@ -1,7 +1,7 @@
 package org.meowy.cqp.jcq.message;
 
-import org.meowy.cqp.jcq.annotation.Authority;
-import org.meowy.cqp.jcq.annotation.EventType;
+import org.meowy.cqp.jcq.entity.enumerate.Authority;
+import org.meowy.cqp.jcq.entity.enumerate.EventType;
 import org.meowy.cqp.jcq.entity.Member;
 
 import java.util.Date;
@@ -191,7 +191,7 @@ public class GroupMsg extends Sender {
      * @return 管理权限
      */
     public Authority getAuthority() {
-        return Authority.valueOf(member.getAuthority());
+        return member.getAuthority();
     }
 
     /**
@@ -443,7 +443,7 @@ public class GroupMsg extends Sender {
      * @return 本发送者对象
      */
     public GroupMsg leave() {
-        status = CQ.setGroupLeave(getGroupId(), getAuthority() == Authority.Owner);
+        status = CQ.setGroupLeave(getGroupId(), getAuthority() == Authority.OWNER);
         return this;
     }
 

@@ -1,7 +1,7 @@
 package org.meowy.cqp.jcq.annotation.common;
 
 import org.meowy.cqp.jcq.annotation.CQEventMapping;
-import org.meowy.cqp.jcq.annotation.EventType;
+import org.meowy.cqp.jcq.entity.enumerate.EventType;
 
 import java.lang.annotation.*;
 

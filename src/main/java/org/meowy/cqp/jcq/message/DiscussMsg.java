@@ -1,6 +1,6 @@
 package org.meowy.cqp.jcq.message;
 
-import org.meowy.cqp.jcq.annotation.EventType;
+import org.meowy.cqp.jcq.entity.enumerate.EventType;
 
 /**
  * Created by Sobte on 2018/10/21.<br>

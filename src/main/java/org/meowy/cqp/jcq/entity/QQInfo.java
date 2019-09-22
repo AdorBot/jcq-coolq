@@ -1,5 +1,7 @@
 package org.meowy.cqp.jcq.entity;
 
+import org.meowy.cqp.jcq.entity.enumerate.Gender;
+
 /**
  * Created by Sobte on 2018/3/12.
  * Time: 15:21
@@ -15,7 +17,7 @@ public class QQInfo {
     /**
      * 性别 0/男性 1/女性
      */
-    int gender;
+    Gender gender;
     /**
      * 年龄
      */
@@ -25,63 +27,104 @@ public class QQInfo {
      */
     String nick;
 
+    /**
+     * QQInfo 无参构造函数
+     */
     public QQInfo() {
     }
 
+    /**
+     * QQInfo 有参构造函数
+     *
+     * @param qqId QQ号
+     */
     public QQInfo(long qqId) {
         this.qqId = qqId;
     }
 
-    public QQInfo(long qqId, int gender, int age, String nick) {
+    /**
+     * QQInfo 有参构造函数
+     *
+     * @param qqId   QQ号
+     * @param gender 性别
+     * @param age    年龄
+     * @param nick   昵称
+     */
+    public QQInfo(long qqId, Gender gender, int age, String nick) {
         this.qqId = qqId;
         this.gender = gender;
         this.age = age;
         this.nick = nick;
     }
 
-    @Deprecated
-    public long getQqId() {
-        return qqId;
-    }
-
-    @Deprecated
-    public void setQqId(long qqId) {
-        this.qqId = qqId;
-    }
-
+    /**
+     * 设置QQ号
+     *
+     * @param qqId QQ号
+     */
     public void setQQId(long qqId) {
         this.qqId = qqId;
     }
 
+    /**
+     * 获取QQ号
+     *
+     * @return QQ号
+     */
     public long getQQId() {
         return qqId;
     }
 
     /**
-     * 性别 0/男性 1/女性
+     * 获取性别 0/男性 1/女性
      *
      * @return 性别
      */
-    public int getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(int gender) {
+    /**
+     * 设置性别
+     *
+     * @param gender 性别
+     */
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 
+    /**
+     * 获取年龄
+     *
+     * @return 年龄
+     */
     public int getAge() {
         return age;
     }
 
+    /**
+     * 设置年龄
+     *
+     * @param age 年龄
+     */
     public void setAge(int age) {
         this.age = age;
     }
 
+    /**
+     * 获取昵称
+     *
+     * @return 昵称
+     */
     public String getNick() {
         return nick;
     }
 
+    /**
+     * 设置昵称
+     *
+     * @param nick 昵称
+     */
     public void setNick(String nick) {
         this.nick = nick;
     }
@@ -109,7 +152,7 @@ public class QQInfo {
         Pack pack = new Pack(bytes);
         qqInfo.qqId = pack.getLong();
         qqInfo.nick = pack.getLenStr();
-        qqInfo.gender = pack.getInt();
+        qqInfo.gender = Gender.valueOf(pack.getInt());
         qqInfo.age = pack.getInt();
         return qqInfo;
     }

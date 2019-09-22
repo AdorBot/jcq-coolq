@@ -1,5 +1,7 @@
 package org.meowy.cqp.jcq.entity;
 
+import org.meowy.cqp.jcq.entity.enumerate.Authority;
+import org.meowy.cqp.jcq.entity.enumerate.Gender;
 import org.meowy.cqp.jcq.util.StringUtils;
 
 import java.io.File;
@@ -609,8 +611,8 @@ public class CQDebug extends CoolQ {
         member.setQQId(qqId);
         member.setNick("测试昵称");
         member.setCard("测试名片");
-        member.setGender(0);
-        member.setAuthority(1);
+        member.setGender(Gender.UNKNOWN);
+        member.setAuthority(Authority.MEMBER);
         member.setTitle("测试专属头衔");
         member.setTitleExpire(null);
         return member;
@@ -642,7 +644,7 @@ public class CQDebug extends CoolQ {
         info.setQQId(qqId);
         info.setNick("测试昵称");
         info.setAge(0);
-        info.setGender(0);
+        info.setGender(Gender.UNKNOWN);
         return info;
     }
 

@@ -1,6 +1,6 @@
 package org.meowy.cqp.jcq.message;
 
-import org.meowy.cqp.jcq.annotation.EventType;
+import org.meowy.cqp.jcq.entity.enumerate.EventType;
 import org.meowy.cqp.jcq.entity.ISystem;
 
 import java.util.Date;

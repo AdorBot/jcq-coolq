@@ -1,4 +1,4 @@
-package org.meowy.cqp.jcq.annotation;
+package org.meowy.cqp.jcq.entity.enumerate;
 
 /**
  * Created by Sobte on 2018/7/15.<br>
@@ -11,17 +11,17 @@ package org.meowy.cqp.jcq.annotation;
 public enum Authority {
 
     /**
-     * 成员
+     * 权限：成员
      */
-    Member(1),
+    MEMBER(1),
     /**
-     * 管理员
+     * 权限：管理员
      */
-    Admin(2),
+    ADMIN(2),
     /**
-     * 群主
+     * 权限：群主
      */
-    Owner(3);
+    OWNER(3);
     /**
      * 管理权限常量值 1/成员 2/管理员 3/群主
      */
@@ -48,14 +48,13 @@ public enum Authority {
      */
     public static Authority valueOf(int value) {
         switch (value) {
-            case 1:
-                return Member;
             case 2:
-                return Admin;
+                return ADMIN;
             case 3:
-                return Owner;
+                return OWNER;
+            case 1:
             default:
-                return null;
+                return MEMBER;
         }
     }
 

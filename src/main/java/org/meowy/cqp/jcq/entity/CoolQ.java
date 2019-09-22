@@ -1,6 +1,6 @@
 package org.meowy.cqp.jcq.entity;
 
-import org.meowy.cqp.jcq.annotation.AuthType;
+import org.meowy.cqp.jcq.entity.enumerate.AuthType;
 import org.meowy.cqp.jcq.message.MsgBuilder;
 import org.meowy.cqp.jcq.util.StringUtils;
 

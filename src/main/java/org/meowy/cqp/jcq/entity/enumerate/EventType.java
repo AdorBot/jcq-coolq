@@ -1,4 +1,4 @@
-package org.meowy.cqp.jcq.annotation;
+package org.meowy.cqp.jcq.entity.enumerate;
 
 import org.meowy.cqp.jcq.event.IType;
 

@@ -1,7 +1,7 @@
 package org.meowy.cqp.jcq.message;
 
-import org.meowy.cqp.jcq.annotation.EventType;
-import org.meowy.cqp.jcq.annotation.Gender;
+import org.meowy.cqp.jcq.entity.enumerate.EventType;
+import org.meowy.cqp.jcq.entity.enumerate.Gender;
 import org.meowy.cqp.jcq.entity.QQInfo;
 
 /**
@@ -105,7 +105,7 @@ public class Sender extends AbstractSender {
      */
     @Override
     public Gender getGender() {
-        return Gender.valueOf(info.getGender());
+        return info.getGender();
     }
 
     /**
