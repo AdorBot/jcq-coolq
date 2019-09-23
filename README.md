@@ -6,11 +6,11 @@
 > 本文档适用于有一定Java基础的开发者阅读     
 > 以下提供详细步骤，推荐使用maven进行开发    
 > 文档不够详细的部分可以源码，源码的注释也是非常全的     
-> 视频教学：[[小白]如何使用Java开发酷Q插件](https://www.bilibili.com/video/av21077001/)       
+> 视频教学：待续~
 > 酷Q帖子：https://cqp.cc/t/37318   
 
 ## 开发环境
-1) 电脑上已安装32位 [JDK(JRE)](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) **1.6以上版本**    
+1) 电脑上已安装32位 [JDK(JRE)](https://java.com) **1.6以上版本**    
     注：酷Q未提供64位版本，所以JRE必须为32位，否则JRE无法正常加载
 2) 下载 [酷Q](https://cqp.cc/t/23253) 和 [JavaCQ SDK Tool](https://cqp.cc/t/37318) 插件 ，安装并启用工具插件   
     注：启用时发生依赖DLL链接错误，多半因为JVM相关 [VC库](https://www.microsoft.com/en-us/download/details.aspx?id=5555) 未安装 
@@ -18,7 +18,7 @@
 
 ## JCQ Tool 目录结构 
 
-根目录 (例：酷Q/app/com.sobte.cqp.jcq/)
+根目录 (例：酷Q/data/app/com.sobte.cqp.jcq/)
 
 | 目录        |  描述                               |
 | --------   | :----------------------------------|
@@ -168,9 +168,9 @@ JSON文件是用于存储插件信息的文本文件
 
 Maven 导入
 ```
-   <groupId>com.sobte.cqp</groupId>
-   <artifactId>jcq-coolq</artifactId>
-   <version>1.2.7</version>
+    <groupId>org.meowy.cqp</groupId>
+    <artifactId>jcq-coolq</artifactId>
+    <version>1.3.0</version>
 ```
 
 ## JCQ-CoolQ 常用类说明
@@ -178,7 +178,7 @@ Maven 导入
  JCQ JavaDoc http://sobte.gitee.io/jcq-wiki/        
  其中包括JCQ所有类的注释
  
-[CoolQ](http://sobte.gitee.io/jcq-wiki/com/sobte/cqp/jcq/entity/CoolQ.html) 类     
+[CoolQ](http://sobte.gitee.io/jcq-wiki/org/meowy/cqp/jcq/entity/CoolQ.html) 类     
 酷Q操作的核心类
 
 | 方法         | 说明                                |
@@ -228,7 +228,7 @@ Maven 导入
 | setGroupWholeBan| 全群禁言|
 | getLastStatus| 获取最后状态|
 
-[CQCode](http://sobte.gitee.io/jcq-wiki/com/sobte/cqp/jcq/message/CQCode.html) 类        
+[CQCode](http://sobte.gitee.io/jcq-wiki/org/meowy/cqp/jcq/message/CQCode.html) 类        
 [CQ码](https://d.cqp.me/Pro/CQ%E7%A0%81) ，用于辅助开发加快开发效率，以下方法均返回 [CQ码](https://d.cqp.me/Pro/CQ%E7%A0%81) 文本
 
 | 方法         | 说明                                |
