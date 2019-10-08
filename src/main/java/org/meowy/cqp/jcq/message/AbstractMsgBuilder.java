@@ -607,7 +607,6 @@ abstract class AbstractMsgBuilder implements Appendable, CharSequence, Message {
 
     @Override
     public AbstractMsgBuilder append(CharSequence csq) {
-        sb.append(csq);
         if (csq == null)
             return this.append("null");
         if (csq instanceof String)

@@ -37,6 +37,10 @@ public interface IType {
      */
     int EVENT_System_GroupMemberIncrease = 103;
     /**
+     * 群禁言事件处理
+     */
+    int EVENT_System_GroupBan = 104;
+    /**
      * 好友已添加事件处理
      */
     int EVENT_Friend_Add = 201;

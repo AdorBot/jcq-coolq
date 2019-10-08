@@ -456,7 +456,7 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      */
     public int logError(String category, Throwable e) {
         int status = logError(category, e.getMessage());
-        e.printStackTrace(System.out);
+        e.printStackTrace(System.err);
         return status;
     }
 
@@ -974,6 +974,17 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
         return status = setFriendAddRequest(authCode, responseFlag, backType, remarks);
     }
 
+    /**
+     * 处理好友添加请求
+     *
+     * @param responseFlag 请求事件收到的“responseFlag”参数
+     * @param backType     REQUEST_ADOPT(通过) 或 REQUEST_REFUSE(拒绝)
+     * @return 状态码
+     */
+    public int setFriendAddRequest(String responseFlag, int backType) {
+        return status = setFriendAddRequest(authCode, responseFlag, backType, null);
+    }
+
     private native int setGroupAddRequestV2(int authCode, String responseFlag, int requestType, int backType, String reason);
 
     /**
@@ -1001,6 +1012,29 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
         return toMemberList(getGroupMemberList(authCode, groupId));
     }
 
+    private native byte[] getGroupInfo(int authCode, long groupId, boolean notCache);
+
+    /**
+     * 获取群信息(支持缓存)
+     *
+     * @param groupId  目标群
+     * @param notCache 是否不使用缓存，通常忽略本参数(false)，仅在必要时使用
+     * @return 如果成功，返回群信息
+     */
+    public Group getGroupInfo(long groupId, boolean notCache) {
+        return Group.toGroup(getGroupInfo(authCode, groupId, notCache));
+    }
+
+    /**
+     * 获取群信息
+     *
+     * @param groupId 目标群
+     * @return 如果成功，返回群信息
+     */
+    public Group getGroupInfo(long groupId) {
+        return getGroupInfo(groupId, false);
+    }
+
     private native byte[] getGroupList(int authCode);
 
     /**
@@ -1010,6 +1044,18 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      */
     public List<Group> getGroupList() {
         return toGroupList(getGroupList(authCode));
+    }
+
+    private native byte[] getFriendList(int authCode, boolean reserved);
+
+
+    /**
+     * 获取好友列表
+     *
+     * @return 如果成功，返回好友列表
+     */
+    public List<Friend> getFriendList() {
+        return toFriendList(getFriendList(authCode, false));
     }
 
     /**
@@ -1041,7 +1087,31 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
     }
 
     /**
-     * 转换数据到群信息
+     * 转换数据到好友列表
+     *
+     * @param source 数据
+     * @return 好友列表
+     */
+    private List<Friend> toFriendList(byte[] source) {
+        List<Friend> list = new ArrayList<Friend>();
+        if (source == null || source.length < 4)
+            return list;
+        Pack pack = new Pack(source);
+        int count = pack.getInt();
+        for (int i = 0; i < count; i++) {
+            if (pack.getRemainingLen() <= 0) {
+                return list;
+            }
+            Friend friend = Friend.toFriend(pack.getToken());
+            if (friend == null)
+                return list;
+            list.add(friend);
+        }
+        return list;
+    }
+
+    /**
+     * 转换数据到群列表
      *
      * @param source 数据
      * @return 群列表

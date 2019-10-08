@@ -17,7 +17,7 @@ public class QQInfo {
     /**
      * 性别 0/男性 1/女性
      */
-    Gender gender;
+    Gender gender = Gender.UNKNOWN;
     /**
      * 年龄
      */

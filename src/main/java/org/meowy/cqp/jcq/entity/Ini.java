@@ -34,15 +34,16 @@ public class Ini {
      * @param exp 将要解析的字符串
      */
     public Ini(String exp) {
-        analysis(exp);
+        analysis(exp, false);
     }
 
     /**
      * 解析ini字符串的入口
      *
-     * @param exp 将要解析的字符串
+     * @param exp     将要解析的字符串
+     * @param rewrite 是否覆盖之前的配置
      */
-    public void analysis(String exp) {
+    public void analysis(String exp, boolean rewrite) {
         // 获取单字符换行符
         int length = exp.length();
         for (int i = 0; i < length; i++) {
@@ -63,14 +64,14 @@ public class Ini {
                             endIdx = length;
                         else
                             endIdx--;
-                        analysisKeyValue(exp.substring(++i, idx), endIdx < ++idx ? "" : exp.substring(idx, endIdx));// key加一排除开头 '[' , endIdx减一排除末尾 '['  , idx加一排除开头 ']'
+                        analysisKeyValue(exp.substring(++i, idx), endIdx < ++idx ? "" : exp.substring(idx, endIdx), rewrite);// key加一排除开头 '[' , endIdx减一排除末尾 '['  , idx加一排除开头 ']'
                         i = endIdx;
                     } else {
                         i = length;// 直接设置为超出，相当于退出循环
                     }
                     break;
                 case '=':
-                    analysisKeyValue("", exp);
+                    analysisKeyValue("", exp, rewrite);
                     i = length;// 直接设置为超出，相当于退出循环
                     break;
                 // 过滤无效段落
@@ -291,10 +292,11 @@ public class Ini {
     /**
      * 解析文本并添加到对应的key中
      *
-     * @param expKey 段的key
-     * @param exp    要解析的文本
+     * @param expKey  段的key
+     * @param exp     要解析的文本
+     * @param rewrite 是否覆盖之前的配置
      */
-    public void analysisKeyValue(String expKey, String exp) {
+    public void analysisKeyValue(String expKey, String exp, boolean rewrite) {
         ConcurrentHashMap<String, List<String>> expMap = map.get(expKey);
         if (expMap == null)
             expMap = new ConcurrentHashMap<String, List<String>>();
@@ -321,6 +323,7 @@ public class Ini {
                     List<String> values = expMap.get(key);
                     if (values == null)
                         values = Collections.synchronizedList(new ArrayList<String>());
+                    if (rewrite) values.clear(); // 如果覆盖就清空之前的文本
                     values.add(value);
                     expMap.put(key, values);
                     i = idx;

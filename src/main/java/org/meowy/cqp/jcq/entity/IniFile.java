@@ -71,6 +71,13 @@ public class IniFile extends Ini {
     }
 
     /**
+     * 重新加载
+     */
+    public void reload() throws IOException {
+        init(iniFile, encodingName);
+    }
+
+    /**
      * 初始并加载解析ini文件
      *
      * @param iniFile     ini文件
@@ -105,7 +112,7 @@ public class IniFile extends Ini {
                 isr.close();
         }
         // 解析
-        this.analysis(sb.toString());
+        this.analysis(sb.toString(), true);
     }
 
     /**
@@ -166,16 +173,6 @@ public class IniFile extends Ini {
         super.addProfileString(AppName, KeyName, Value);
         // 添加到源解析字符串中
         return this;
-    }
-
-    /**
-     * 解析ini字符串的入口
-     *
-     * @param exp 将要解析的字符串
-     */
-    @Override
-    public void analysis(String exp) {
-        super.analysis(exp);
     }
 
     /**
