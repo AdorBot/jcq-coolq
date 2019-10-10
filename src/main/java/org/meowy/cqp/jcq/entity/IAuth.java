@@ -96,6 +96,11 @@ public interface IAuth {
     int AUTH_GetStrangerInfo = 131;
 
     /**
+     * 取群信息,对应CoolQ方法 getGroupInfo
+     */
+    int AUTH_GetGroupInfo = 132;
+
+    /**
      * 置讨论组退出,对应CoolQ方法 setDiscussLeave
      */
     int AUTH_SetDiscussLeave = 140;
@@ -119,6 +124,11 @@ public interface IAuth {
      * 取群列表,对应CoolQ方法 getGroupList
      */
     int AUTH_GetGroupList = 161;
+
+    /**
+     * 取好友列表,对应CoolQ方法 getFriendList
+     */
+    int AUTH_GetFriendList = 162;
 
     /**
      * 撤回消息,对应CoolQ方法 deleteMsg

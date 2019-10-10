@@ -2,6 +2,7 @@ package org.meowy.cqp.jcq.entity;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 /**
  * Created by Sobte on 2018/3/11.
@@ -155,7 +156,7 @@ public class Pack {
     }
 
     /**
-     * 取Ascii
+     * 取字符串
      *
      * @return 字符串
      */
@@ -163,20 +164,11 @@ public class Pack {
         short len = date.getShort();
         byte[] bytes = new byte[len];
         date.get(bytes);
-        return new String(bytes, StandardCharsets.UTF_8);
+        System.out.println(Arrays.toString(bytes));
+        return toU8Str(bytes);
     }
 
-    /**
-     * 取UTF8的字符串
-     *
-     * @return 字符串
-     */
-    public String getLenStrU8() {
-        short len = date.getShort();
-        byte[] bytes = new byte[len];
-        date.get(bytes);
-        return new String(bytes);
-    }
+    private native String toU8Str(byte[] src);
 
     /**
      * 添加Ascii
