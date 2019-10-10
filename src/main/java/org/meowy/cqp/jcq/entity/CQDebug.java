@@ -435,6 +435,18 @@ public class CQDebug extends CoolQ {
     }
 
     /**
+     * 获取Cookie,慎用,此接口需要严格授权
+     *
+     * @param domain 目标域名，如 api.example.com
+     * @return Cookies
+     */
+    @Override
+    public String getCookies(String domain) {
+        addLogs(LOG_INFO, "取Cookies", "本函数请在酷Q中测试");
+        return "";
+    }
+
+    /**
      * 获取CsrfToken,即QQ网页用到的bkn/g_tk等 慎用,此接口需要严格授权
      *
      * @return CsrfToken
@@ -739,6 +751,35 @@ public class CQDebug extends CoolQ {
     public List<Group> getGroupList() {
         addLogs(LOG_INFO, "取群列表", "本函数请在酷Q中测试 返回：空列表");
         return new ArrayList<Group>();
+    }
+
+    /**
+     * 获取群信息(支持缓存)
+     *
+     * @param groupId  目标群
+     * @param notCache 是否不使用缓存，通常忽略本参数(false)，仅在必要时使用
+     * @return 如果成功，返回群信息
+     */
+    @Override
+    public Group getGroupInfo(long groupId, boolean notCache) {
+        addLogs(LOG_INFO, "取群信息", String.format("g[%15s] 本函数请在酷Q中测试 不使用缓存：%s 返回：测试群信息", groupId, notCache));
+        Group group = new Group();
+        group.setId(0L);
+        group.setCountMax(1000);// 测试最大人数1000人
+        group.setCount(300);// 测试在线人数300人
+        group.setName("测试群");
+        return group;
+    }
+
+    /**
+     * 获取好友列表
+     *
+     * @return 如果成功，返回好友列表
+     */
+    @Override
+    public List<Friend> getFriendList() {
+        addLogs(LOG_INFO, "取好友列表", "本函数请在酷Q中测试 返回：空列表");
+        return new ArrayList<Friend>();
     }
 
     /**

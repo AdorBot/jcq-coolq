@@ -28,6 +28,7 @@ public class Friend extends QQInfo {
      * @param gender 性别
      * @param age    年龄
      * @param nick   昵称
+     * @param remark 备注
      */
     public Friend(long qqId, Gender gender, int age, String nick, String remark) {
         super(qqId, gender, age, nick);

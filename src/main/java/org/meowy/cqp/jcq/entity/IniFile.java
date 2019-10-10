@@ -72,6 +72,8 @@ public class IniFile extends Ini {
 
     /**
      * 重新加载
+     *
+     * @throws IOException IO异常
      */
     public void reload() throws IOException {
         init(iniFile, encodingName);
@@ -82,6 +84,7 @@ public class IniFile extends Ini {
      *
      * @param iniFile     ini文件
      * @param charsetName 编码
+     * @throws IOException ID异常
      */
     private void init(File iniFile, String charsetName) throws IOException {
         this.iniFile = iniFile;

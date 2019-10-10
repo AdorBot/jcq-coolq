@@ -164,7 +164,6 @@ public class Pack {
         short len = date.getShort();
         byte[] bytes = new byte[len];
         date.get(bytes);
-        System.out.println(Arrays.toString(bytes));
         return toU8Str(bytes);
     }
 
