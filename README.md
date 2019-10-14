@@ -75,7 +75,7 @@ JSON文件是用于存储插件信息的文本文件
 
 整体部分
 
-```json  
+```jsonc
 {  
     "ret"        : 1,   // 返回码，固定为1
     "apiver"     : 9,   // Api版本，本SDK为9
@@ -95,36 +95,36 @@ JSON文件是用于存储插件信息的文本文件
 
 事件部分
 
-```json  
+```jsonc
 {
 	// 这是事件部分json，其他部分与上面一致
 	"event":
-	[  
+	[
 		// 这里列举私聊事件为例，其他参考Demo中的json
-		{  
+		{
 			"id"      : 1,                      // 事件ID，保持唯一即可
-			"type"    : 21,                     // 事件类型，事件类型，用于区分各函数的功能  
+			"type"    : 21,                     // 事件类型，事件类型，用于区分各函数的功能
 			"name"    : "私聊消息处理",          // 事件名称
-			"function": "privateMsg",           // 事件对应主类中的函数  
-			"priority": 30000                   // 事件优先级 (参见 cqp.im/deveventpriority)  
-		}  
-	]  
+			"function": "privateMsg",           // 事件对应主类中的函数
+			"priority": 30000                   // 事件优先级 (参见 cqp.im/deveventpriority)
+		}
+	]
 }
 ```  
 
 菜单部分
 
-```json  
+```jsonc
 {
 	// 这是事件部分json，其他部分与上面一致
 	"event":
-	[  
-	    // 菜单会在管理器中被调用
+	[
+		// 菜单会在管理器中被调用
 		{
-            "name": "设置A", //菜单名称
-            "function": "menuA" //菜单对应主类中的函数
-        }
-	]  
+			"name": "设置A", //菜单名称
+			"function": "menuA" //菜单对应主类中的函数
+		}
+	]
 }
 ```  
 
@@ -167,7 +167,7 @@ JSON文件是用于存储插件信息的文本文件
 1) 待续，暂未完成....
 
 Maven 导入
-```
+```xml
     <groupId>org.meowy.cqp</groupId>
     <artifactId>jcq-coolq</artifactId>
     <version>1.3.0</version>
