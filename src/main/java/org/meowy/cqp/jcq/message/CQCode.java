@@ -259,11 +259,11 @@ public final class CQCode {
      *
      * @param musicId 音乐的歌曲数字ID
      * @param type    目前支持 qq/QQ音乐 163/网易云音乐 xiami/虾米音乐，默认为qq
-     * @param style   启用新版样式，目前仅 QQ音乐 支持
+     * @param style   指定分享样式 0/是最古老的版本 1/是QQ音乐特有的大版本 2/是最新的支持
      * @return CQ码
      */
-    public String music(long musicId, String type, boolean style) {
-        return StringUtils.stringConcat("[CQ:music,id=", musicId, ",type=", StringUtils.isEmpty(type) ? "qq" : encode(type, true), style ? ",style=1" : "", "]");
+    public String music(long musicId, String type, int style) {
+        return StringUtils.stringConcat("[CQ:music,id=", musicId, ",type=", StringUtils.isEmpty(type) ? "qq" : encode(type, true), ",style=", style, "]");
     }
 
     /**

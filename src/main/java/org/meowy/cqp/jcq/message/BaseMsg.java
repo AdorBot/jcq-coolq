@@ -349,17 +349,17 @@ abstract class BaseMsg<E extends ActionMsg> extends ArrayList<E> {
      *
      * @param musicId 音乐的歌曲数字ID
      * @param type    目前支持 qq/QQ音乐 163/网易云音乐 xiami/虾米音乐，默认为qq
-     * @param style   启用新版样式，目前仅 QQ音乐 支持
+     * @param style   指定分享样式 0/是最古老的版本 1/是QQ音乐特有的大版本 2/是最新的支持
      * @return 本消息对象
      */
-    public BaseMsg<E> music(long musicId, String type, boolean style) {
+    public BaseMsg<E> music(long musicId, String type, int style) {
         ActionCode ac = new ActionCode("music");
         ac.put("id", String.valueOf(musicId));
         if (StringUtils.isEmpty(type))
             ac.put("type", "qq");
         else
             ac.put("type", CQCode.encode(type, true));
-        if (style) ac.put("style", "1");
+        ac.put("style", Integer.toString(style));
         addCode(ac);
         return this;
     }
