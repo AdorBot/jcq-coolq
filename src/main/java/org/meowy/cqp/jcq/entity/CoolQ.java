@@ -159,7 +159,11 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logTrace(String category, Throwable e) {
-        int status = logTrace(category, e.getMessage());
+        int status = logTrace(category, StringUtils.stringConcat(
+                e.getMessage(),
+                StringUtils.lineSeparator,
+                StringUtils.getStackTracePrintString(e))
+        );
         e.printStackTrace(System.out);
         return status;
     }
@@ -203,7 +207,11 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logDebug(String category, Throwable e) {
-        int status = logDebug(category, e.getMessage());
+        int status = logDebug(category, StringUtils.stringConcat(
+                e.getMessage(),
+                StringUtils.lineSeparator,
+                StringUtils.getStackTracePrintString(e))
+        );
         e.printStackTrace(System.out);
         return status;
     }
@@ -245,7 +253,11 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logInfo(String category, Throwable e) {
-        int status = logInfo(category, e.getMessage());
+        int status = logInfo(category, StringUtils.stringConcat(
+                e.getMessage(),
+                StringUtils.lineSeparator,
+                StringUtils.getStackTracePrintString(e))
+        );
         e.printStackTrace(System.out);
         return status;
     }
@@ -287,7 +299,11 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logInfoRecv(String category, Throwable e) {
-        int status = logInfoRecv(category, e.getMessage());
+        int status = logInfoRecv(category, StringUtils.stringConcat(
+                e.getMessage(),
+                StringUtils.lineSeparator,
+                StringUtils.getStackTracePrintString(e))
+        );
         e.printStackTrace(System.out);
         return status;
     }
@@ -329,7 +345,11 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logInfoSend(String category, Throwable e) {
-        int status = logInfoSend(category, e.getMessage());
+        int status = logInfoSend(category, StringUtils.stringConcat(
+                e.getMessage(),
+                StringUtils.lineSeparator,
+                StringUtils.getStackTracePrintString(e))
+        );
         e.printStackTrace(System.out);
         return status;
     }
@@ -371,7 +391,11 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logInfoSuccess(String category, Throwable e) {
-        int status = logInfoSuccess(category, e.getMessage());
+        int status = logInfoSuccess(category, StringUtils.stringConcat(
+                e.getMessage(),
+                StringUtils.lineSeparator,
+                StringUtils.getStackTracePrintString(e))
+        );
         e.printStackTrace(System.out);
         return status;
     }
@@ -413,7 +437,11 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logWarning(String category, Throwable e) {
-        int status = logWarning(category, e.getMessage());
+        int status = logWarning(category, StringUtils.stringConcat(
+                e.getMessage(),
+                StringUtils.lineSeparator,
+                StringUtils.getStackTracePrintString(e))
+        );
         e.printStackTrace(System.out);
         return status;
     }
@@ -455,7 +483,11 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
      * @return 状态码
      */
     public int logError(String category, Throwable e) {
-        int status = logError(category, e.getMessage());
+        int status = logError(category, StringUtils.stringConcat(
+                e.getMessage(),
+                StringUtils.lineSeparator,
+                StringUtils.getStackTracePrintString(e))
+        );
         e.printStackTrace(System.err);
         return status;
     }
@@ -500,7 +532,8 @@ public abstract class CoolQ implements ILog, IRequest, IMsg, ICQVer {
         String pst = StringUtils.getStackTracePrintString(e);
         String sb = "很抱歉，应用发生致命错误，无法继续运行。\n" +
                 "应用名称：[" + appName + "]\n" +
-                "堆栈信息：\n" + pst;
+                "错误信息：" + e.getMessage() + "\n" +
+                "堆栈信息：" + pst;
         return logFatal(category, sb);
     }
 
